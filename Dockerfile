@@ -6,6 +6,8 @@ WORKDIR /app
 COPY package-lock.json /app
 COPY package.json /app
 COPY stories /app
+COPY *.ts /app
+COPY *.tsx /app
 RUN npm ci
 
 COPY .storybook /app/.storybook

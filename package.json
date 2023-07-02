@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@tmcw/togeojson": "^5.7.0",
+    "deck.gl": "^8.9.19",
     "storybook": "^7.0.24"
   },
   "devDependencies": {
@@ -10,12 +12,15 @@
     "@storybook/react": "^7.0.24",
     "@storybook/react-vite": "^7.0.24",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "eslint": "^8.44.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "docker:storybook": "docker run --rm -it $(docker build -q .)",
+    "validate": "eslint"
   }
 }
