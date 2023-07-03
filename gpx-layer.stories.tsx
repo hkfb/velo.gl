@@ -11,6 +11,8 @@ export default {
 const gpxData = gpx('Morning_Ride.gpx')
 
 export const GPXLayer = () => {
+  const [dom, setDom] = React.useState();
+  fetch("Morning_Ride.gpx").then((response) => response.text()).then((xml) => {setDom(new DOMParser().parseFromString(xml, "text/xml"))});
   const layer = new GeoJsonLayer({
     id: 'gpx-layer',
     data: gpxData,
