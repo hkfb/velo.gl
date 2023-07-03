@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@tmcw/togeojson": "^5.7.0",
+    "@loaders.gl/kml": "^3.4.6",
     "deck.gl": "^8.9.19"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "build-storybook": "storybook build",
     "docker:storybook": "docker run --rm -it $(docker build -q .)",
     "docker:compose:storybook": "docker-compose up --build",
-    "lint": "tsc --noEmit && eslint . *.tsx",
-    "lint:fix": "eslint . *.tsx --fix"
+    "lint": "tsc --noEmit && eslint . *.tsx *.ts",
+    "lint:fix": "eslint . *.tsx *.ts --fix"
   }
 }

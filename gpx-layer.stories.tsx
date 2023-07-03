@@ -1,36 +1,24 @@
 import { DeckGL } from "@deck.gl/react/typed";
-import { GeoJsonLayer } from "@deck.gl/layers/typed";
-import { gpx } from "@tmcw/togeojson";
-import { useState, useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import * as React from "react";
+import { GpxLayer } from "./gpx-layer";
 
 export default {
   title: "GPX Layer",
 };
 
 export function GPXLayer() {
-  const [dom, setDom] = useState<Document>(new Document());
   const gpxFile = "Morning_Ride.gpx";
-
-  useEffect(() => {
-    fetch(gpxFile)
-      .then((response) => response.text())
-      .then((xml) => {
-        setDom(new DOMParser().parseFromString(xml, "text/xml"));
-      });
-  }, [gpxFile]);
-
-  const geojsonData = useMemo(() => gpx(dom), [dom]);
 
   const layer = useMemo(
     () =>
-      new GeoJsonLayer({
+      new GpxLayer({
         id: "gpx-layer",
-        data: geojsonData,
-        lineWidthMinPixels: 5, // customize the point radius
-        getFillColor: [255, 0, 0], // customize the point color
+        data: gpxFile,
+        lineWidthMinPixels: 5,
+        getLineColor: [0, 0, 0],
       }),
-    [geojsonData]
+    [gpxFile]
   );
 
   const initialViewState = {
