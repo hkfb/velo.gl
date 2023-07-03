@@ -28,6 +28,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "docker:storybook": "docker run --rm -it $(docker build -q .)",
-    "validate": "eslint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   }
 }
