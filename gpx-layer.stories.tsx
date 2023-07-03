@@ -6,11 +6,7 @@ import * as React from "react";
 
 export default {
   title: "GPX Layer",
-  // decorators: [withKnobs],
 };
-
-// Parse the GPX file
-// const gpxData = gpx('Morning_Ride.gpx');
 
 export function GPXLayer() {
   const [dom, setDom] = useState<Document>(new Document());
@@ -26,17 +22,27 @@ export function GPXLayer() {
 
   const geojsonData = useMemo(() => gpx(dom), [dom]);
 
-  const layer = new GeoJsonLayer({
-    id: "gpx-layer",
-    data: geojsonData,
-    getRadius: 100, // customize the point radius
-    getFillColor: [255, 0, 0], // customize the point color
-  });
+  const layer = useMemo(
+    () =>
+      new GeoJsonLayer({
+        id: "gpx-layer",
+        data: geojsonData,
+        lineWidthMinPixels: 5, // customize the point radius
+        getFillColor: [255, 0, 0], // customize the point color
+      }),
+    [geojsonData]
+  );
+
+  const initialViewState = {
+    longitude: 10.8,
+    latitude: 59.79,
+    zoom: 12,
+  };
 
   return (
-    <DeckGL layers={[layer]} initialViewState={{}} controller>
+    <DeckGL layers={[layer]} initialViewState={initialViewState} controller>
       <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-        Custom UI or additional components can be added here
+        GPX Example
       </div>
     </DeckGL>
   );
