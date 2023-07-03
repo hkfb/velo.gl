@@ -1,3 +1,4 @@
+/*
 import { DeckGL } from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import { Parser } from 'gpx-parser';
@@ -37,3 +38,4 @@ ReactDOM.render(
   document.getElementById('map-container')
 );
 
+*/
