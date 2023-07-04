@@ -4,6 +4,9 @@ Deck.gl layer for rendering GPX tracks.
 
 ![GpxLayer](sample/velo.gl.png)
 
+## Examples
+See [Storybook](https://hkfb.github.io/velo.gl/?path=/story/gpx-layer--gpx-layer-default)
+
 ## Running Storybook
 
 ### Using npm to run locally:
