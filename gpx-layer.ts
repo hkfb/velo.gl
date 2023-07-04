@@ -7,3 +7,7 @@ export class GpxLayer extends GeoJsonLayer {
     super(props);
   }
 }
+
+const defaultProps = { ...GeoJsonLayer.defaultProps, lineWidthMinPixels: 2 };
+
+GpxLayer.defaultProps = defaultProps;

@@ -16,14 +16,15 @@ const initialViewState = {
   zoom: 8,
 };
 
+const defaultLayerProps = {
+  id: "gpx-layer",
+  data: gpxFile,
+};
+
 export function GPXLayerDefault() {
   const layer = useMemo(
-    () =>
-      new GpxLayer({
-        id: "gpx-layer",
-        data: gpxFile,
-      }),
-    [gpxFile]
+    () => new GpxLayer(defaultLayerProps),
+    [defaultLayerProps]
   );
 
   return (
@@ -39,12 +40,11 @@ export function GPXLayerLineStyle() {
   const layer = useMemo(
     () =>
       new GpxLayer({
-        id: "gpx-layer",
-        data: gpxFile,
+        ...defaultLayerProps,
         lineWidthMinPixels: 5,
-        getLineColor: [0, 0, 0],
+        getLineColor: [0, 0, 200],
       }),
-    [gpxFile]
+    [defaultLayerProps]
   );
 
   return (
@@ -58,14 +58,8 @@ export function GPXLayerLineStyle() {
 
 export function GpxWms() {
   const gpxLayer = useMemo(
-    () =>
-      new GpxLayer({
-        id: "gpx-layer",
-        data: gpxFile,
-        lineWidthMinPixels: 5,
-        getLineColor: [0, 0, 0],
-      }),
-    [gpxFile]
+    () => new GpxLayer(defaultLayerProps),
+    [defaultLayerProps]
   );
 
   const wmsLayer = new _WMSLayer({
