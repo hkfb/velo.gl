@@ -44,5 +44,6 @@
     "docker:compose:storybook": "docker-compose up --build",
     "lint": "tsc --noEmit && eslint \"**\"",
     "lint:fix": "eslint \"**\" --fix"
-  }
+  },
+  "version": "0.0.1"
 }
