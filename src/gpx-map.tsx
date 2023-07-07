@@ -19,10 +19,12 @@ const INITIAL_VIEW_STATE = {
 };
 
 export function GpxMap({
+  children = [],
   gpx = gpxFile,
   initialViewState = INITIAL_VIEW_STATE,
   auxLayers = [],
 }: {
+  children?: React.ReactNode;
   gpx?: string;
   initialViewState?: typeof INITIAL_VIEW_STATE;
   auxLayers?: LayersList;
@@ -37,6 +39,8 @@ export function GpxMap({
       layers={[...auxLayers, gpxLayer]}
       initialViewState={initialViewState}
       controller
-    ></DeckGL>
+    >
+      {children}
+    </DeckGL>
   );
 }

@@ -19,3 +19,11 @@ export function GpxMapJotunheimenRundt() {
   const gpxUrl = "Jotunheimen_rundt.gpx";
   return <GpxMap gpx={gpxUrl} initialViewState={initialViewState} />;
 }
+
+export function GpxMapText() {
+  return (
+    <GpxMap>
+      <div>Text</div>
+    </GpxMap>
+  );
+}

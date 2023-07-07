@@ -1,10 +1,18 @@
-import React from "react";
+import * as React from "react";
 import { GpxStreetMap } from "./gpx-street-map";
 
 export default {
   title: "GPX Street Map",
 };
 
-export function GpxStreetMapStory() {
+export function GpxStreetMapDefault() {
   return <GpxStreetMap />;
+}
+
+export function GpxStreetMapText() {
+  return (
+    <GpxStreetMap>
+      <div>Text</div>
+    </GpxStreetMap>
+  );
 }
