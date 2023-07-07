@@ -1,8 +1,9 @@
 {
   "name": "velo.gl",
   "author": "Håvard Bjerke",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
   "dependencies": {
     "@loaders.gl/kml": "^3.4.6",
     "deck.gl": "^8.9.19"
