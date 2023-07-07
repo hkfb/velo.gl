@@ -11,5 +11,6 @@
     "outDir": "dist",
     "jsx": "react",
     "declaration": true
-  }
+  },
+  "exclude": ["**/*.stories.tsx"]
 }
