@@ -34,7 +34,7 @@ export function GpxMap({
 
   return (
     <DeckGL
-      layers={[gpxLayer, ...auxLayers]}
+      layers={[...auxLayers, gpxLayer]}
       initialViewState={initialViewState}
       controller
     ></DeckGL>
