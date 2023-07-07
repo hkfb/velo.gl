@@ -37,7 +37,7 @@
     "build-storybook": "storybook build",
     "docker:storybook": "docker run --rm -it $(docker build -q .)",
     "docker:compose:storybook": "docker-compose up --build",
-    "lint": "tsc --noEmit && eslint . *.tsx *.ts",
-    "lint:fix": "eslint . *.tsx *.ts --fix"
+    "lint": "tsc --noEmit && eslint \"**\"",
+    "lint:fix": "eslint \"**\" --fix"
   }
 }
