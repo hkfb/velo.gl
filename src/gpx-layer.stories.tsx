@@ -1,5 +1,5 @@
 import { DeckGL } from "@deck.gl/react/typed";
-import { _WMSLayer } from "@deck.gl/geo-layers/typed";
+import { StreetLayer } from "./street-layer";
 import { useMemo, useState } from "react";
 import * as React from "react";
 import { GpxLayer } from "./gpx-layer";
@@ -65,13 +65,7 @@ export function GpxWms() {
     [defaultLayerProps]
   );
 
-  const wmsLayer = new _WMSLayer({
-    data: "https://ows.terrestris.de/osm/service",
-    serviceType: "wms",
-    layers: ["OSM-WMS"],
-  });
-
-  const layers = [gpxLayer, wmsLayer];
+  const layers = [gpxLayer, new StreetLayer()];
 
   return (
     <DeckGL layers={layers} initialViewState={initialViewState} controller>

@@ -8,3 +8,14 @@ export default {
 export function GpxMapDefault() {
   return <GpxMap />;
 }
+
+export function GpxMapJotunheimenRundt() {
+  const initialViewState = {
+    longitude: 8.3,
+    latitude: 61.4,
+    zoom: 8,
+  };
+
+  const gpxUrl = "Jotunheimen_rundt.gpx";
+  return <GpxMap gpx={gpxUrl} initialViewState={initialViewState} />;
+}
