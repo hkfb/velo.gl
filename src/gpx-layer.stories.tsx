@@ -31,11 +31,11 @@ export function GPXLayerDefault() {
   );
 
   return (
-    <DeckGL layers={[layer]} initialViewState={initialViewState} controller>
-      <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-        GPX Example
-      </div>
-    </DeckGL>
+    <DeckGL
+      layers={[layer]}
+      initialViewState={initialViewState}
+      controller
+    ></DeckGL>
   );
 }
 
