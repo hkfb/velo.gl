@@ -50,5 +50,5 @@
     "lint": "tsc --noEmit && eslint \"**\"",
     "lint:fix": "eslint \"**\" --fix"
   },
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
