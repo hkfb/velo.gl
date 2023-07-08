@@ -9,7 +9,9 @@
   ],
   "dependencies": {
     "@loaders.gl/kml": "^3.4.6",
-    "deck.gl": "^8.9.19"
+    "@turf/bbox": "^6.5.0",
+    "deck.gl": "^8.9.19",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@deck.gl/geo-layers": "^8.9.19",
@@ -20,7 +22,6 @@
     "@storybook/react": "^7.0.24",
     "@storybook/react-vite": "^7.0.24",
     "@storybook/testing-library": "^0.0.14-next.2",
-    "@turf/bbox": "^6.5.0",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
