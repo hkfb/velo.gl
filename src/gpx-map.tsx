@@ -18,17 +18,19 @@ const INITIAL_VIEW_STATE = {
   zoom: 8,
 };
 
+export type GpxMapProps = {
+  children?: React.ReactNode;
+  gpx?: string;
+  initialViewState?: typeof INITIAL_VIEW_STATE;
+  auxLayers?: LayersList;
+};
+
 export function GpxMap({
   children = [],
   gpx = gpxFile,
   initialViewState = INITIAL_VIEW_STATE,
   auxLayers = [],
-}: {
-  children?: React.ReactNode;
-  gpx?: string;
-  initialViewState?: typeof INITIAL_VIEW_STATE;
-  auxLayers?: LayersList;
-}) {
+}: GpxMapProps) {
   const gpxLayer = useMemo(
     () => new GpxLayer({ ...defaultLayerProps, data: gpx }),
     [defaultLayerProps, gpx]
