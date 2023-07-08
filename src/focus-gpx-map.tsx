@@ -2,7 +2,13 @@ import * as React from "react";
 import { GpxMap, INITIAL_VIEW_STATE } from "./gpx-map";
 import bbox from "@turf/bbox";
 import * as _ from "lodash";
-import { Layer, WebMercatorViewport, LayersList } from "@deck.gl/core/typed";
+import {
+  Layer,
+  WebMercatorViewport,
+  LayersList,
+  FlyToInterpolator,
+  MapViewState,
+} from "@deck.gl/core/typed";
 import { DeckGLProps } from "@deck.gl/react/typed";
 import { FeatureCollection } from "geojson";
 
@@ -15,7 +21,8 @@ export type FocusGpxMapProps = {
 };
 
 export function FocusGpxMap(args: FocusGpxMapProps) {
-  const [viewState, setViewState] = React.useState(INITIAL_VIEW_STATE);
+  const [viewState, setViewState] =
+    React.useState<MapViewState>(INITIAL_VIEW_STATE);
 
   const onLoad = React.useCallback(
     (data: FeatureCollection, info: { propName: string; layer: Layer }) => {
@@ -26,7 +33,13 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
       ];
       const fit = viewport.fitBounds(bounds);
       const { longitude, latitude, zoom } = fit;
-      setViewState({ longitude: longitude, latitude: latitude, zoom: zoom });
+      setViewState({
+        longitude: longitude,
+        latitude: latitude,
+        zoom: zoom,
+        transitionDuration: 1000,
+        transitionInterpolator: new FlyToInterpolator(),
+      });
     },
     [setViewState]
   );
