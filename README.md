@@ -1,6 +1,6 @@
 # Velo.gl
 
-Deck.gl layer for rendering GPX tracks.
+Map components and [Deck.gl](https://deck.gl/) layers for rendering GPX tracks.
 
 ![GpxLayer](sample/velo.gl.png)
 
