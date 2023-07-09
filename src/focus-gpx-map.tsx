@@ -31,7 +31,7 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
         [number, number],
         [number, number]
       ];
-      const fit = viewport.fitBounds(bounds);
+      const fit = viewport.fitBounds(bounds, { padding: 20 });
       const { longitude, latitude, zoom } = fit;
       setViewState({
         longitude: longitude,
