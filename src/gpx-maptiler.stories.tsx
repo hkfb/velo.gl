@@ -8,3 +8,11 @@ export default {
 export function GpxMaptilerDefault() {
   return <GpxMaptiler></GpxMaptiler>;
 }
+
+export function GpxMaptilerText() {
+  return (
+    <GpxMaptiler>
+      <div>GPX Map Tiler story</div>
+    </GpxMaptiler>
+  );
+}

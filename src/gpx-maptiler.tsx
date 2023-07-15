@@ -11,6 +11,7 @@ export function GpxMaptiler(args: FocusGpxMapProps) {
         mapStyle={mapStyle}
         style={{ position: "relative", zIndex: "-100" }}
       />
+      {args.children}
     </FocusGpxMap>
   );
 }
