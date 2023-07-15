@@ -11,7 +11,8 @@
     "@loaders.gl/kml": "^3.4.6",
     "@turf/bbox": "^6.5.0",
     "deck.gl": "^8.9.19",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "react-map-gl": "^7.1.2"
   },
   "devDependencies": {
     "@deck.gl/geo-layers": "^8.9.19",
@@ -40,7 +41,6 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-map-gl": "^7.1.1",
     "storybook": "^7.0.24"
   },
   "scripts": {
