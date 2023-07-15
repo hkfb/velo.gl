@@ -51,28 +51,31 @@ export function GPXLayerLineStyle() {
   );
 
   return (
-    <DeckGL layers={[layer]} initialViewState={initialViewState} controller>
-      <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-        GPX Example
-      </div>
-    </DeckGL>
+    <DeckGL
+      layers={[layer]}
+      initialViewState={initialViewState}
+      controller
+    ></DeckGL>
   );
 }
 
 export function GpxWms() {
   const gpxLayer = useMemo(
-    () => new GpxLayer(defaultLayerProps),
+    () =>
+      new GpxLayer({
+        ...defaultLayerProps,
+      }),
     [defaultLayerProps]
   );
 
   const layers = [gpxLayer, new StreetLayer()];
 
   return (
-    <DeckGL layers={layers} initialViewState={initialViewState} controller>
-      <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-        GPX Example
-      </div>
-    </DeckGL>
+    <DeckGL
+      layers={layers}
+      initialViewState={initialViewState}
+      controller
+    ></DeckGL>
   );
 }
 

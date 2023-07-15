@@ -43,7 +43,6 @@
     "storybook": "^7.0.24"
   },
   "scripts": {
-    "prepare": "npm run build",
     "build": "rm -rf dist && tsc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

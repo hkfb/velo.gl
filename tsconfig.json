@@ -12,5 +12,5 @@
     "jsx": "react",
     "declaration": true
   },
-  "exclude": ["**/*.stories.tsx"]
+  "exclude": ["**/*.stories.tsx", "dist"]
 }
