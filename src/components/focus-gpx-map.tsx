@@ -1,28 +1,16 @@
 import * as React from "react";
-import { GpxMap, INITIAL_VIEW_STATE } from "./gpx-map";
+import { GpxMap, GpxMapProps, INITIAL_VIEW_STATE } from "./gpx-map";
 import bbox from "@turf/bbox";
 import * as _ from "lodash";
 import {
   Layer,
   WebMercatorViewport,
-  LayersList,
   FlyToInterpolator,
   MapViewState,
 } from "@deck.gl/core/typed";
-import { DeckGLProps } from "@deck.gl/react/typed";
 import { FeatureCollection } from "geojson";
 
-export type FocusGpxMapProps = {
-  children?: React.ReactNode;
-
-  /**
-   * A url to a GPX file.
-   */
-  gpx?: string;
-  auxLayers?: LayersList;
-  deckGlProps?: DeckGLProps;
-  onGpxLoad?: (data: unknown, context: unknown) => void;
-};
+export type FocusGpxMapProps = Omit<GpxMapProps, "initialViewState">;
 
 export function FocusGpxMap(args: FocusGpxMapProps) {
   const [viewState, setViewState] =

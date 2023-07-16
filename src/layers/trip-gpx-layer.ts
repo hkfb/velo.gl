@@ -37,3 +37,4 @@ const defaultProps = {
 };
 
 TripGpxLayer.defaultProps = defaultProps;
+TripGpxLayer.layerName = "TripGpxLayer";

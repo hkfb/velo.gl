@@ -39,3 +39,4 @@ const defaultProps = {
 };
 
 GpxLayer.defaultProps = defaultProps;
+GpxLayer.layerName = "GpxLayer";
