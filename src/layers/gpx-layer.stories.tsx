@@ -85,7 +85,7 @@ export function GpxSatteliteTerrain() {
     getLineColor: [255, 255, 0],
   };
 
-  const gpxLayer = useMemo(() => new GpxLayer(layerProps), [defaultLayerProps]);
+  const gpxLayer = useMemo(() => new GpxLayer({ ...layerProps }), [layerProps]);
 
   const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
 

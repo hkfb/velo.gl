@@ -24,4 +24,5 @@ HillLayer.defaultProps = {
   color: [255, 255, 255],
   minZoom: 0,
   maxZoom: 12,
+  getPolygonOffset: () => [0, 10000],
 };
