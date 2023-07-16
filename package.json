@@ -50,7 +50,7 @@
     "build-storybook": "storybook build",
     "docker:storybook": "docker run --rm -it $(docker build -q .)",
     "docker:compose:storybook": "docker-compose up --build",
-    "lint": "tsc --noEmit && eslint \"**\"",
+    "lint": "tsc --project tsconfig.lint.json --noEmit && eslint \"**\"",
     "lint:fix": "eslint \"**\" --fix"
   },
   "version": "0.4.2"
