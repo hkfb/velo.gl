@@ -14,6 +14,10 @@ import { FeatureCollection } from "geojson";
 
 export type FocusGpxMapProps = {
   children?: React.ReactNode;
+
+  /**
+   * A url to a GPX file.
+   */
   gpx?: string;
   auxLayers?: LayersList;
   deckGlProps?: DeckGLProps;
