@@ -53,5 +53,5 @@
     "lint": "tsc --project tsconfig.lint.json --noEmit && eslint \"**\"",
     "lint:fix": "eslint \"**\" --fix"
   },
-  "version": "0.4.2"
+  "version": "0.5.0"
 }
