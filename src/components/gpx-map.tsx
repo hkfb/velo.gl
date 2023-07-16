@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as React from "react";
 import { DeckGL, DeckGLProps } from "@deck.gl/react/typed";
 import { LayersList } from "@deck.gl/core/typed";
-import { GpxLayer } from "./gpx-layer";
+import { GpxLayer } from "../layers/gpx-layer";
 
 const gpxFile =
   "https://cdn.cyclingstage.com/images/tour-de-france/2023/stage-7-parcours.gpx";

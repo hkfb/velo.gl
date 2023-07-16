@@ -1,6 +1,6 @@
 import React from "react";
 import { GpxMap } from "./gpx-map";
-import { StreetLayer } from "./street-layer";
+import { StreetLayer } from "../layers/street-layer";
 import { MapViewState } from "@deck.gl/core/typed";
 
 export type GpxStreetMapProps = {

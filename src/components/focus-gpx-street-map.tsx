@@ -1,6 +1,6 @@
 import React from "react";
 import { FocusGpxMap } from "./focus-gpx-map";
-import { StreetLayer } from "./street-layer";
+import { StreetLayer } from "../layers/street-layer";
 
 export type FocusGpxStreetMapProps = {
   children?: React.ReactNode;
