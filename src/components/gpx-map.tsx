@@ -4,12 +4,12 @@ import { DeckGL, DeckGLProps } from "@deck.gl/react/typed";
 import { LayersList } from "@deck.gl/core/typed";
 import { GpxLayer } from "../layers/gpx-layer";
 
-const gpxFile =
+export const DEFAULT_GPX_FILE =
   "https://cdn.cyclingstage.com/images/tour-de-france/2023/stage-7-parcours.gpx";
 
 const defaultLayerProps = {
   id: "gpx-layer",
-  data: gpxFile,
+  data: DEFAULT_GPX_FILE,
 };
 
 export const INITIAL_VIEW_STATE = {
@@ -44,7 +44,7 @@ export type GpxMapProps = {
 
 export function GpxMap({
   children = [],
-  gpx = gpxFile,
+  gpx = DEFAULT_GPX_FILE,
   initialViewState = INITIAL_VIEW_STATE,
   auxLayers = [],
   deckGlProps = {},

@@ -2,8 +2,7 @@ import * as React from "react";
 import { DeckGL } from "@deck.gl/react/typed";
 import { TripGpxLayer } from "./trip-gpx-layer";
 import { GpxHillMap } from "../components/gpx-hill-map";
-import { GpxMap } from "../components/gpx-map";
-import { FocusGpxMap } from "../components/focus-gpx-map";
+import { DEFAULT_GPX_FILE } from "../components/gpx-map";
 
 export default {
   title: "GPX Trip Layer",
@@ -67,10 +66,30 @@ export function TripGpxLayerMap({ time }: { time: number }) {
       }),
     [time, defaultLayerProps]
   );
-  return <FocusGpxMap gpx={gpxFile} annotationLayers={[layer]}></FocusGpxMap>;
+  return <GpxHillMap gpx={gpxFile} annotationLayers={[layer]}></GpxHillMap>;
 }
 
 TripGpxLayerMap.args = { time: 1000 };
 TripGpxLayerMap.argTypes = {
   time: { control: { type: "range", min: 1000, max: 46000 } },
+};
+
+export function TripGpxLayerTdf({ time }: { time: number }) {
+  const layer = React.useMemo(
+    () =>
+      new TripGpxLayer({
+        ...defaultLayerProps,
+        data: DEFAULT_GPX_FILE,
+        currentTime: time,
+      }),
+    [time, defaultLayerProps]
+  );
+  return (
+    <GpxHillMap gpx={DEFAULT_GPX_FILE} annotationLayers={[layer]}></GpxHillMap>
+  );
+}
+
+TripGpxLayerTdf.args = { time: 0 };
+TripGpxLayerTdf.argTypes = {
+  time: { control: { type: "range", min: 0, max: 16900 } },
 };

@@ -7,7 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "types": ["vite/client"],
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "outDir": "dist",
     "jsx": "react",
     "declaration": true

@@ -7,5 +7,5 @@ import { HillLayer } from "../layers/hill-layer";
  */
 export function GpxHillMap(args: FocusGpxMapProps) {
   const baseLayer = new HillLayer();
-  return <FocusGpxMap {...args} auxLayers={[baseLayer]} />;
+  return <FocusGpxMap {...args} baseLayers={[baseLayer]} />;
 }
