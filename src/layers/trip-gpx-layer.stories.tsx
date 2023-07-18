@@ -93,3 +93,35 @@ TripGpxLayerTdf.args = { time: 0 };
 TripGpxLayerTdf.argTypes = {
   time: { control: { type: "range", min: 0, max: 16900 } },
 };
+
+export function TripGpxLayerAnimate({ velocity }: { velocity: number }) {
+  const [date, setDate] = React.useState(0);
+
+  React.useEffect(() => {
+    const timerID = setInterval(() => {
+      setDate((date) => date + 1);
+    }, 1000);
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
+
+  const layer = React.useMemo(
+    () =>
+      new TripGpxLayer({
+        ...defaultLayerProps,
+        data: DEFAULT_GPX_FILE,
+        currentTime: date,
+        velocity: velocity,
+      }),
+    [date, defaultLayerProps, velocity]
+  );
+  return (
+    <GpxHillMap gpx={DEFAULT_GPX_FILE} annotationLayers={[layer]}></GpxHillMap>
+  );
+}
+
+TripGpxLayerAnimate.args = { velocity: 10 };
+TripGpxLayerAnimate.argTypes = {
+  velocity: { control: { type: "range", min: 0, max: 30 } },
+};

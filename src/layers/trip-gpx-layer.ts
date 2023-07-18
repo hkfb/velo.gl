@@ -12,8 +12,8 @@ function getTimestamps(times: string[] | undefined) {
   return t;
 }
 
-function simulateTimestamps(coordinates: Position[]) {
-  const velocity = 10; // m/s
+function simulateTimestamps(coordinates: Position[], velocity: number) {
+  console.log(velocity);
   const timestamps = coordinates.reduce((accumulator, coordinate, index) => {
     if (0 === index) {
       return [0];
@@ -29,14 +29,14 @@ function simulateTimestamps(coordinates: Position[]) {
   return timestamps;
 }
 
-function dataTransform(collection: FeatureCollection) {
+function dataTransform(collection: FeatureCollection, velocity: number) {
   const feature: Feature = collection.features[0];
   const geometry = feature.geometry as LineString;
   const coordinates = geometry.coordinates;
   const properties = feature.properties;
   const times = properties?.coordinateProperties?.times;
   const gpxTimestamps = getTimestamps(times);
-  const timestamps = gpxTimestamps ?? simulateTimestamps(coordinates);
+  const timestamps = gpxTimestamps ?? simulateTimestamps(coordinates, velocity);
   const trip = {
     path: coordinates,
     timestamps: timestamps,
@@ -44,11 +44,23 @@ function dataTransform(collection: FeatureCollection) {
   return [trip];
 }
 
+function createDataTransform(velocity: number) {
+  return (collection: FeatureCollection) => dataTransform(collection, velocity);
+}
+
+export interface TripGpxLayerProps extends TripsLayerProps {
+  velocity?: number;
+}
+
 export class TripGpxLayer extends TripsLayer {
-  constructor(props: TripsLayerProps) {
-    props.loaders = [GPXLoader];
-    props.dataTransform = dataTransform as unknown as null;
-    super(props);
+  constructor(props: TripGpxLayerProps) {
+    super({
+      ...props,
+      dataTransform: createDataTransform(
+        props.velocity ?? 10
+      ) as unknown as undefined,
+      updateTriggers: { getTimestamps: [props.velocity] },
+    });
   }
 }
 
@@ -58,6 +70,9 @@ const defaultProps = {
   trailLength: 1000,
   widthMinPixels: 5,
   getColor: [255, 0, 0] as Color,
+  loaders: [GPXLoader],
+  velocity: 10,
+  //updateTriggers: { getTimestamps: [velocity] }
 };
 
 TripGpxLayer.defaultProps = defaultProps;
