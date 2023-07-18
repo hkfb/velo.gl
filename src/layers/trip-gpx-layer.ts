@@ -5,7 +5,7 @@ import { Color } from "@deck.gl/core/typed";
 import { FeatureCollection, Feature, LineString, Position } from "geojson";
 import distance from "@turf/distance";
 
-function getTimestamps(times: string[] | undefined) {
+function calcTimestamps(times: string[] | undefined) {
   const t = times?.map(
     (time: string) => new Date(time).getTime() / 1000 - 1561748779
   );
@@ -13,7 +13,6 @@ function getTimestamps(times: string[] | undefined) {
 }
 
 function simulateTimestamps(coordinates: Position[], velocity: number) {
-  console.log(velocity);
   const timestamps = coordinates.reduce((accumulator, coordinate, index) => {
     if (0 === index) {
       return [0];
@@ -29,37 +28,42 @@ function simulateTimestamps(coordinates: Position[], velocity: number) {
   return timestamps;
 }
 
-function dataTransform(collection: FeatureCollection, velocity: number) {
+function dataTransform(collection: FeatureCollection) {
   const feature: Feature = collection.features[0];
   const geometry = feature.geometry as LineString;
   const coordinates = geometry.coordinates;
   const properties = feature.properties;
   const times = properties?.coordinateProperties?.times;
-  const gpxTimestamps = getTimestamps(times);
-  const timestamps = gpxTimestamps ?? simulateTimestamps(coordinates, velocity);
+  const gpxTimestamps = calcTimestamps(times);
   const trip = {
     path: coordinates,
-    timestamps: timestamps,
+    timestamps: gpxTimestamps,
   };
   return [trip];
 }
 
-function createDataTransform(velocity: number) {
-  return (collection: FeatureCollection) => dataTransform(collection, velocity);
+function getTimestamps(velocity: number) {
+  return (data: { path: Position[]; timestamps: number[] }) =>
+    data.timestamps ?? simulateTimestamps(data.path, velocity);
 }
 
 export interface TripGpxLayerProps extends TripsLayerProps {
+  /**
+   * Trip velocity in m/s, which will be used if the GPX file does not already
+   * contain timestamps.
+   */
   velocity?: number;
 }
 
+/**
+ * A Deck.gl layer that shows the position from a GPX track at a given moment.
+ */
 export class TripGpxLayer extends TripsLayer {
   constructor(props: TripGpxLayerProps) {
     super({
       ...props,
-      dataTransform: createDataTransform(
-        props.velocity ?? 10
-      ) as unknown as undefined,
       updateTriggers: { getTimestamps: [props.velocity] },
+      getTimestamps: getTimestamps(props.velocity ?? 10),
     });
   }
 }
@@ -72,7 +76,7 @@ const defaultProps = {
   getColor: [255, 0, 0] as Color,
   loaders: [GPXLoader],
   velocity: 10,
-  //updateTriggers: { getTimestamps: [velocity] }
+  dataTransform: dataTransform as unknown as undefined,
 };
 
 TripGpxLayer.defaultProps = defaultProps;
