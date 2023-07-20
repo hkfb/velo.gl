@@ -65,3 +65,15 @@ docker run --rm -it $(docker build -q .)
 docker-compose up --build
 ```
 
+## Testing
+
+### Using npm with local storybook running:
+```sh
+npm test:storybook
+```
+
+### Using npm & docker-compose:
+```sh
+npm docker:compose:test
+```
+
