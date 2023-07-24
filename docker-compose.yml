@@ -1,8 +1,8 @@
 version: "3"
 services:
-    storybook:
-        image: velo.gl
-        build: .
-        volumes:
-            - '/app/node_modules'
-            - '.:/app:ro'
+  storybook:
+    image: velo.gl
+    build: .
+    volumes:
+      - /app/node_modules
+      - ".:/app:ro"

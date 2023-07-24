@@ -3,5 +3,4 @@ sample/*
 LICENSE
 Dockerfile
 README.md
-docker-compose.yml
 dist
