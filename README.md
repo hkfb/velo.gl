@@ -2,7 +2,7 @@
 
 Map components and [Deck.gl](https://deck.gl/) layers for rendering GPX tracks.
 
-![GpxLayer](sample/velo.gl.png)
+![GpxLayer](sample/velo.gl.webp)
 
 ## Features
 * Deck.gl layers
