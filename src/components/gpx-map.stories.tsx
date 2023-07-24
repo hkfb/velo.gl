@@ -1,24 +1,30 @@
 import * as React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { GpxMap } from "./gpx-map";
 
-export default {
+const meta: Meta<typeof GpxMap> = {
   title: "GPX Map",
+  tags: ["autodocs"],
+  component: GpxMap,
 };
 
-export function GpxMapDefault() {
-  return <GpxMap />;
-}
+export default meta;
 
-export function GpxMapJotunheimenRundt() {
-  const initialViewState = {
-    longitude: 8.3,
-    latitude: 61.4,
-    zoom: 8,
-  };
+type Story = StoryObj<typeof GpxMap>;
 
-  const gpxUrl = "Jotunheimen_rundt.gpx";
-  return <GpxMap gpx={gpxUrl} initialViewState={initialViewState} />;
-}
+export const Default: Story = {};
+
+export const JotunheimenRundt: Story = {
+  args: {
+    initialViewState: {
+      longitude: 8.3,
+      latitude: 61.4,
+      zoom: 8,
+    },
+
+    gpx: "Jotunheimen_rundt.gpx",
+  },
+};
 
 export function GpxMapText() {
   return (
