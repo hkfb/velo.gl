@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "sample/velo.gl.png"
   ],
   "dependencies": {
     "@loaders.gl/kml": "^3.4.6",
@@ -41,6 +42,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-yml": "^1.8.0",
     "playwright": "^1.36.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -54,7 +56,8 @@
     "docker:storybook": "docker run --rm -it $(docker build -q .)",
     "docker:compose:storybook": "docker-compose up --build",
     "docker:compose:test": "docker-compose -f docker-compose.test.yml up --build",
-    "lint": "tsc --project tsconfig.lint.json --noEmit && eslint \"**\"",
+    "lint:typecheck": "tsc --project tsconfig.lint.json --noEmit",
+    "lint": "npm run lint:typecheck && eslint \"**\"",
     "lint:fix": "eslint \"**\" --fix",
     "test:storybook": "test-storybook"
   },
