@@ -53,7 +53,7 @@
     "build": "rm -rf dist && tsc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "docker:storybook": "docker run --rm -it $(docker build -q .)",
+    "docker:storybook": "docker run --rm -it --mount type=bind,source=\"$(pwd)\"/sample,target=/app/sample,readonly $(docker build -q .)",
     "docker:compose:storybook": "docker-compose up --build",
     "docker:compose:test": "docker-compose -f docker-compose.test.yml up --build",
     "lint:typecheck": "tsc --project tsconfig.lint.json --noEmit",
