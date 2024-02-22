@@ -25,8 +25,8 @@
     "@storybook/addon-storysource": "^7.6.17",
     "@storybook/blocks": "^7.0.24",
     "@storybook/react": "^7.0.24",
-    "@storybook/react-vite": "^7.0.24",
-    "@storybook/test-runner": "^0.11.0",
+    "@storybook/react-vite": "^7.6.17",
+    "@storybook/test-runner": "^0.16.0",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
@@ -47,7 +47,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "^7.0.24"
+    "storybook": "^7.6.17"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
