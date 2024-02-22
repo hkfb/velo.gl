@@ -4,8 +4,7 @@ services:
     image: velo.gl
     build: .
     volumes:
-      - /app/node_modules
-      - ".:/app:ro"
+      - ".:/app:rw"
     ports:
       - "6006:6006"
     healthcheck:
@@ -19,5 +18,5 @@ services:
       storybook:
         condition: service_healthy
     command: >
-      sh -c "npx playwright install-deps
+      sh -c "npm ci && npx playwright install-deps
       && npm run test:storybook -- --url http://storybook:6006/"

@@ -4,5 +4,4 @@ services:
     image: velo.gl
     build: .
     volumes:
-      - /app/node_modules
-      - ".:/app:ro"
+      - ".:/app:rw"
