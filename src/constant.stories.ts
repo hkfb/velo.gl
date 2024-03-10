@@ -1,1 +1,1 @@
- export const TEIDE_ACTIVITY_FILE = "Teide.tcx";
+export const TEIDE_ACTIVITY_FILE = "Teide.tcx";

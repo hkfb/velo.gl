@@ -3,7 +3,6 @@ import { DeckGL } from "@deck.gl/react/typed";
 import { TripGpxLayer } from "./trip-gpx-layer";
 import { GpxHillMap } from "../components/gpx-hill-map";
 import { DEFAULT_GPX_FILE } from "../components/gpx-map";
-import { TEIDE_ACTIVITY_FILE } from "../constant.stories";
 
 export default {
   title: "GPX Trip Layer",
