@@ -9,18 +9,13 @@ export function GpxStreetMapDefault() {
   return <GpxStreetMap />;
 }
 
-export function GpxStreetMapJotunheimenRundt() {
+export function ElTeide() {
   const initialViewState = {
-    longitude: 8.3,
-    latitude: 61.4,
-    zoom: 8,
+    latitude: 28.2,
+    longitude: -16.6,
+    zoom: 10,
   };
-  return (
-    <GpxStreetMap
-      gpx={"Jotunheimen_rundt.gpx"}
-      initialViewState={initialViewState}
-    />
-  );
+  return <GpxStreetMap gpx={"Teide.tcx"} initialViewState={initialViewState} />;
 }
 
 export function GpxStreetMapText() {

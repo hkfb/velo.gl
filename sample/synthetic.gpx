@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="YourApplicationNameHere" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <trk>
+    <name>Example Track</name>
+    <trkseg>
+      <trkpt lat="37.7749" lon="-122.4194">
+        <ele>50</ele>
+      </trkpt>
+      <trkpt lat="34.0522" lon="-118.2437">
+        <ele>71</ele>
+      </trkpt>
+      <trkpt lat="40.7128" lon="-74.0060">
+        <ele>16</ele>
+      </trkpt>
+      <trkpt lat="51.5074" lon="-0.1278">
+        <ele>35</ele>
+      </trkpt>
+      <trkpt lat="48.8566" lon="2.3522">
+        <ele>35</ele>
+      </trkpt>
+      <trkpt lat="35.6895" lon="139.6917">
+        <ele>5</ele>
+      </trkpt>
+      <trkpt lat="-33.8688" lon="151.2093">
+        <ele>3</ele>
+      </trkpt>
+      <trkpt lat="41.9028" lon="12.4964">
+        <ele>13</ele>
+      </trkpt>
+      <trkpt lat="-33.9249" lon="18.4241">
+        <ele>24</ele>
+      </trkpt>
+      <trkpt lat="38.8977" lon="-77.0365">
+        <ele>16</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+

@@ -15,15 +15,15 @@ type Story = StoryObj<typeof GpxMap>;
 
 export const Default: Story = {};
 
-export const JotunheimenRundt: Story = {
+export const ElTeide: Story = {
   args: {
     initialViewState: {
-      longitude: 8.3,
-      latitude: 61.4,
-      zoom: 8,
+      latitude: 28.2,
+      longitude: -16.6,
+      zoom: 10,
     },
 
-    gpx: "Jotunheimen_rundt.gpx",
+    gpx: "Teide.tcx",
   },
 };
 

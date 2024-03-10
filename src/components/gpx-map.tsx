@@ -4,8 +4,7 @@ import { DeckGL, DeckGLProps } from "@deck.gl/react/typed";
 import { LayersList } from "@deck.gl/core/typed";
 import { GpxLayer } from "../layers/gpx-layer";
 
-export const DEFAULT_GPX_FILE =
-  "https://cdn.cyclingstage.com/images/tour-de-france/2023/stage-7-parcours.gpx";
+export const DEFAULT_GPX_FILE = "Jotunheimen_rundt.gpx";
 
 const defaultLayerProps = {
   id: "gpx-layer",
@@ -13,8 +12,8 @@ const defaultLayerProps = {
 };
 
 export const INITIAL_VIEW_STATE = {
-  longitude: -0.48,
-  latitude: 44.2,
+  longitude: 8.3,
+  latitude: 61.4,
   zoom: 8,
 };
 

@@ -74,24 +74,25 @@ TripGpxLayerMap.argTypes = {
   time: { control: { type: "range", min: 1000, max: 46000 } },
 };
 
-export function TripGpxLayerTdf({ time }: { time: number }) {
+export function TripGpxLayerSynthetic({ time }: { time: number }) {
   const layer = React.useMemo(
     () =>
       new TripGpxLayer({
         ...defaultLayerProps,
-        data: DEFAULT_GPX_FILE,
+        data: "synthetic.gpx",
         currentTime: time,
+        trailLength: 100000,
       }),
     [time, defaultLayerProps]
   );
   return (
-    <GpxHillMap gpx={DEFAULT_GPX_FILE} annotationLayers={[layer]}></GpxHillMap>
+    <GpxHillMap gpx={"synthetic.gpx"} annotationLayers={[layer]}></GpxHillMap>
   );
 }
 
-TripGpxLayerTdf.args = { time: 0 };
-TripGpxLayerTdf.argTypes = {
-  time: { control: { type: "range", min: 0, max: 16900 } },
+TripGpxLayerSynthetic.args = { time: 0 };
+TripGpxLayerSynthetic.argTypes = {
+  time: { control: { type: "range", min: 0, max: 6000000 } },
 };
 
 export function TripGpxLayerAnimate({ velocity }: { velocity: number }) {
