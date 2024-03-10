@@ -32,5 +32,5 @@ jobs:
         run: |
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "npx http-server storybook-static --port $PORT -a $HOST" \
-            "npx wait-on http://$HOST:$PORT/ && npm run storybook:test -- --ci --url http://$HOST:$PORT/"
+            "npx wait-on http://$HOST:$PORT/ && npm run test:storybook -- --ci --url http://$HOST:$PORT/"
 
