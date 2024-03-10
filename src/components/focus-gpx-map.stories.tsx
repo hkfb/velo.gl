@@ -20,9 +20,6 @@ FocusGpxMapSelect.args = {
 FocusGpxMapSelect.argTypes = {
   gpxUrl: {
     control: "select",
-    options: [
-      "Jotunheimen_rundt.gpx",
-      "https://cdn.cyclingstage.com/images/tour-de-france/2023/stage-7-parcours.gpx",
-    ],
+    options: ["Jotunheimen_rundt.gpx", "Teide.tcx"],
   },
 };

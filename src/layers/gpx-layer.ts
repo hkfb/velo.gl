@@ -4,12 +4,12 @@ import {
   PathLayer,
 } from "@deck.gl/layers/typed";
 import { Color } from "@deck.gl/core/typed";
-import { GPXLoader } from "@loaders.gl/kml";
+import { GPXLoader, TCXLoader } from "@loaders.gl/kml";
 import * as _ from "lodash";
 
 export class GpxLayer extends GeoJsonLayer {
   constructor(props: GeoJsonLayerProps) {
-    props.loaders = [GPXLoader];
+    props.loaders = [GPXLoader, TCXLoader];
     super(props);
   }
 
