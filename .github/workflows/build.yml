@@ -24,3 +24,13 @@ jobs:
 
       - name: Build Storybook
         run: npm run build-storybook
+
+      - name: Run smoke tests
+        env:
+          PORT: 8080
+          HOST: 127.0.0.1
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port $PORT -a $HOST" \
+            "npx wait-on http://$HOST:$PORT/ && npm run test:storybook -- --ci --url http://$HOST:$PORT/"
+
