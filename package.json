@@ -13,7 +13,7 @@
     "@loaders.gl/kml": "^4.1.1",
     "@turf/bbox": "^6.5.0",
     "@turf/distance": "^6.5.0",
-    "deck.gl": "^8.9.34",
+    "deck.gl": "^8.9.35",
     "lodash": "^4.17.21",
     "maplibre-gl": "^4.0.2",
     "react-map-gl": "^7.1.7"
