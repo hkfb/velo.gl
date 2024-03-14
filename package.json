@@ -2,6 +2,11 @@
   "name": "velo.gl",
   "author": "Håvard Bjerke",
   "license": "MIT",
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
