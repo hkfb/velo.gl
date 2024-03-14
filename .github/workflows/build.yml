@@ -34,3 +34,9 @@ jobs:
             "npx http-server storybook-static --port $PORT -a $HOST" \
             "npx wait-on http://$HOST:$PORT/ && npm run test:storybook -- --ci --url http://$HOST:$PORT/"
 
+      - name: Release
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release --dry-run
