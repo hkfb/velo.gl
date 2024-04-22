@@ -14,7 +14,7 @@
     "sample/velo.gl.webp"
   ],
   "dependencies": {
-    "@deck.gl/geo-layers": "^8.9.34",
+    "@deck.gl/geo-layers": "^9.0.9",
     "@loaders.gl/kml": "^4.1.1",
     "@turf/bbox": "^6.5.0",
     "@turf/distance": "^6.5.0",
