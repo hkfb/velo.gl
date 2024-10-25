@@ -21,6 +21,7 @@
     "deck.gl": "^8.9.35",
     "lodash": "^4.17.21",
     "maplibre-gl": "^4.0.2",
+    "proj4": "^2.13.1",
     "react-map-gl": "^7.1.7"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@storybook/react-vite": "~7.5",
     "@storybook/test-runner": "^0.16.0",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/proj4": "^2.5.5",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.62.0",
