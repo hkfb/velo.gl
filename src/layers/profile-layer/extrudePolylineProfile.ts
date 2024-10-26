@@ -13,16 +13,6 @@ const WebMercator = "EPSG:3857";
  * @param point - A Point3D with x as longitude and y as latitude.
  * @returns A Point3D with x and y in meters.
  */
-export function lngLatToMetersOld(point: Point3D): Point3D {
-    const [x, y] = proj4(WGS84, WebMercator, [point.x, point.y]);
-    return { x, y, z: point.z };
-}
-
-/**
- * Converts geographic coordinates (longitude, latitude) to meters (Web Mercator).
- * @param point - A Point3D with x as longitude and y as latitude.
- * @returns A Point3D with x and y in meters.
- */
 export function lngLatToMeters(point: Point3dTuple): Point3dTuple {
     const [x, y] = proj4(WGS84, WebMercator, [point[0], point[1]]);
     return [x, y, point[2]];
@@ -42,7 +32,6 @@ export function extrudePolylineProfile(
     polyline: Point3dTuple[],
     pathWidth = 3000
 ): { vertices: Point3dTuple[]; indices: number[] } {
-    console.log(polyline);
     const keyedCoordinate = polyline.map(([x, y, z]) => ({
         x,
         y,

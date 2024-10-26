@@ -8,17 +8,24 @@ import {
     lngLatToMeters,
     Point3dTuple,
 } from "./extrudePolylineProfile";
+import { UpdateParameters } from "@deck.gl/core/typed";
 
-export interface ProfileLayerProps extends Omit<SimpleMeshLayerProps, "mesh"> {
+export type ProfileLayerData = Point3dTuple[][];
+
+export interface ProfileLayerProps
+    extends Omit<SimpleMeshLayerProps<ProfileLayerData>, "mesh"> {
     data: Point3dTuple[][];
     width?: number;
 }
 
-export class ProfileLayer extends SimpleMeshLayer {
+export class ProfileLayer extends SimpleMeshLayer<
+    ProfileLayerData,
+    ProfileLayerProps
+> {
     static layerName = "ProfileLayer";
 
-    constructor(props: ProfileLayerProps) {
-        const data = props.data;
+    updateState(args: UpdateParameters<this>) {
+        const data = args.props.data;
         const pathMeterOffset = data.map((polyline) =>
             polyline.map(lngLatToMeters)
         );
@@ -45,7 +52,12 @@ export class ProfileLayer extends SimpleMeshLayer {
             },
         };
 
-        super({ ...props, mesh });
+        const props = {
+            ...args.props,
+            mesh,
+        };
+
+        super.updateState({ ...args, props });
     }
 }
 
