@@ -21,8 +21,8 @@ const initialViewState = {
 };
 
 const POLYLINE: Point3D[] = [
-  { x: 61.45, y: 7.29, z: 10 },
-  { x: 62.46, y: 8.3, z: 10000 },
+  { x: 61.45, y: 7.29, z: 10000 },
+  { x: 62.46, y: 8.3, z: 0 },
   { x: 63.47, y: 8.51, z: 7000 },
   { x: 65.47, y: 9.51, z: 8000 },
 ];
@@ -31,14 +31,16 @@ const polylineMeters = POLYLINE.map(lngLatToMeters);
 
 const PROFILE = extrudePolylineProfile(polylineMeters, 5000);
 const PROFILE_LAT_LONG = PROFILE.vertices.map(metersToLngLat);
-console.log(PROFILE_LAT_LONG);
+//console.log(PROFILE_LAT_LONG);
 
 // Flatten and format the positions and indices
+/*
 const positions = PROFILE_LAT_LONG.map((vertex) => [
   vertex.x,
   vertex.y,
   vertex.z,
 ]);
+*/
 
 const positionsFlat = PROFILE.vertices.flatMap((vertex) => [
   vertex.x,
@@ -62,16 +64,15 @@ export function ProfileLayerDefault() {
       },
     },
     data: [[0, 0, 0]],
-    id: "p",
-    wireframe: true,
+    id: "profile",
+    wireframe: false,
     coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+    pickable: true,
   };
 
   const layer = new ProfileLayer({ ...props });
 
-  //console.log(positions);
-
-  //const pathV = POLYLINE.map((v) => [v.x, v.y, v.z]);
+  /*
   const pathV = positions;
 
   const path = new PathLayer({
@@ -79,14 +80,11 @@ export function ProfileLayerDefault() {
     getPath: (object) => object,
     widthMinPixels: 2,
   });
-
-  //console.log(props);
+  */
 
   return (
     <DeckGL
       layers={[layer]}
-      //layers={[layer, path]}
-      //layers={[/*layer,*/ path]}
       initialViewState={initialViewState}
       controller
     ></DeckGL>
