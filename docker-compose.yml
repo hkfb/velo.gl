@@ -5,3 +5,5 @@ services:
         build: .
         volumes:
             - ".:/app:rw"
+        command: >
+            sh -c "npm run storybook -- --no-open"
