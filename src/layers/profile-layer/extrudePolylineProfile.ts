@@ -30,7 +30,7 @@ export function metersToLngLat(point: Point3dStructured): Point3dStructured {
 
 export function extrudePolylineProfile(
     polyline: Point3d[],
-    pathWidth = 3000
+    pathWidth = 3000,
 ): { vertices: Point3d[]; indices: number[] } {
     const keyedCoordinate = polyline.map(([x, y, z]) => ({
         x,
@@ -39,7 +39,7 @@ export function extrudePolylineProfile(
     }));
     const { vertices, indices } = extrudePolylineToRoad(
         keyedCoordinate,
-        pathWidth
+        pathWidth,
     );
     const unstructuredVertices: Point3d[] = vertices.map(({ x, y, z }) => [
         x,
@@ -58,7 +58,7 @@ export function extrudePolylineProfile(
  */
 export function extrudePolylineToRoad(
     polyline: Point3dStructured[],
-    roadWidth: number
+    roadWidth: number,
 ): Geometry {
     const vertices: Point3dStructured[] = [];
     const indices: number[] = [];
@@ -84,7 +84,7 @@ export function extrudePolylineToRoad(
         const length = Math.hypot(dir.x, dir.y);
         if (length === 0) {
             throw new Error(
-                `Zero-length segment between points ${i} and ${i + 1}.`
+                `Zero-length segment between points ${i} and ${i + 1}.`,
             );
         }
         // Normalize direction
