@@ -27,15 +27,15 @@ export class ProfileLayer extends SimpleMeshLayer<
     updateState(args: UpdateParameters<this>) {
         const data = args.props.data;
         const pathMeterOffset = data.map((polyline) =>
-            polyline.map(lngLatToMeters)
+            polyline.map(lngLatToMeters),
         );
 
         const extrudedProfile = pathMeterOffset.map((polyline) =>
-            extrudePolylineProfile(polyline)
+            extrudePolylineProfile(polyline),
         );
 
         const verticesFlat = extrudedProfile.map((profile) =>
-            profile.vertices.flatMap(([x, y, z]) => [x, y, z])
+            profile.vertices.flatMap(([x, y, z]) => [x, y, z]),
         );
 
         const positionsBuffer = new Float32Array(verticesFlat[0]);

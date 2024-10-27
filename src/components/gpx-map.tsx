@@ -58,7 +58,7 @@ export function GpxMap({
                 data: gpx,
                 onDataLoad: onGpxLoad,
             }),
-        [defaultLayerProps, gpx]
+        [defaultLayerProps, gpx],
     );
 
     return (

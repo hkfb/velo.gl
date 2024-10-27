@@ -41,7 +41,7 @@ export function TripGpxLayerTime({ time }: { time: number }) {
                 ...defaultLayerProps,
                 currentTime: time,
             }),
-        [time, defaultLayerProps]
+        [time, defaultLayerProps],
     );
     return (
         <DeckGL
@@ -64,7 +64,7 @@ export function TripGpxLayerMap({ time }: { time: number }) {
                 ...defaultLayerProps,
                 currentTime: time,
             }),
-        [time, defaultLayerProps]
+        [time, defaultLayerProps],
     );
     return <GpxHillMap gpx={gpxFile} annotationLayers={[layer]}></GpxHillMap>;
 }
@@ -83,7 +83,7 @@ export function TripGpxLayerSynthetic({ time }: { time: number }) {
                 currentTime: time,
                 trailLength: 100000,
             }),
-        [time, defaultLayerProps]
+        [time, defaultLayerProps],
     );
     return (
         <GpxHillMap
@@ -118,7 +118,7 @@ export function TripGpxLayerAnimate({ velocity }: { velocity: number }) {
                 currentTime: date,
                 velocity: velocity,
             }),
-        [date, defaultLayerProps, velocity]
+        [date, defaultLayerProps, velocity],
     );
     return (
         <GpxHillMap

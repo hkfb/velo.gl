@@ -7,7 +7,7 @@ import distance from "@turf/distance";
 
 function calcTimestamps(times: string[] | undefined) {
     const t = times?.map(
-        (time: string) => new Date(time).getTime() / 1000 - 1561748779
+        (time: string) => new Date(time).getTime() / 1000 - 1561748779,
     );
     return t;
 }

@@ -9,6 +9,8 @@ services:
             - "6006:6006"
         healthcheck:
             test: curl --fail http://localhost:6006/
+        command: >
+            sh -c "npm run storybook -- --no-open"
     test-storybook:
         image: velo.gl
         volumes:
@@ -18,5 +20,5 @@ services:
             storybook:
                 condition: service_healthy
         command: >
-            sh -c "npm ci && npx playwright install-deps
+            sh -c "npm ci && npx playwright install-deps && npx playwright install
             && npm run test:storybook -- --url http://storybook:6006/"

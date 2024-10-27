@@ -21,7 +21,7 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
             const viewport = info.layer.context.viewport as WebMercatorViewport;
             const bounds = _.chunk(bbox(data), 2) as [
                 [number, number],
-                [number, number]
+                [number, number],
             ];
             const fit = viewport.fitBounds(bounds, { padding: 20 });
             const { longitude, latitude, zoom } = fit;
@@ -33,7 +33,7 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
                 transitionInterpolator: new FlyToInterpolator(),
             });
         },
-        [setViewState]
+        [setViewState],
     );
 
     return GpxMap({
