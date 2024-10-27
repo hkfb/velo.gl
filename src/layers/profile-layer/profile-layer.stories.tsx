@@ -5,7 +5,7 @@ import { Point3D, Point3dTuple } from "./extrudePolylineProfile";
 import { COORDINATE_SYSTEM } from "@deck.gl/core/typed";
 
 export default {
-    title: "Profile Layer",
+    title: "Layers / Profile Layer",
 };
 
 const initialViewState = {

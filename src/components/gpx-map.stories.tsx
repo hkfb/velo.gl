@@ -4,9 +4,9 @@ import { GpxMap, DEFAULT_GPX_FILE } from "./gpx-map";
 import { TripGpxLayer } from "../layers/trip-gpx-layer";
 
 const meta: Meta<typeof GpxMap> = {
-  title: "GPX Map",
-  tags: ["autodocs"],
-  component: GpxMap,
+    title: "GPX Map",
+    tags: ["autodocs"],
+    component: GpxMap,
 };
 
 export default meta;
@@ -16,29 +16,29 @@ type Story = StoryObj<typeof GpxMap>;
 export const Default: Story = {};
 
 export const ElTeide: Story = {
-  args: {
-    initialViewState: {
-      latitude: 28.2,
-      longitude: -16.6,
-      zoom: 10,
-    },
+    args: {
+        initialViewState: {
+            latitude: 28.2,
+            longitude: -16.6,
+            zoom: 10,
+        },
 
-    gpx: "Teide.tcx",
-  },
+        gpx: "Teide.tcx",
+    },
 };
 
 export function GpxMapText() {
-  return (
-    <GpxMap>
-      <div>Text</div>
-    </GpxMap>
-  );
+    return (
+        <GpxMap>
+            <div>Text</div>
+        </GpxMap>
+    );
 }
 
 export const AnnotationLayer: Story = {
-  args: {
-    annotationLayers: [
-      new TripGpxLayer({ id: "trip", data: DEFAULT_GPX_FILE }),
-    ],
-  },
+    args: {
+        annotationLayers: [
+            new TripGpxLayer({ id: "trip", data: DEFAULT_GPX_FILE }),
+        ],
+    },
 };
