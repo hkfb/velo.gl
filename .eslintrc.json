@@ -1,48 +1,48 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true
-  },
-  "extends": [
-    "plugin:react/recommended",
-    "eslint:recommended",
-    "plugin:prettier/recommended"
-  ],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "plugins": ["@typescript-eslint"],
-      "extends": [
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
+        "eslint:recommended",
         "plugin:prettier/recommended"
-      ]
+    ],
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "plugins": ["@typescript-eslint"],
+            "extends": [
+                "plugin:react/recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:prettier/recommended"
+            ]
+        },
+        {
+            "files": ["*.stories.tsx"],
+            "rules": {
+                "import/no-extraneous-dependencies": "off"
+            }
+        },
+        {
+            "files": ["*.yml"],
+            "parser": "yaml-eslint-parser",
+            "plugins": ["eslint-plugin-yml"],
+            "extends": ["plugin:yml/prettier"]
+        }
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
     },
-    {
-      "files": ["*.stories.tsx"],
-      "rules": {
-        "import/no-extraneous-dependencies": "off"
-      }
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 14,
+        "sourceType": "module"
     },
-    {
-      "files": ["*.yml"],
-      "parser": "yaml-eslint-parser",
-      "plugins": ["eslint-plugin-yml"],
-      "extends": ["plugin:yml/standard"]
-    }
-  ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 14,
-    "sourceType": "module"
-  },
-  "plugins": ["react", "@typescript-eslint"],
-  "rules": {}
+    "plugins": ["react", "@typescript-eslint"],
+    "rules": {}
 }
