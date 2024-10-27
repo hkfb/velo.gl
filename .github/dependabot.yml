@@ -12,3 +12,13 @@ updates:
     commit-message:
       prefix: fix
       prefix-development: chore
+    groups:
+      deck.gl:
+        applies-to: version-updates
+        patterns:
+          - "@deck.gl/*"
+      storybook:
+        applies-to: version-updates
+        patterns:
+          - "@storybook/*"
+          - "storybook"
