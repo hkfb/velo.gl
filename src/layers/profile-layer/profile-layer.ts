@@ -6,15 +6,15 @@ import { COORDINATE_SYSTEM } from "@deck.gl/core/typed";
 import {
     extrudePolylineProfile,
     lngLatToMeters,
-    Point3dTuple,
+    Point3d,
 } from "./extrudePolylineProfile";
 import { UpdateParameters } from "@deck.gl/core/typed";
 
-export type ProfileLayerData = Point3dTuple[][];
+export type ProfileLayerData = Point3d[][];
 
 export interface ProfileLayerProps
     extends Omit<SimpleMeshLayerProps<ProfileLayerData>, "mesh"> {
-    data: Point3dTuple[][];
+    data: Point3d[][];
     width?: number;
 }
 

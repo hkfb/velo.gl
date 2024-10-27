@@ -2,17 +2,17 @@ import * as React from "react";
 import { GpxMaptiler } from "./gpx-maptiler";
 
 export default {
-  title: "GPX Maptiler",
+    title: "GPX Maptiler",
 };
 
 export function GpxMaptilerDefault() {
-  return <GpxMaptiler></GpxMaptiler>;
+    return <GpxMaptiler></GpxMaptiler>;
 }
 
 export function GpxMaptilerText() {
-  return (
-    <GpxMaptiler>
-      <div>GPX Map Tiler story</div>
-    </GpxMaptiler>
-  );
+    return (
+        <GpxMaptiler>
+            <div>GPX Map Tiler story</div>
+        </GpxMaptiler>
+    );
 }

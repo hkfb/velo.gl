@@ -6,6 +6,6 @@ import { HillLayer } from "../layers/hill-layer";
  * Renders a GPX trace on top of a satellite terrain map.
  */
 export function GpxHillMap(args: FocusGpxMapProps) {
-  const baseLayer = new HillLayer();
-  return <FocusGpxMap {...args} baseLayers={[baseLayer]} />;
+    const baseLayer = new HillLayer();
+    return <FocusGpxMap {...args} baseLayers={[baseLayer]} />;
 }

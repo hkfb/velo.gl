@@ -1,6 +1,6 @@
-export type Point3D = { x: number; y: number; z: number };
-export type Point3dTuple = [number, number, number];
-type Geometry = { vertices: Point3D[]; indices: number[] };
+export type Point3d = [number, number, number];
+type Geometry = { vertices: Point3dStructured[]; indices: number[] };
+type Point3dStructured = { x: number; y: number; z: number };
 
 import proj4 from "proj4";
 
@@ -13,7 +13,7 @@ const WebMercator = "EPSG:3857";
  * @param point - A Point3D with x as longitude and y as latitude.
  * @returns A Point3D with x and y in meters.
  */
-export function lngLatToMeters(point: Point3dTuple): Point3dTuple {
+export function lngLatToMeters(point: Point3d): Point3d {
     const [x, y] = proj4(WGS84, WebMercator, [point[0], point[1]]);
     return [x, y, point[2]];
 }
@@ -23,15 +23,15 @@ export function lngLatToMeters(point: Point3dTuple): Point3dTuple {
  * @param point - A Point3D with x and y in meters.
  * @returns A Point3D with x as longitude and y as latitude.
  */
-export function metersToLngLat(point: Point3D): Point3D {
+export function metersToLngLat(point: Point3dStructured): Point3dStructured {
     const [x, y] = proj4(WebMercator, WGS84, [point.x, point.y]);
     return { x, y, z: point.z };
 }
 
 export function extrudePolylineProfile(
-    polyline: Point3dTuple[],
+    polyline: Point3d[],
     pathWidth = 3000
-): { vertices: Point3dTuple[]; indices: number[] } {
+): { vertices: Point3d[]; indices: number[] } {
     const keyedCoordinate = polyline.map(([x, y, z]) => ({
         x,
         y,
@@ -41,7 +41,7 @@ export function extrudePolylineProfile(
         keyedCoordinate,
         pathWidth
     );
-    const unstructuredVertices: Point3dTuple[] = vertices.map(({ x, y, z }) => [
+    const unstructuredVertices: Point3d[] = vertices.map(({ x, y, z }) => [
         x,
         y,
         z,
@@ -57,10 +57,10 @@ export function extrudePolylineProfile(
  * @returns An object containing vertices and indices representing the tessellated road geometry.
  */
 export function extrudePolylineToRoad(
-    polyline: Point3D[],
+    polyline: Point3dStructured[],
     roadWidth: number
 ): Geometry {
-    const vertices: Point3D[] = [];
+    const vertices: Point3dStructured[] = [];
     const indices: number[] = [];
 
     const n = polyline.length;
@@ -68,11 +68,11 @@ export function extrudePolylineToRoad(
         throw new Error("Polyline must have at least 2 points.");
     }
 
-    const leftOffsets: Point3D[] = [];
-    const rightOffsets: Point3D[] = [];
+    const leftOffsets: Point3dStructured[] = [];
+    const rightOffsets: Point3dStructured[] = [];
 
     // Precompute segment directions and normals
-    const segmentDirections: Point3D[] = [];
+    const segmentDirections: Point3dStructured[] = [];
     for (let i = 0; i < n - 1; i++) {
         const p0 = polyline[i];
         const p1 = polyline[i + 1];
@@ -93,7 +93,7 @@ export function extrudePolylineToRoad(
 
     // Compute mitered offsets at each vertex
     for (let i = 0; i < n; i++) {
-        let normal: Point3D;
+        let normal: Point3dStructured;
         let miterLength = roadWidth / 2;
 
         if (i === 0) {
@@ -110,7 +110,6 @@ export function extrudePolylineToRoad(
             const dirNext = segmentDirections[i];
 
             // Compute angle between segments
-            const cosTheta = dirPrev.x * dirNext.x + dirPrev.y * dirNext.y;
             const sinTheta = dirPrev.x * dirNext.y - dirPrev.y * dirNext.x;
 
             // Miter vector is sum of normals of adjacent segments

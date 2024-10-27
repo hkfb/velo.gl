@@ -1,7 +1,7 @@
 version: "3"
 services:
-  storybook:
-    image: velo.gl
-    build: .
-    volumes:
-      - ".:/app:rw"
+    storybook:
+        image: velo.gl
+        build: .
+        volumes:
+            - ".:/app:rw"

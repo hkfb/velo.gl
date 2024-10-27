@@ -4,23 +4,23 @@ import { StreetLayer } from "../layers/street-layer";
 import { MapViewState } from "@deck.gl/core/typed";
 
 export type GpxStreetMapProps = {
-  children?: React.ReactNode;
-  gpx?: string;
-  initialViewState?: MapViewState;
+    children?: React.ReactNode;
+    gpx?: string;
+    initialViewState?: MapViewState;
 };
 
 export function GpxStreetMap({
-  children,
-  gpx,
-  initialViewState,
+    children,
+    gpx,
+    initialViewState,
 }: GpxStreetMapProps) {
-  return (
-    <GpxMap
-      gpx={gpx}
-      initialViewState={initialViewState}
-      auxLayers={[new StreetLayer()]}
-    >
-      {children}
-    </GpxMap>
-  );
+    return (
+        <GpxMap
+            gpx={gpx}
+            initialViewState={initialViewState}
+            auxLayers={[new StreetLayer()]}
+        >
+            {children}
+        </GpxMap>
+    );
 }
