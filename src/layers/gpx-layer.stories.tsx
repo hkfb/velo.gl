@@ -27,7 +27,7 @@ const defaultLayerProps = {
 export function GPXLayerDefault() {
     const layer = useMemo(
         () => new GpxLayer(defaultLayerProps),
-        [defaultLayerProps]
+        [defaultLayerProps],
     );
 
     return (
@@ -47,7 +47,7 @@ export function GPXLayerLineStyle() {
                 lineWidthMinPixels: 5,
                 getLineColor: [0, 0, 200],
             }),
-        [defaultLayerProps]
+        [defaultLayerProps],
     );
 
     return (
@@ -65,7 +65,7 @@ export function GpxWms() {
             new GpxLayer({
                 ...defaultLayerProps,
             }),
-        [defaultLayerProps]
+        [defaultLayerProps],
     );
 
     const layers = [gpxLayer, new StreetLayer()];
@@ -87,7 +87,7 @@ export function GpxSatteliteTerrain() {
 
     const gpxLayer = useMemo(
         () => new GpxLayer({ ...layerProps }),
-        [layerProps]
+        [layerProps],
     );
 
     const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
@@ -114,7 +114,7 @@ export function GpxSatteliteTerrain() {
                 wireframe: false,
                 color: [255, 255, 255],
             }),
-        [ELEVATION_DECODER, TERRAIN_IMAGE, SURFACE_IMAGE]
+        [ELEVATION_DECODER, TERRAIN_IMAGE, SURFACE_IMAGE],
     );
 
     const layers = [gpxLayer, terrainLayer];
@@ -136,7 +136,7 @@ export function GpxSatteliteTerrain() {
 export function GpxMapTerrain() {
     const gpxLayer = useMemo(
         () => new GpxLayer(defaultLayerProps),
-        [defaultLayerProps]
+        [defaultLayerProps],
     );
 
     const [API_KEY] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
