@@ -50,6 +50,7 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-yml": "^1.12.2",
+        "jest-image-snapshot": "^6.4.0",
         "playwright": "^1.48.2",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
