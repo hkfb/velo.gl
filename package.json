@@ -67,6 +67,5 @@
         "lint": "npm run lint:typecheck && eslint \"**\"",
         "lint:fix": "eslint \"**\" --fix"
     },
-    "prepack": "npm run build",
     "version": "0.6.0"
 }
