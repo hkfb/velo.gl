@@ -1,5 +1,4 @@
 import { toMatchImageSnapshot } from "jest-image-snapshot";
-import { jest, expect } from "@jest/globals";
 
 import { getStoryContext, type TestRunnerConfig } from "@storybook/test-runner";
 
