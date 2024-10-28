@@ -39,6 +39,10 @@ jobs:
             "npx http-server storybook-static --port $PORT -a $HOST" \
             "npx wait-on http://$HOST:$PORT/ && npm run test:storybook -- --ci --url http://$HOST:$PORT/"
 
+      - name: Build package
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: npm run build
+
       - name: Release
         if: ${{ github.ref == 'refs/heads/main' }}
         env:

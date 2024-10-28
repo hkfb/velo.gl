@@ -9,10 +9,7 @@
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "files": [
-        "dist",
-        "sample/velo.gl.webp"
-    ],
+    "files": ["dist"],
     "dependencies": {
         "@deck.gl/geo-layers": "^8.9.34",
         "@loaders.gl/kml": "^4.1.1",
@@ -68,8 +65,8 @@
         "docker:compose:test": "docker-compose -f docker-compose.test.yml up --build",
         "lint:typecheck": "tsc --project tsconfig.lint.json --noEmit",
         "lint": "npm run lint:typecheck && eslint \"**\"",
-        "lint:fix": "eslint \"**\" --fix",
-        "test:storybook": "test-storybook"
+        "lint:fix": "eslint \"**\" --fix"
     },
+    "prepack": "npm run build",
     "version": "0.6.0"
 }
