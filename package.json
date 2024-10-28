@@ -9,7 +9,9 @@
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "dependencies": {
         "@deck.gl/geo-layers": "^8.9.34",
         "@loaders.gl/kml": "^4.1.1",
