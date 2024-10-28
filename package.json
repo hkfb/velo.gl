@@ -10,8 +10,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "sample/velo.gl.webp"
+        "dist"
     ],
     "dependencies": {
         "@deck.gl/geo-layers": "^8.9.34",
