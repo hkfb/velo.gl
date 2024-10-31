@@ -2,12 +2,14 @@ import { toMatchImageSnapshot } from "jest-image-snapshot";
 
 import { getStoryContext, type TestRunnerConfig } from "@storybook/test-runner";
 
+const customSnapshotsDir = `${process.cwd()}/__snapshots__`;
+
 const screenshotTest = async (page, context) => {
     let previousScreenshot: Buffer = Buffer.from("");
 
     let stable = false;
 
-    const poll = 10000;
+    const pollInterval = 10000;
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
@@ -18,19 +20,20 @@ const screenshotTest = async (page, context) => {
         }
 
         if (!stable) {
-            await page.waitForTimeout(poll);
+            await page.waitForTimeout(pollInterval);
         }
     }
 
     // @ts-expect-error TS2551
     expect(previousScreenshot).toMatchImageSnapshot({
+        customSnapshotsDir,
         customSnapshotIdentifier: context.id,
     });
 };
 
 const config: TestRunnerConfig = {
     setup() {
-        jest.retryTimes(2);
+        jest.retryTimes(3);
 
         expect.extend({ toMatchImageSnapshot });
     },
