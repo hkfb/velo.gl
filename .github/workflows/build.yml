@@ -45,6 +45,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
 
+      - name: Install docker compose
+        run: apt install docker-compose
+
       - name: Install dependencies
         run: npm ci
 
