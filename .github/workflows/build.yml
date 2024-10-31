@@ -46,7 +46,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install docker compose
-        run: apt install docker-compose
+        run: sudo apt-get -y install docker-compose
 
       - name: Install dependencies
         run: npm ci
