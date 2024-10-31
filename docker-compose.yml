@@ -4,7 +4,7 @@ services:
         image: velo.gl-storybook
         build: .
         volumes:
-            - ".:/app:ro"
+            - ".:/app:rw"
         ports:
             - "6006:6006"
         healthcheck:
@@ -36,5 +36,5 @@ services:
             storybook:
                 condition: service_healthy
         command: >
-            sh -c "npm run test:storybook -- --updateSnapshot --verbose --url http://storybook:6006/"
+            sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
 
