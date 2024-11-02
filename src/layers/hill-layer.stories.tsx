@@ -11,6 +11,7 @@ const INITIAL_VIEW_STATE = {
 
 export default {
     title: "Hill Layer",
+    tags: ["no-visual-test"],
 };
 
 export function HillLayerDefault() {
