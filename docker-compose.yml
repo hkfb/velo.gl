@@ -15,8 +15,8 @@ services:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
         volumes:
-            - ".:/app:ro"
-            - "./__snapshots__:/app/__snapshots__:rw"
+            - ".:/app:rw"
+              #- "./__snapshots__:/app/__snapshots__:rw"
         #working_dir: /app
         user: ubuntu
         depends_on:
