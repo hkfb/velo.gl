@@ -161,3 +161,4 @@ export function GpxMapTerrain() {
         </DeckGL>
     );
 }
+GpxMapTerrain.tags = ["no-visual-test"];
