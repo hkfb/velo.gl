@@ -11,12 +11,13 @@ services:
             test: curl --fail http://localhost:6006/
         command: >
             sh -c "npm run storybook -- --no-open"
+
     test-storybook:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
         volumes:
-            - ".:/app:rw"
-              #- "./__snapshots__:/app/__snapshots__:rw"
+            - ".:/app:ro"
+            - "./__snapshots__:/app/__snapshots__:rw"
         working_dir: /app
         user: ubuntu
         depends_on:
@@ -24,6 +25,7 @@ services:
                 condition: service_healthy
         command: >
             sh -c "npm run test:storybook -- --ci --url http://storybook:6006/"
+
     test-storybook-update:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
@@ -37,12 +39,13 @@ services:
                 condition: service_healthy
         command: >
             sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
+
     test-storybook-github:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
+        environment: MAPTILER_API_KEY
         volumes:
             - ".:/app:rw"
-              #- "./__snapshots__:/app/__snapshots__:rw"
         working_dir: /app
         user: root
         depends_on:

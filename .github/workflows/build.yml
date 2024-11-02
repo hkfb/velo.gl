@@ -52,5 +52,7 @@ jobs:
         run: npm ci
 
       - name: Storybook visual tests
+        env:
+          VITE_MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
         run: npm run docker:compose:test:github
 
