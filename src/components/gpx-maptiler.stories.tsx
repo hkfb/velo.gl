@@ -3,6 +3,7 @@ import { GpxMaptiler } from "./gpx-maptiler";
 
 export default {
     title: "GPX Maptiler",
+    tags: ["no-visual-test"],
 };
 
 export function GpxMaptilerDefault() {

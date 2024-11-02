@@ -6,9 +6,10 @@ import { GpxLayer } from "./gpx-layer";
 import { TerrainLayer } from "@deck.gl/geo-layers/typed";
 import { GeoJsonLayerProps } from "@deck.gl/layers/typed";
 import { Map } from "react-map-gl/maplibre";
+import type { StoryObj } from "@storybook/react";
 
 export default {
-    title: "GPX Layer",
+    title: "Layers / GPX Layer",
 };
 
 const gpxFile = "Jotunheimen_rundt.gpx";
@@ -79,59 +80,62 @@ export function GpxWms() {
     );
 }
 
-export function GpxSatteliteTerrain() {
-    const layerProps: GeoJsonLayerProps = {
-        ...defaultLayerProps,
-        getLineColor: [255, 255, 0],
-    };
+export const GpxSatteliteTerrain: StoryObj = {
+    render: () => {
+        const layerProps: GeoJsonLayerProps = {
+            ...defaultLayerProps,
+            getLineColor: [255, 255, 0],
+        };
 
-    const gpxLayer = useMemo(
-        () => new GpxLayer({ ...layerProps }),
-        [layerProps],
-    );
+        const gpxLayer = useMemo(
+            () => new GpxLayer({ ...layerProps }),
+            [layerProps],
+        );
 
-    const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
+        const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
 
-    const TERRAIN_IMAGE = `https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=${key}`;
-    const SURFACE_IMAGE = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${key}`;
+        const TERRAIN_IMAGE = `https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=${key}`;
+        const SURFACE_IMAGE = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${key}`;
 
-    const ELEVATION_DECODER = {
-        rScaler: 6553.6,
-        gScaler: 25.6,
-        bScaler: 0.1,
-        offset: -10000,
-    };
+        const ELEVATION_DECODER = {
+            rScaler: 6553.6,
+            gScaler: 25.6,
+            bScaler: 0.1,
+            offset: -10000,
+        };
 
-    const terrainLayer = useMemo(
-        () =>
-            new TerrainLayer({
-                id: "terrain",
-                minZoom: 0,
-                maxZoom: 12,
-                elevationDecoder: ELEVATION_DECODER,
-                elevationData: TERRAIN_IMAGE,
-                texture: SURFACE_IMAGE,
-                wireframe: false,
-                color: [255, 255, 255],
-            }),
-        [ELEVATION_DECODER, TERRAIN_IMAGE, SURFACE_IMAGE],
-    );
+        const terrainLayer = useMemo(
+            () =>
+                new TerrainLayer({
+                    id: "terrain",
+                    minZoom: 0,
+                    maxZoom: 12,
+                    elevationDecoder: ELEVATION_DECODER,
+                    elevationData: TERRAIN_IMAGE,
+                    texture: SURFACE_IMAGE,
+                    wireframe: false,
+                    color: [255, 255, 255],
+                }),
+            [ELEVATION_DECODER, TERRAIN_IMAGE, SURFACE_IMAGE],
+        );
 
-    const layers = [gpxLayer, terrainLayer];
+        const layers = [gpxLayer, terrainLayer];
 
-    const pitchedViewState = {
-        ...initialViewState,
-        pitch: 45,
-    };
+        const pitchedViewState = {
+            ...initialViewState,
+            pitch: 45,
+        };
 
-    return (
-        <DeckGL
-            layers={layers}
-            initialViewState={pitchedViewState}
-            controller
-        ></DeckGL>
-    );
-}
+        return (
+            <DeckGL
+                layers={layers}
+                initialViewState={pitchedViewState}
+                controller
+            ></DeckGL>
+        );
+    },
+    tags: ["no-visual-test"],
+};
 
 export function GpxMapTerrain() {
     const gpxLayer = useMemo(
@@ -157,3 +161,4 @@ export function GpxMapTerrain() {
         </DeckGL>
     );
 }
+GpxMapTerrain.tags = ["no-visual-test"];

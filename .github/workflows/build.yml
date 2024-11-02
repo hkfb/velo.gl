@@ -24,21 +24,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Storybook
-        run: npm run build-storybook
-
-      - name: Install Playwright browsers
-        run: npx playwright install
-
-      - name: Run smoke tests
-        env:
-          PORT: 8080
-          HOST: 127.0.0.1
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "npx http-server storybook-static --port $PORT -a $HOST" \
-            "npx wait-on http://$HOST:$PORT/ && npm run test:storybook -- --ci --url http://$HOST:$PORT/"
-
       - name: Build package
         if: ${{ github.ref == 'refs/heads/main' }}
         run: npm run build
@@ -49,3 +34,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install docker compose
+        run: sudo apt-get -y install docker-compose
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Storybook visual tests
+        env:
+          VITE_MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
+        run: npm run docker:compose:test:github
+

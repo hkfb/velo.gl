@@ -2,6 +2,13 @@
     "name": "velo.gl",
     "author": "Håvard Bjerke",
     "license": "MIT",
+    "keywords": [
+        "gpx",
+        "webgl",
+        "visualization",
+        "react",
+        "deck.gl"
+    ],
     "release": {
         "branches": [
             "main"
@@ -34,6 +41,7 @@
         "@storybook/react-vite": "^8.3.6",
         "@storybook/test": "^8.3.6",
         "@storybook/test-runner": "^0.19.1",
+        "@types/jest": "^29.5.14",
         "@types/proj4": "^2.5.5",
         "@types/react-dom": "^18.3.1",
         "@typescript-eslint/eslint-plugin": "^5.60.1",
@@ -50,6 +58,7 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-yml": "^1.12.2",
+        "jest-image-snapshot": "^6.4.0",
         "playwright": "^1.48.2",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
@@ -63,8 +72,10 @@
         "build-storybook": "storybook build",
         "docker": "docker run --rm -it --user node --mount type=bind,source=\"$(pwd)\",target=/app $(docker build -q .)",
         "docker:storybook": "npm run docker -- npm run storybook -- --no-open",
-        "docker:compose:storybook": "docker-compose up --build",
-        "docker:compose:test": "docker-compose -f docker-compose.test.yml up --build",
+        "docker:compose:storybook": "docker-compose up --build storybook",
+        "docker:compose:test": "docker-compose run test-storybook",
+        "docker:compose:test:github": "docker-compose run test-storybook-github",
+        "docker:compose:test:update": "docker-compose run test-storybook-update",
         "lint:typecheck": "tsc --project tsconfig.lint.json --noEmit",
         "lint": "npm run lint:typecheck && eslint \"**\"",
         "lint:fix": "eslint \"**\" --fix",

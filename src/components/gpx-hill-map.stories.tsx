@@ -10,10 +10,13 @@ export default meta;
 
 type Story = StoryObj<typeof GpxHillMap>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ["no-visual-test"],
+};
 
 export const JotunheimenRundt: Story = {
     args: {
         gpx: "Jotunheimen_rundt.gpx",
     },
+    tags: ["no-visual-test"],
 };
