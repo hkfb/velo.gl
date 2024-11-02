@@ -3,6 +3,8 @@ services:
     storybook:
         image: velo.gl-storybook
         build: .
+        environment:
+            - MAPTILER_API_KEY
         volumes:
             - ".:/app:rw"
         ports:
@@ -43,8 +45,6 @@ services:
     test-storybook-github:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
-        environment:
-            - MAPTILER_API_KEY
         volumes:
             - ".:/app:rw"
         working_dir: /app
