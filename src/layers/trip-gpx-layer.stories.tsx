@@ -33,6 +33,7 @@ export function TripGpxLayerDefault() {
         ></DeckGL>
     );
 }
+TripGpxLayerDefault.tags = ["no-visual-test"];
 
 export function TripGpxLayerTime({ time }: { time: number }) {
     const layer = React.useMemo(
@@ -56,6 +57,7 @@ TripGpxLayerTime.args = { time: 10000 };
 TripGpxLayerTime.argTypes = {
     time: { control: { type: "range", min: 1000, max: 10000 } },
 };
+TripGpxLayerTime.tags = ["no-visual-test"];
 
 export function TripGpxLayerMap({ time }: { time: number }) {
     const layer = React.useMemo(
