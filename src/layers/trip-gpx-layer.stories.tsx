@@ -5,7 +5,7 @@ import { GpxHillMap } from "../components/gpx-hill-map";
 import { DEFAULT_GPX_FILE } from "../components/gpx-map";
 
 export default {
-    title: "GPX Trip Layer",
+    title: "Layers / GPX Trip Layer",
 };
 
 const gpxFile = "Jotunheimen_rundt.gpx";
@@ -73,6 +73,7 @@ TripGpxLayerMap.args = { time: 1000 };
 TripGpxLayerMap.argTypes = {
     time: { control: { type: "range", min: 1000, max: 46000 } },
 };
+TripGpxLayerMap.tags = ["no-visual-test"];
 
 export function TripGpxLayerSynthetic({ time }: { time: number }) {
     const layer = React.useMemo(
@@ -97,6 +98,7 @@ TripGpxLayerSynthetic.args = { time: 0 };
 TripGpxLayerSynthetic.argTypes = {
     time: { control: { type: "range", min: 0, max: 6000000 } },
 };
+TripGpxLayerSynthetic.tags = ["no-visual-test"];
 
 export function TripGpxLayerAnimate({ velocity }: { velocity: number }) {
     const [date, setDate] = React.useState(0);
@@ -132,3 +134,4 @@ TripGpxLayerAnimate.args = { velocity: 10 };
 TripGpxLayerAnimate.argTypes = {
     velocity: { control: { type: "range", min: 0, max: 30 } },
 };
+TripGpxLayerAnimate.tags = ["no-visual-test"];
