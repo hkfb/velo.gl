@@ -2,6 +2,7 @@
     "name": "velo.gl",
     "author": "Håvard Bjerke",
     "license": "MIT",
+    "keywords": ["gpx", "webgl", "visualization", "react", "deck.gl"],
     "release": {
         "branches": [
             "main"
