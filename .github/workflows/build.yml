@@ -52,5 +52,5 @@ jobs:
         run: npm ci
 
       - name: Storybook visual tests
-        run: npm run docker:compose:test
+        run: npm run docker:compose:test:github
 

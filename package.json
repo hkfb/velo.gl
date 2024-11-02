@@ -67,6 +67,7 @@
         "docker:storybook": "npm run docker -- npm run storybook -- --no-open",
         "docker:compose:storybook": "docker-compose up --build storybook",
         "docker:compose:test": "docker-compose up --build test-storybook",
+        "docker:compose:test:github": "docker-compose up --build test-storybook-github",
         "docker:compose:test:update": "docker-compose up --build test-storybook-update",
         "lint:typecheck": "tsc --project tsconfig.lint.json --noEmit",
         "lint": "npm run lint:typecheck && eslint \"**\"",

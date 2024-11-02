@@ -37,4 +37,16 @@ services:
                 condition: service_healthy
         command: >
             sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
-
+    test-storybook-github:
+        image: velo.gl-test-storybook
+        build: ./config/test-storybook
+        volumes:
+            - ".:/app:rw"
+              #- "./__snapshots__:/app/__snapshots__:rw"
+        working_dir: /app
+        user: root
+        depends_on:
+            storybook:
+                condition: service_healthy
+        command: >
+            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/"
