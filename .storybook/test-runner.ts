@@ -45,7 +45,7 @@ const config: TestRunnerConfig = {
             return;
         }
 
-        if (!storyContext.tags.includes("no-screenshot-test")) {
+        if (!storyContext.tags.includes("no-visual-test")) {
             await screenshotTest(page, context);
         }
     },
