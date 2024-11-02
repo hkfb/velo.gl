@@ -1,13 +1,24 @@
 import * as React from "react";
 import { FocusGpxMap } from "./focus-gpx-map";
+import type { Meta, StoryObj } from "@storybook/react";
 
-export default {
-    title: "Focus GPX Map",
+type Story = StoryObj<typeof FocusGpxMap>;
+
+const meta: Meta<typeof FocusGpxMap> = {
+    tags: ["autodocs"],
+    component: FocusGpxMap,
+    parameters: {
+        docs: {
+            story: {
+                height: "400px",
+            },
+        },
+    },
 };
 
-export function FocusGpxMapDefault() {
-    return <FocusGpxMap></FocusGpxMap>;
-}
+export default meta;
+
+export const Default: Story = {};
 
 export function FocusGpxMapSelect({ gpxUrl }: { gpxUrl: string }) {
     return <FocusGpxMap gpx={gpxUrl}></FocusGpxMap>;

@@ -10,6 +10,14 @@ import type { StoryObj } from "@storybook/react";
 
 export default {
     title: "Layers / GPX Layer",
+    tags: ["autodocs"],
+    parameters: {
+        docs: {
+            story: {
+                height: "600px",
+            },
+        },
+    },
 };
 
 const gpxFile = "Jotunheimen_rundt.gpx";
