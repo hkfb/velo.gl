@@ -43,7 +43,8 @@ services:
     test-storybook-github:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
-        environment: MAPTILER_API_KEY
+        environment:
+            - MAPTILER_API_KEY
         volumes:
             - ".:/app:rw"
         working_dir: /app
