@@ -6,3 +6,4 @@ README.md
 dist
 storybook-static
 package-lock.json
+__snapshots__
