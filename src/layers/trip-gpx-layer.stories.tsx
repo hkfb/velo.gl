@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DeckGL } from "@deck.gl/react";
+import { Layer } from "@deck.gl/core";
 import { TripGpxLayer } from "./trip-gpx-layer";
 import { GpxHillMap } from "../components/gpx-hill-map";
 import { DEFAULT_GPX_FILE } from "../components/gpx-map";
@@ -24,7 +25,7 @@ const initialViewState = {
 export function TripGpxLayerDefault() {
     const layer = new TripGpxLayer({
         ...defaultLayerProps,
-    });
+    }) as unknown as Layer;
     return (
         <DeckGL
             layers={[layer]}
@@ -35,14 +36,10 @@ export function TripGpxLayerDefault() {
 }
 
 export function TripGpxLayerTime({ time }: { time: number }) {
-    const layer = React.useMemo(
-        () =>
-            new TripGpxLayer({
-                ...defaultLayerProps,
-                currentTime: time,
-            }),
-        [time, defaultLayerProps],
-    );
+    const layer = new TripGpxLayer({
+        ...defaultLayerProps,
+        currentTime: time,
+    }) as unknown as Layer;
     return (
         <DeckGL
             layers={[layer]}
@@ -58,14 +55,10 @@ TripGpxLayerTime.argTypes = {
 };
 
 export function TripGpxLayerMap({ time }: { time: number }) {
-    const layer = React.useMemo(
-        () =>
-            new TripGpxLayer({
-                ...defaultLayerProps,
-                currentTime: time,
-            }),
-        [time, defaultLayerProps],
-    );
+    const layer = new TripGpxLayer({
+        ...defaultLayerProps,
+        currentTime: time,
+    }) as unknown as Layer;
     return <GpxHillMap gpx={gpxFile} annotationLayers={[layer]}></GpxHillMap>;
 }
 
@@ -76,16 +69,13 @@ TripGpxLayerMap.argTypes = {
 TripGpxLayerMap.tags = ["no-visual-test"];
 
 export function TripGpxLayerSynthetic({ time }: { time: number }) {
-    const layer = React.useMemo(
-        () =>
-            new TripGpxLayer({
-                ...defaultLayerProps,
-                data: "synthetic.gpx",
-                currentTime: time,
-                trailLength: 100000,
-            }),
-        [time, defaultLayerProps],
-    );
+    const layer = new TripGpxLayer({
+        ...defaultLayerProps,
+        data: "synthetic.gpx",
+        currentTime: time,
+        trailLength: 100000,
+    }) as unknown as Layer;
+
     return (
         <GpxHillMap
             gpx={"synthetic.gpx"}
@@ -112,16 +102,13 @@ export function TripGpxLayerAnimate({ velocity }: { velocity: number }) {
         };
     }, []);
 
-    const layer = React.useMemo(
-        () =>
-            new TripGpxLayer({
-                ...defaultLayerProps,
-                data: DEFAULT_GPX_FILE,
-                currentTime: date,
-                velocity: velocity,
-            }),
-        [date, defaultLayerProps, velocity],
-    );
+    const layer = new TripGpxLayer({
+        ...defaultLayerProps,
+        data: DEFAULT_GPX_FILE,
+        currentTime: date,
+        velocity: velocity,
+    }) as unknown as Layer;
+
     return (
         <GpxHillMap
             gpx={DEFAULT_GPX_FILE}

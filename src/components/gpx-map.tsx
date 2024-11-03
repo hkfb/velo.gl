@@ -57,15 +57,17 @@ export function GpxMap({
         onDataLoad: onGpxLoad,
     });
 
+    const layers = [
+        ...baseLayers,
+        ...auxLayers,
+        gpxLayer,
+        ...annotationLayers,
+    ];
+
     return (
         <DeckGL
             {...deckGlProps}
-            layers={[
-                ...baseLayers,
-                ...auxLayers,
-                gpxLayer,
-                ...annotationLayers,
-            ]}
+            layers={layers}
             initialViewState={initialViewState}
             controller
         >
