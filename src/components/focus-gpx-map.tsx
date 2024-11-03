@@ -7,7 +7,7 @@ import {
     WebMercatorViewport,
     FlyToInterpolator,
     MapViewState,
-} from "@deck.gl/core/typed";
+} from "@deck.gl/core";
 import { FeatureCollection } from "geojson";
 
 export type FocusGpxMapProps = Omit<GpxMapProps, "initialViewState">;

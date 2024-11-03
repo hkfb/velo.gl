@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DeckGL } from "@deck.gl/react/typed";
+import { DeckGL } from "@deck.gl/react";
 import { HillLayer } from "./hill-layer";
 
 const INITIAL_VIEW_STATE = {

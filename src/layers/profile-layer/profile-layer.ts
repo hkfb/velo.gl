@@ -1,14 +1,11 @@
-import {
-    SimpleMeshLayer,
-    SimpleMeshLayerProps,
-} from "@deck.gl/mesh-layers/typed";
-import { COORDINATE_SYSTEM } from "@deck.gl/core/typed";
+import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
+import { COORDINATE_SYSTEM } from "@deck.gl/core";
 import {
     extrudePolylineProfile,
     lngLatToMeters,
     Point3d,
 } from "./extrudePolylineProfile";
-import { UpdateParameters } from "@deck.gl/core/typed";
+import { UpdateParameters } from "@deck.gl/core";
 
 export type ProfileLayerData = Point3d[][];
 
@@ -41,10 +38,12 @@ export class ProfileLayer extends SimpleMeshLayer<
         const positionsBuffer = new Float32Array(verticesFlat[0]);
         const indicesArray = new Uint32Array(extrudedProfile[0].indices);
 
-        const mesh = {
-            positions: {
-                value: positionsBuffer,
-                size: 3,
+        const mesh: SimpleMeshLayerProps["mesh"] = {
+            attributes: {
+                positions: {
+                    value: positionsBuffer,
+                    size: 3,
+                },
             },
             indices: {
                 value: indicesArray,

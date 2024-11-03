@@ -1,8 +1,8 @@
-import { useMemo } from "react";
 import * as React from "react";
-import { DeckGL, DeckGLProps } from "@deck.gl/react/typed";
-import { LayersList } from "@deck.gl/core/typed";
+import { DeckGL, DeckGLProps } from "@deck.gl/react";
+import { LayersList } from "@deck.gl/core";
 import { GpxLayer } from "../layers/gpx-layer";
+import { GeoJsonLayer } from "@deck.gl/layers";
 
 export const DEFAULT_GPX_FILE = "Jotunheimen_rundt.gpx";
 
@@ -51,25 +51,18 @@ export function GpxMap({
     annotationLayers = [],
     baseLayers = [],
 }: GpxMapProps) {
-    const gpxLayer = useMemo(
-        () =>
-            new GpxLayer({
-                ...defaultLayerProps,
-                data: gpx,
-                onDataLoad: onGpxLoad,
-            }),
-        [defaultLayerProps, gpx],
-    );
+    const gpxLayer: typeof GeoJsonLayer = new GpxLayer({
+        ...defaultLayerProps,
+        data: gpx,
+        onDataLoad: onGpxLoad,
+    });
+
+    const layers = [...baseLayers, ...auxLayers, gpxLayer, ...annotationLayers];
 
     return (
         <DeckGL
             {...deckGlProps}
-            layers={[
-                ...baseLayers,
-                ...auxLayers,
-                gpxLayer,
-                ...annotationLayers,
-            ]}
+            layers={layers}
             initialViewState={initialViewState}
             controller
         >

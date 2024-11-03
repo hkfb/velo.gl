@@ -1,8 +1,8 @@
 import { ProfileLayer } from "./profile-layer";
-import { DeckGL } from "@deck.gl/react/typed";
+import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
-import { COORDINATE_SYSTEM } from "@deck.gl/core/typed";
+import { COORDINATE_SYSTEM } from "@deck.gl/core";
 
 export default {
     title: "Layers / Profile Layer",

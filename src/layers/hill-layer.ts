@@ -1,4 +1,4 @@
-import { TerrainLayer } from "@deck.gl/geo-layers/typed";
+import { TerrainLayer } from "@deck.gl/geo-layers";
 
 const KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 
@@ -26,3 +26,4 @@ HillLayer.defaultProps = {
     maxZoom: 12,
     getPolygonOffset: () => [0, 10000],
 };
+HillLayer.layerName = "HillLayer";

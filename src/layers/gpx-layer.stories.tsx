@@ -1,10 +1,10 @@
-import { DeckGL } from "@deck.gl/react/typed";
+import { DeckGL } from "@deck.gl/react";
 import { StreetLayer } from "./street-layer";
 import { useMemo, useState } from "react";
 import * as React from "react";
 import { GpxLayer } from "./gpx-layer";
-import { TerrainLayer } from "@deck.gl/geo-layers/typed";
-import { GeoJsonLayerProps } from "@deck.gl/layers/typed";
+import { TerrainLayer } from "@deck.gl/geo-layers";
+import { LayersList, CompositeLayer } from "@deck.gl/core";
 import { Map } from "react-map-gl/maplibre";
 import type { StoryObj } from "@storybook/react";
 
@@ -34,14 +34,11 @@ const defaultLayerProps = {
 };
 
 export function GPXLayerDefault() {
-    const layer = useMemo(
-        () => new GpxLayer(defaultLayerProps),
-        [defaultLayerProps],
-    );
+    const layer = new GpxLayer({ ...defaultLayerProps }) as CompositeLayer;
 
     return (
         <DeckGL
-            layers={[layer]}
+            layers={[layer] as LayersList}
             initialViewState={initialViewState}
             controller
         ></DeckGL>
@@ -49,15 +46,11 @@ export function GPXLayerDefault() {
 }
 
 export function GPXLayerLineStyle() {
-    const layer = useMemo(
-        () =>
-            new GpxLayer({
-                ...defaultLayerProps,
-                lineWidthMinPixels: 5,
-                getLineColor: [0, 0, 200],
-            }),
-        [defaultLayerProps],
-    );
+    const layer = new GpxLayer({
+        ...defaultLayerProps,
+        lineWidthMinPixels: 5,
+        getLineColor: [0, 0, 200],
+    }) as CompositeLayer;
 
     return (
         <DeckGL
@@ -69,13 +62,9 @@ export function GPXLayerLineStyle() {
 }
 
 export function GpxWms() {
-    const gpxLayer = useMemo(
-        () =>
-            new GpxLayer({
-                ...defaultLayerProps,
-            }),
-        [defaultLayerProps],
-    );
+    const gpxLayer = new GpxLayer({
+        ...defaultLayerProps,
+    }) as CompositeLayer;
 
     const layers = [gpxLayer, new StreetLayer()];
 
@@ -90,15 +79,12 @@ export function GpxWms() {
 
 export const GpxSatteliteTerrain: StoryObj = {
     render: () => {
-        const layerProps: GeoJsonLayerProps = {
+        const layerProps = {
             ...defaultLayerProps,
             getLineColor: [255, 255, 0],
         };
 
-        const gpxLayer = useMemo(
-            () => new GpxLayer({ ...layerProps }),
-            [layerProps],
-        );
+        const gpxLayer = new GpxLayer({ ...layerProps }) as CompositeLayer;
 
         const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
 
@@ -146,10 +132,7 @@ export const GpxSatteliteTerrain: StoryObj = {
 };
 
 export function GpxMapTerrain() {
-    const gpxLayer = useMemo(
-        () => new GpxLayer(defaultLayerProps),
-        [defaultLayerProps],
-    );
+    const gpxLayer = new GpxLayer({ ...defaultLayerProps }) as CompositeLayer;
 
     const [API_KEY] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
     const layers = [gpxLayer];

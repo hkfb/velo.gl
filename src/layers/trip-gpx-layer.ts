@@ -1,7 +1,7 @@
 import { GPXLoader } from "@loaders.gl/kml";
-import { TripsLayer } from "@deck.gl/geo-layers/typed";
-import { TripsLayerProps } from "@deck.gl/geo-layers/typed/trips-layer/trips-layer";
-import { Color } from "@deck.gl/core/typed";
+import { TripsLayer } from "@deck.gl/geo-layers";
+import { type TripsLayerProps } from "@deck.gl/geo-layers";
+import { Color } from "@deck.gl/core";
 import { FeatureCollection, Feature, LineString, Position } from "geojson";
 import distance from "@turf/distance";
 
@@ -47,19 +47,20 @@ function getTimestamps(velocity: number) {
         data.timestamps ?? simulateTimestamps(data.path, velocity);
 }
 
-export interface TripGpxLayerProps extends TripsLayerProps {
+export type TripGpxLayerProps = TripsLayerProps & {
     /**
      * Trip velocity in m/s, which will be used if the GPX file does not already
      * contain timestamps.
      */
     velocity?: number;
-}
+};
 
 /**
  * A Deck.gl layer that shows the position from a GPX track at a given moment.
  */
 export class TripGpxLayer extends TripsLayer {
     constructor(props: TripGpxLayerProps) {
+        // @ts-expect-error 2554
         super({
             ...props,
             updateTriggers: { getTimestamps: [props.velocity] },
