@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DeckGL, DeckGLProps } from "@deck.gl/react";
-import { LayersList, Layer } from "@deck.gl/core";
+import { LayersList } from "@deck.gl/core";
 import { GpxLayer } from "../layers/gpx-layer";
 import { GeoJsonLayer } from "@deck.gl/layers";
 
@@ -56,7 +56,6 @@ export function GpxMap({
         data: gpx,
         onDataLoad: onGpxLoad,
     });
-
 
     return (
         <DeckGL
