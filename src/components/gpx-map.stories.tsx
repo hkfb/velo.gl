@@ -36,9 +36,10 @@ export function GpxMapText() {
 }
 
 export const AnnotationLayer: Story = {
-    args: {
-        annotationLayers: [
+    render: () => {
+        const annotationLayers = [
             new TripGpxLayer({ id: "trip", data: DEFAULT_GPX_FILE }),
-        ],
+        ];
+        return <GpxMap annotationLayers={annotationLayers} />;
     },
 };

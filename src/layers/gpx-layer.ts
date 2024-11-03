@@ -9,9 +9,9 @@ import * as _ from "lodash";
 
 export type GpxLayerProps = typeof GeoJsonLayerProps;
 
-export class GpxLayer extends GeoJsonLayer {
+export class GpxLayer extends GeoJsonLayer<GpxLayerProps> {
     constructor(props: GpxLayerProps) {
-        super(props);
+        super({ ...props });
     }
 
     renderLayers() {

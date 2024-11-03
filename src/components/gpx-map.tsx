@@ -1,7 +1,6 @@
-import { useMemo } from "react";
 import * as React from "react";
 import { DeckGL, DeckGLProps } from "@deck.gl/react";
-import { LayersList } from "@deck.gl/core";
+import { LayersList, Layer } from "@deck.gl/core";
 import { GpxLayer } from "../layers/gpx-layer";
 import { GeoJsonLayer } from "@deck.gl/layers";
 
@@ -52,15 +51,12 @@ export function GpxMap({
     annotationLayers = [],
     baseLayers = [],
 }: GpxMapProps) {
-    const gpxLayer: typeof GeoJsonLayer = useMemo(
-        () =>
-            new GpxLayer({
-                ...defaultLayerProps,
-                data: gpx,
-                onDataLoad: onGpxLoad,
-            }),
-        [defaultLayerProps, gpx],
-    );
+    const gpxLayer: typeof GeoJsonLayer = new GpxLayer({
+        ...defaultLayerProps,
+        data: gpx,
+        onDataLoad: onGpxLoad,
+    });
+
 
     return (
         <DeckGL

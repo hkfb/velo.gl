@@ -26,3 +26,4 @@ HillLayer.defaultProps = {
     maxZoom: 12,
     getPolygonOffset: () => [0, 10000],
 };
+HillLayer.layerName = "HillLayer";
