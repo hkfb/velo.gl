@@ -16,7 +16,7 @@ Library for interactive 3D visualization of GPX activities.
   * Focus GPX Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace
 
 ## Examples
-See [Storybook](https://hkfb.github.io/velo.gl/?path=/story/gpx-layer--gpx-layer-default)
+See [Storybook](https://hkfb.github.io/velo.gl/?path=/story/focus-gpx-street-map--focus-gpx-street-map-default)
 
 ## Installation
 
