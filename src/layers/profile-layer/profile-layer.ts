@@ -38,10 +38,12 @@ export class ProfileLayer extends SimpleMeshLayer<
         const positionsBuffer = new Float32Array(verticesFlat[0]);
         const indicesArray = new Uint32Array(extrudedProfile[0].indices);
 
-        const mesh = {
-            positions: {
-                value: positionsBuffer,
-                size: 3,
+        const mesh: SimpleMeshLayerProps["mesh"] = {
+            attributes: {
+                positions: {
+                    value: positionsBuffer,
+                    size: 3,
+                },
             },
             indices: {
                 value: indicesArray,
