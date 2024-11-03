@@ -57,12 +57,7 @@ export function GpxMap({
         onDataLoad: onGpxLoad,
     });
 
-    const layers = [
-        ...baseLayers,
-        ...auxLayers,
-        gpxLayer,
-        ...annotationLayers,
-    ];
+    const layers = [...baseLayers, ...auxLayers, gpxLayer, ...annotationLayers];
 
     return (
         <DeckGL
