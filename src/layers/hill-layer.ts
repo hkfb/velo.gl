@@ -1,4 +1,4 @@
-import { TerrainLayer } from "@deck.gl/geo-layers/typed";
+import { TerrainLayer } from "@deck.gl/geo-layers";
 
 const KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 

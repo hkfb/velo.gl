@@ -1,14 +1,11 @@
-import {
-    SimpleMeshLayer,
-    SimpleMeshLayerProps,
-} from "@deck.gl/mesh-layers/typed";
-import { COORDINATE_SYSTEM } from "@deck.gl/core/typed";
+import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
+import { COORDINATE_SYSTEM } from "@deck.gl/core";
 import {
     extrudePolylineProfile,
     lngLatToMeters,
     Point3d,
 } from "./extrudePolylineProfile";
-import { UpdateParameters } from "@deck.gl/core/typed";
+import { UpdateParameters } from "@deck.gl/core";
 
 export type ProfileLayerData = Point3d[][];
 

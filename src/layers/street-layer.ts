@@ -1,4 +1,4 @@
-import { _WMSLayer } from "@deck.gl/geo-layers/typed";
+import { _WMSLayer } from "@deck.gl/geo-layers";
 
 export class StreetLayer extends _WMSLayer {}
 

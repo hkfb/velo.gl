@@ -1,10 +1,10 @@
-import { DeckGL } from "@deck.gl/react/typed";
+import { DeckGL } from "@deck.gl/react";
 import { StreetLayer } from "./street-layer";
 import { useMemo, useState } from "react";
 import * as React from "react";
 import { GpxLayer } from "./gpx-layer";
-import { TerrainLayer } from "@deck.gl/geo-layers/typed";
-import { GeoJsonLayerProps } from "@deck.gl/layers/typed";
+import { TerrainLayer } from "@deck.gl/geo-layers";
+import { GeoJsonLayerProps } from "@deck.gl/layers";
 import { Map } from "react-map-gl/maplibre";
 import type { StoryObj } from "@storybook/react";
 

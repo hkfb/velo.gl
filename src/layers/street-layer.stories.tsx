@@ -1,5 +1,5 @@
 import React from "react";
-import { DeckGL } from "@deck.gl/react/typed";
+import { DeckGL } from "@deck.gl/react";
 import { StreetLayer } from "./street-layer";
 
 export default {

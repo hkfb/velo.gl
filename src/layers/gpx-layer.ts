@@ -1,21 +1,22 @@
 import {
     GeoJsonLayer,
-    GeoJsonLayerProps,
     PathLayer,
-} from "@deck.gl/layers/typed";
-import { Color } from "@deck.gl/core/typed";
+    type GeoJsonLayerProps,
+} from "@deck.gl/layers";
+import { Color } from "@deck.gl/core";
 import { GPXLoader, TCXLoader } from "@loaders.gl/kml";
 import * as _ from "lodash";
 
+export type GpxLayerProps = typeof GeoJsonLayerProps;
+
 export class GpxLayer extends GeoJsonLayer {
-    constructor(props: GeoJsonLayerProps) {
-        props.loaders = [GPXLoader, TCXLoader];
+    constructor(props: GpxLayerProps) {
         super(props);
     }
 
     renderLayers() {
         const defaultLayers = super.renderLayers();
-        const lineLayers = defaultLayers[1] as PathLayer[];
+        const lineLayers = defaultLayers[1];
         if (!_.isArray(lineLayers) || lineLayers.length < 2) {
             return defaultLayers;
         }
@@ -36,6 +37,7 @@ const defaultProps = {
     ...GeoJsonLayer.defaultProps,
     lineWidthMinPixels: 3,
     getLineColor: [255, 255, 0] as Color,
+    loaders: [GPXLoader, TCXLoader],
 };
 
 GpxLayer.defaultProps = defaultProps;

@@ -1,7 +1,7 @@
 import React from "react";
 import { GpxMap } from "./gpx-map";
 import { StreetLayer } from "../layers/street-layer";
-import { MapViewState } from "@deck.gl/core/typed";
+import { MapViewState } from "@deck.gl/core";
 
 export type GpxStreetMapProps = {
     children?: React.ReactNode;

@@ -1,7 +1,7 @@
 import { GPXLoader } from "@loaders.gl/kml";
-import { TripsLayer } from "@deck.gl/geo-layers/typed";
-import { TripsLayerProps } from "@deck.gl/geo-layers/typed/trips-layer/trips-layer";
-import { Color } from "@deck.gl/core/typed";
+import { TripsLayer } from "@deck.gl/geo-layers";
+import { TripsLayerProps } from "@deck.gl/geo-layers";
+import { Color } from "@deck.gl/core";
 import { FeatureCollection, Feature, LineString, Position } from "geojson";
 import distance from "@turf/distance";
 
@@ -58,8 +58,9 @@ export interface TripGpxLayerProps extends TripsLayerProps {
 /**
  * A Deck.gl layer that shows the position from a GPX track at a given moment.
  */
-export class TripGpxLayer extends TripsLayer {
+export class TripGpxLayer extends TripsLayer<TripGpxLayerProps> {
     constructor(props: TripGpxLayerProps) {
+        // @ts-expect-error 2554
         super({
             ...props,
             updateTriggers: { getTimestamps: [props.velocity] },
