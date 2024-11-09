@@ -60,7 +60,6 @@ export type TripGpxLayerProps = TripsLayerProps & {
  */
 export class TripGpxLayer extends TripsLayer {
     constructor(props: TripGpxLayerProps) {
-        // @ts-expect-error 2554
         super({
             ...props,
             updateTriggers: { getTimestamps: [props.velocity] },
