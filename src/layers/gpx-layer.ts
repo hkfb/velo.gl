@@ -7,7 +7,7 @@ import { Color } from "@deck.gl/core";
 import { GPXLoader, TCXLoader } from "@loaders.gl/kml";
 import * as _ from "lodash";
 
-export type GpxLayerProps = typeof GeoJsonLayerProps;
+export type GpxLayerProps = GeoJsonLayerProps;
 
 export class GpxLayer extends GeoJsonLayer {
     constructor(props: GpxLayerProps) {
@@ -21,10 +21,10 @@ export class GpxLayer extends GeoJsonLayer {
             return defaultLayers;
         }
         const pathLayer = lineLayers[1];
-        if (pathLayer.constructor !== PathLayer) {
+        if (!pathLayer || pathLayer.constructor.name !== "PathLayer") {
             return defaultLayers;
         }
-        const outlineLayer = pathLayer.clone({
+        const outlineLayer = (pathLayer as PathLayer).clone({
             id: "outline",
             widthMinPixels: this.props.lineWidthMinPixels + 1,
             getColor: [0, 0, 0],

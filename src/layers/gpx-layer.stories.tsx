@@ -2,7 +2,7 @@ import { DeckGL } from "@deck.gl/react";
 import { StreetLayer } from "./street-layer";
 import { useMemo, useState } from "react";
 import * as React from "react";
-import { GpxLayer } from "./gpx-layer";
+import { GpxLayer, GpxLayerProps } from "./gpx-layer";
 import { TerrainLayer } from "@deck.gl/geo-layers";
 import { LayersList, CompositeLayer } from "@deck.gl/core";
 import { Map } from "react-map-gl/maplibre";
@@ -34,7 +34,7 @@ const defaultLayerProps = {
 };
 
 export function GPXLayerDefault() {
-    const layer = new GpxLayer({ ...defaultLayerProps }) as CompositeLayer;
+    const layer = new GpxLayer({ ...defaultLayerProps });
 
     return (
         <DeckGL
@@ -79,12 +79,12 @@ export function GpxWms() {
 
 export const GpxSatteliteTerrain: StoryObj = {
     render: () => {
-        const layerProps = {
+        const layerProps: GpxLayerProps = {
             ...defaultLayerProps,
             getLineColor: [255, 255, 0],
         };
 
-        const gpxLayer = new GpxLayer({ ...layerProps }) as CompositeLayer;
+        const gpxLayer = new GpxLayer({ ...layerProps });
 
         const [key] = useState(import.meta.env.VITE_MAPTILER_API_KEY);
 
