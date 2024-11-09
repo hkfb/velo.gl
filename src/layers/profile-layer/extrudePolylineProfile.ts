@@ -1,12 +1,13 @@
+import { Proj4Projection } from "@math.gl/proj4";
+
 export type Point3d = [number, number, number];
 type Geometry = { vertices: Point3dStructured[]; indices: number[] };
 type Point3dStructured = { x: number; y: number; z: number };
 
-import proj4 from "proj4";
-
 // Define projections
-const WGS84 = "EPSG:4326";
 const WebMercator = "EPSG:3857";
+
+const PROJECTION = new Proj4Projection({ from: "WGS84", to: WebMercator });
 
 /**
  * Converts geographic coordinates (longitude, latitude) to meters (Web Mercator).
@@ -14,7 +15,7 @@ const WebMercator = "EPSG:3857";
  * @returns A Point3D with x and y in meters.
  */
 export function lngLatToMeters(point: Point3d): Point3d {
-    const [x, y] = proj4(WGS84, WebMercator, [point[0], point[1]]);
+    const [x, y] = PROJECTION.project([point[0], point[1]]);
     return [x, y, point[2]];
 }
 
@@ -24,7 +25,7 @@ export function lngLatToMeters(point: Point3d): Point3d {
  * @returns A Point3D with x as longitude and y as latitude.
  */
 export function metersToLngLat(point: Point3dStructured): Point3dStructured {
-    const [x, y] = proj4(WebMercator, WGS84, [point.x, point.y]);
+    const [x, y] = PROJECTION.unproject([point.x, point.y]);
     return { x, y, z: point.z };
 }
 
