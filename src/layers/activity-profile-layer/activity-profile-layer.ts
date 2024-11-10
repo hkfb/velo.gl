@@ -3,7 +3,7 @@ import {
     ProfileLayer,
     ProfileLayerProps,
 } from "../profile-layer/profile-layer";
-import { FeatureCollection, Feature, LineString, Position } from "geojson";
+import { FeatureCollection, Feature, LineString } from "geojson";
 import { type DefaultProps } from "@deck.gl/core";
 
 export type ActivityProfileLayerProps = ProfileLayerProps;

@@ -31,7 +31,7 @@ export function metersToLngLat(point: Point3dStructured): Point3dStructured {
 
 export function extrudePolylineProfile(
     polyline: Point3d[],
-    pathWidth = 3000,
+    pathWidth = 100,
 ): { vertices: Point3d[]; indices: number[] } {
     const keyedCoordinate = polyline.map(([x, y, z]) => ({
         x,

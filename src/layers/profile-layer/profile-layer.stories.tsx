@@ -32,6 +32,7 @@ export const ProfileLayerDefault: StoryObj = {
             data,
             id: "profile",
             pickable: true,
+            width: 3000,
         };
 
         const layer = new ProfileLayer({ ...props });
@@ -54,6 +55,7 @@ export const ProfileLayerWithMap: StoryObj = {
             data,
             id: "profile",
             pickable: true,
+            width: 3000,
         };
 
         const profile = new ProfileLayer({ ...props });

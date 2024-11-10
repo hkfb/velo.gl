@@ -20,15 +20,10 @@ export default {
     },
 };
 
-const testViewState = {
-    longitude: 7.505,
-    latitude: 61.064,
-    zoom: 10,
-};
-
-export const ActivityProfileLayerDefault: StoryObj = {
+export const JotunheimenRundt: StoryObj = {
     render: () => {
-        const layer = new ActivityProfileLayer();
+        const data = JR_ACTIVITY_FILE;
+        const layer = new ActivityProfileLayer({ data: data });
         return (
             <DeckGL
                 layers={[layer]}
@@ -39,30 +34,28 @@ export const ActivityProfileLayerDefault: StoryObj = {
     },
 };
 
-export const JotunheimenRundt: StoryObj = {
+export const JotunheimenRundtWithMap: StoryObj = {
     render: () => {
         const data = JR_ACTIVITY_FILE;
-        const layer = new ActivityProfileLayer({ data: data, width: 100 });
-        //const layer = new ActivityProfileLayer({ data: [] });
+        const profile = new ActivityProfileLayer({ data: data });
+        const base = new StreetLayer();
         return (
             <DeckGL
-                layers={[layer]}
-                initialViewState={testViewState}
+                layers={[base, profile]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
                 controller
             ></DeckGL>
         );
     },
 };
 
-export const JotunheimenRundtWithMap: StoryObj = {
+export const Empty: StoryObj = {
     render: () => {
-        const data = JR_ACTIVITY_FILE;
-        const profile = new ActivityProfileLayer({ data: data, width: 100 });
-        const base = new StreetLayer();
+        const layer = new ActivityProfileLayer();
         return (
             <DeckGL
-                layers={[base, profile]}
-                initialViewState={testViewState}
+                layers={[layer]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
                 controller
             ></DeckGL>
         );
