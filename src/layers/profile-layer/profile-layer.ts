@@ -1,34 +1,54 @@
 import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
-import { COORDINATE_SYSTEM } from "@deck.gl/core";
+import { COORDINATE_SYSTEM, type DefaultProps } from "@deck.gl/core";
 import {
     extrudePolylineProfile,
     lngLatToMeters,
     Point3d,
 } from "./extrudePolylineProfile";
 import { UpdateParameters } from "@deck.gl/core";
+import _ from "lodash";
 
-export type ProfileLayerData = Point3d[][];
+type Polyline = Point3d[];
 
-export interface ProfileLayerProps
-    extends Omit<SimpleMeshLayerProps<ProfileLayerData>, "mesh"> {
-    data: Point3d[][];
+export type ProfileLayerData = Polyline[];
+
+export interface ProfileLayerProps<DataT = unknown>
+    extends Omit<SimpleMeshLayerProps<DataT>, "mesh"> {
     width?: number;
 }
 
-export class ProfileLayer extends SimpleMeshLayer<
-    ProfileLayerData,
-    ProfileLayerProps
-> {
+const defaultProps: DefaultProps<ProfileLayerProps> = {
+    ...SimpleMeshLayer.defaultProps,
+    id: "road-layer",
+    getPosition: [0, 0, 0],
+    getColor: [200, 100, 150, 255],
+    coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+    extensions: [],
+};
+
+export class ProfileLayer<
+    DataT = ProfileLayerData,
+    PropsT = ProfileLayerProps,
+> extends SimpleMeshLayer<DataT, PropsT & ProfileLayerProps> {
     static layerName = "ProfileLayer";
+    static defaultProps = defaultProps;
 
     updateState(args: UpdateParameters<this>) {
         const data = args.props.data;
-        const pathMeterOffset = data.map((polyline) =>
-            polyline.map(lngLatToMeters),
+        const width = this.props.width;
+
+        if (!data || typeof data === "string" || _.isEmpty(data)) {
+            return;
+        }
+
+        console.dir(data);
+
+        const pathMeterOffset = (data as ProfileLayerData).map(
+            (polyline: Polyline) => polyline.map(lngLatToMeters),
         );
 
         const extrudedProfile = pathMeterOffset.map((polyline) =>
-            extrudePolylineProfile(polyline),
+            extrudePolylineProfile(polyline, width),
         );
 
         const verticesFlat = extrudedProfile.map((profile) =>
@@ -51,20 +71,12 @@ export class ProfileLayer extends SimpleMeshLayer<
             },
         };
 
-        const props = {
-            ...args.props,
-            mesh,
-        };
+        const props = args.props;
+        props.mesh = { ...mesh };
 
-        super.updateState({ ...args, props });
+        const oldProps = { ...args.oldProps };
+        oldProps.mesh = null;
+
+        super.updateState({ ...args, props, oldProps });
     }
 }
-
-ProfileLayer.defaultProps = {
-    ...SimpleMeshLayer.defaultProps,
-    id: "road-layer",
-    getPosition: [0, 0, 0],
-    getColor: [200, 100, 150, 255],
-    coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-    data: [[0, 0, 0]],
-};
