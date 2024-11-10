@@ -7,6 +7,11 @@ import { TerrainLayer } from "@deck.gl/geo-layers";
 import { LayersList, CompositeLayer } from "@deck.gl/core";
 import { Map } from "react-map-gl/maplibre";
 import type { StoryObj } from "@storybook/react";
+import {
+    JR_ACTIVITY_FILE,
+    JR_INITIAL_VIEW_STATE,
+    JR_PITCHED_VIEW_STATE,
+} from "../constant.stories";
 
 export default {
     title: "Layers / GPX Layer",
@@ -20,17 +25,9 @@ export default {
     },
 };
 
-const gpxFile = "Jotunheimen_rundt.gpx";
-
-const initialViewState = {
-    longitude: 8.3,
-    latitude: 61.4,
-    zoom: 8,
-};
-
 const defaultLayerProps = {
     id: "gpx-layer",
-    data: gpxFile,
+    data: JR_ACTIVITY_FILE,
 };
 
 export function GPXLayerDefault() {
@@ -39,7 +36,7 @@ export function GPXLayerDefault() {
     return (
         <DeckGL
             layers={[layer] as LayersList}
-            initialViewState={initialViewState}
+            initialViewState={JR_INITIAL_VIEW_STATE}
             controller
         ></DeckGL>
     );
@@ -55,7 +52,7 @@ export function GPXLayerLineStyle() {
     return (
         <DeckGL
             layers={[layer]}
-            initialViewState={initialViewState}
+            initialViewState={JR_INITIAL_VIEW_STATE}
             controller
         ></DeckGL>
     );
@@ -71,7 +68,7 @@ export function GpxWms() {
     return (
         <DeckGL
             layers={layers}
-            initialViewState={initialViewState}
+            initialViewState={JR_INITIAL_VIEW_STATE}
             controller
         ></DeckGL>
     );
@@ -115,15 +112,10 @@ export const GpxSatteliteTerrain: StoryObj = {
 
         const layers = [gpxLayer, terrainLayer];
 
-        const pitchedViewState = {
-            ...initialViewState,
-            pitch: 45,
-        };
-
         return (
             <DeckGL
                 layers={layers}
-                initialViewState={pitchedViewState}
+                initialViewState={JR_PITCHED_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -142,7 +134,7 @@ export function GpxMapTerrain() {
         <DeckGL
             style={{ position: "absolute", zIndex: "100" }}
             layers={layers}
-            initialViewState={initialViewState}
+            initialViewState={JR_INITIAL_VIEW_STATE}
             controller
         >
             <Map

@@ -2,44 +2,71 @@ import { ProfileLayer } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
-import { COORDINATE_SYSTEM } from "@deck.gl/core";
+import type { StoryObj } from "@storybook/react";
+import { StreetLayer } from "../street-layer";
+import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
 
 export default {
     title: "Layers / Profile Layer",
 };
 
-const initialViewState = {
-    longitude: 61.4,
-    latitude: 8.3,
+const INITIAL_VIEW_STATE = {
+    ...JR_PITCHED_VIEW_STATE,
     zoom: 7,
 };
 
 const POLYLINE = [
-    { x: 61.45, y: 7.29, z: 10000 },
-    { x: 62.46, y: 8.3, z: 0 },
-    { x: 63.47, y: 8.51, z: 7000 },
-    { x: 65.47, y: 9.51, z: 8000 },
+    { y: 61.45, x: 7.29, z: 10000 },
+    { y: 62.26, x: 8.3, z: 0 },
+    { y: 62.17, x: 8.51, z: 7000 },
+    { y: 61.1, x: 9.51, z: 8000 },
 ];
 
 const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
 
-export function ProfileLayerDefault() {
-    const data = [PATH_LAT_LONG];
+export const ProfileLayerDefault: StoryObj = {
+    render: () => {
+        const data = [PATH_LAT_LONG];
 
-    const props = {
-        data,
-        id: "profile",
-        coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-        pickable: true,
-    };
+        const props = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+        };
 
-    const layer = new ProfileLayer({ ...props });
+        const layer = new ProfileLayer({ ...props });
 
-    return (
-        <DeckGL
-            layers={[layer]}
-            initialViewState={initialViewState}
-            controller
-        ></DeckGL>
-    );
-}
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+};
+
+export const ProfileLayerWithMap: StoryObj = {
+    render: () => {
+        const data = [PATH_LAT_LONG];
+
+        const props = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+};
