@@ -26,6 +26,40 @@ const defaultProps: DefaultProps<ProfileLayerProps> = {
     extensions: [],
 };
 
+const getMesh = (activities: ProfileLayerData, width: number) => {
+    const origin = activities[0][0];
+
+    const pathMeterOffset = activities.map((polyline: Polyline) =>
+        polyline.map(lngLatToMeters),
+    );
+
+    const extrudedProfile = pathMeterOffset.map((polyline) =>
+        extrudePolylineProfile(polyline, width),
+    );
+
+    const verticesFlat = extrudedProfile.map((profile) =>
+        profile.vertices.flatMap(([x, y, z]) => [x, y, z]),
+    );
+
+    const positionsBuffer = new Float32Array(verticesFlat[0]);
+    const indicesArray = new Uint32Array(extrudedProfile[0].indices);
+
+    const mesh: SimpleMeshLayerProps["mesh"] = {
+        attributes: {
+            positions: {
+                value: positionsBuffer,
+                size: 3,
+            },
+        },
+        indices: {
+            value: indicesArray,
+            size: 1,
+        },
+    };
+
+    return mesh;
+};
+
 export class ProfileLayer<
     DataT = ProfileLayerData,
     PropsT = ProfileLayerProps,
@@ -41,35 +75,7 @@ export class ProfileLayer<
             return;
         }
 
-        console.dir(data);
-
-        const pathMeterOffset = (data as ProfileLayerData).map(
-            (polyline: Polyline) => polyline.map(lngLatToMeters),
-        );
-
-        const extrudedProfile = pathMeterOffset.map((polyline) =>
-            extrudePolylineProfile(polyline, width),
-        );
-
-        const verticesFlat = extrudedProfile.map((profile) =>
-            profile.vertices.flatMap(([x, y, z]) => [x, y, z]),
-        );
-
-        const positionsBuffer = new Float32Array(verticesFlat[0]);
-        const indicesArray = new Uint32Array(extrudedProfile[0].indices);
-
-        const mesh: SimpleMeshLayerProps["mesh"] = {
-            attributes: {
-                positions: {
-                    value: positionsBuffer,
-                    size: 3,
-                },
-            },
-            indices: {
-                value: indicesArray,
-                size: 1,
-            },
-        };
+        const mesh = getMesh(data, width);
 
         const props = args.props;
         props.mesh = { ...mesh };
