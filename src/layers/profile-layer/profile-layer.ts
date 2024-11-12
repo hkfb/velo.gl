@@ -3,12 +3,11 @@ import { COORDINATE_SYSTEM, type DefaultProps } from "@deck.gl/core";
 import {
     extrudePolylineProfile,
     lngLatToMeters,
-    Point3d,
+    Polyline,
+    getOffset,
 } from "./extrudePolylineProfile";
 import { UpdateParameters } from "@deck.gl/core";
 import _ from "lodash";
-
-type Polyline = Point3d[];
 
 export type ProfileLayerData = Polyline[];
 
@@ -20,17 +19,34 @@ export interface ProfileLayerProps<DataT = unknown>
 const defaultProps: DefaultProps<ProfileLayerProps> = {
     ...SimpleMeshLayer.defaultProps,
     id: "road-layer",
-    getPosition: [0, 0, 0],
+    /*
+    getPosition: (data: unknown) => {
+        const position = [0, 0];
+        console.dir(position);
+        return new Float32Array(position);
+    },
+    */
+    getPosition: (data: unknown) => {
+        const position = (data as unknown as Polyline)[0];
+        console.dir(position);
+        return position;
+    },
+    //getPosition: [0, 0, 0],
     getColor: [200, 100, 150, 255],
-    coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-    extensions: [],
+    //coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+    //extensions: [],
+    //_instanced: true,
+    //numInstances: 10,
+    //numInstances: 1,
 };
 
 const getMesh = (activities: ProfileLayerData, width: number) => {
+    //const origin = [0, 0];
     const origin = activities[0][0];
+    console.log("origin: ", origin);
 
     const pathMeterOffset = activities.map((polyline: Polyline) =>
-        polyline.map(lngLatToMeters),
+        getOffset(polyline, origin),
     );
 
     const extrudedProfile = pathMeterOffset.map((polyline) =>
@@ -68,6 +84,9 @@ export class ProfileLayer<
     static defaultProps = defaultProps;
 
     updateState(args: UpdateParameters<this>) {
+        super.updateState(args);
+        //super.updateState(args);
+
         const data = args.props.data;
         const width = this.props.width;
 
@@ -75,8 +94,14 @@ export class ProfileLayer<
             return;
         }
 
-        const mesh = getMesh(data, width);
+        //const origin = (data as ProfileLayerData)[0][0];
 
+        const mesh = getMesh(data as ProfileLayerData, width ?? 100);
+        const model = this.getModel(mesh);
+        //this.state.model = model;
+        this.setState({ model });
+
+        /*
         const props = args.props;
         props.mesh = { ...mesh };
 
@@ -84,5 +109,6 @@ export class ProfileLayer<
         oldProps.mesh = null;
 
         super.updateState({ ...args, props, oldProps });
+        */
     }
 }

@@ -13,8 +13,8 @@ const defaultProps: DefaultProps<ActivityProfileLayerProps> = {
     id: "activity-profile",
     loaders: [GPXLoader, TCXLoader],
     dataTransform: dataTransform as unknown as undefined,
-    extensions: [],
-    getPosition: [0, 0, 0],
+    //extensions: [],
+    //getPosition: [0, 0, 0],
 };
 
 export class ActivityProfileLayer extends ProfileLayer {
