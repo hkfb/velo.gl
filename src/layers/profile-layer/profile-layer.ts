@@ -1,10 +1,6 @@
 import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
 import { type DefaultProps } from "@deck.gl/core";
-import {
-    extrudePolylineProfile,
-    Polyline,
-    getOffset,
-} from "./extrudePolylineProfile";
+import { Polyline, getOffset, extrudeProfile } from "./extrudePolylineProfile";
 import { UpdateParameters } from "@deck.gl/core";
 import _ from "lodash";
 
@@ -30,14 +26,12 @@ const getMesh = (activities: ProfileLayerData, width: number) => {
     );
 
     const extrudedProfile = pathMeterOffset.map((polyline) =>
-        extrudePolylineProfile(polyline, width),
+        extrudeProfile(polyline, width),
     );
 
-    const verticesFlat = extrudedProfile.map((profile) =>
-        profile.vertices.flatMap(([x, y, z]) => [x, y, z]),
-    );
+    const verticesFlat = extrudedProfile[0].positions;
 
-    const positionsBuffer = new Float32Array(verticesFlat[0]);
+    const positionsBuffer = new Float32Array(verticesFlat);
     const indicesArray = new Uint32Array(extrudedProfile[0].indices);
 
     const mesh: SimpleMeshLayerProps["mesh"] = {
