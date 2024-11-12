@@ -1,6 +1,8 @@
 import { Proj4Projection } from "@math.gl/proj4";
+import { LngLatToLocaleCartesian } from "converter-locale-cartesian";
 
 export type Point3d = [number, number, number];
+export type Polyline = Point3d[];
 type Geometry = { vertices: Point3dStructured[]; indices: number[] };
 type Point3dStructured = { x: number; y: number; z: number };
 
@@ -8,6 +10,18 @@ type Point3dStructured = { x: number; y: number; z: number };
 const WebMercator = "EPSG:3857";
 
 const PROJECTION = new Proj4Projection({ from: "WGS84", to: WebMercator });
+
+export function getOffset(geometry: Polyline, origin: number[]): Polyline {
+    const lngLatToLocalCartesian = new LngLatToLocaleCartesian(
+        origin[0],
+        origin[1],
+    );
+    const offset = geometry.map((v) => {
+        const { x, y } = lngLatToLocalCartesian.converter(v[0], v[1]);
+        return [x, y, v[2]] as Point3d;
+    });
+    return offset;
+}
 
 /**
  * Converts geographic coordinates (longitude, latitude) to meters (Web Mercator).
