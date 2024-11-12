@@ -1,8 +1,7 @@
 import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
-import { COORDINATE_SYSTEM, type DefaultProps } from "@deck.gl/core";
+import { type DefaultProps } from "@deck.gl/core";
 import {
     extrudePolylineProfile,
-    lngLatToMeters,
     Polyline,
     getOffset,
 } from "./extrudePolylineProfile";
@@ -19,31 +18,12 @@ export interface ProfileLayerProps<DataT = unknown>
 const defaultProps: DefaultProps<ProfileLayerProps> = {
     ...SimpleMeshLayer.defaultProps,
     id: "road-layer",
-    /*
-    getPosition: (data: unknown) => {
-        const position = [0, 0];
-        console.dir(position);
-        return new Float32Array(position);
-    },
-    */
-    getPosition: (data: unknown) => {
-        const position = (data as unknown as Polyline)[0];
-        console.dir(position);
-        return position;
-    },
-    //getPosition: [0, 0, 0],
+    getPosition: (data: unknown) => (data as unknown as Polyline)[0],
     getColor: [200, 100, 150, 255],
-    //coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-    //extensions: [],
-    //_instanced: true,
-    //numInstances: 10,
-    //numInstances: 1,
 };
 
 const getMesh = (activities: ProfileLayerData, width: number) => {
-    //const origin = [0, 0];
     const origin = activities[0][0];
-    console.log("origin: ", origin);
 
     const pathMeterOffset = activities.map((polyline: Polyline) =>
         getOffset(polyline, origin),
@@ -85,7 +65,6 @@ export class ProfileLayer<
 
     updateState(args: UpdateParameters<this>) {
         super.updateState(args);
-        //super.updateState(args);
 
         const data = args.props.data;
         const width = this.props.width;
@@ -94,21 +73,8 @@ export class ProfileLayer<
             return;
         }
 
-        //const origin = (data as ProfileLayerData)[0][0];
-
         const mesh = getMesh(data as ProfileLayerData, width ?? 100);
         const model = this.getModel(mesh);
-        //this.state.model = model;
         this.setState({ model });
-
-        /*
-        const props = args.props;
-        props.mesh = { ...mesh };
-
-        const oldProps = { ...args.oldProps };
-        oldProps.mesh = null;
-
-        super.updateState({ ...args, props, oldProps });
-        */
     }
 }
