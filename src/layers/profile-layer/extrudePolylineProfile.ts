@@ -1,15 +1,7 @@
-import { Proj4Projection } from "@math.gl/proj4";
 import { LngLatToLocaleCartesian } from "converter-locale-cartesian";
 
 export type Point3d = [number, number, number];
 export type Polyline = Point3d[];
-type Geometry = { vertices: Point3dStructured[]; indices: number[] };
-type Point3dStructured = { x: number; y: number; z: number };
-
-// Define projections
-const WebMercator = "EPSG:3857";
-
-const PROJECTION = new Proj4Projection({ from: "WGS84", to: WebMercator });
 
 export function getOffset(geometry: Polyline, origin: number[]): Polyline {
     const lngLatToLocalCartesian = new LngLatToLocaleCartesian(
@@ -24,58 +16,18 @@ export function getOffset(geometry: Polyline, origin: number[]): Polyline {
 }
 
 /**
- * Converts geographic coordinates (longitude, latitude) to meters (Web Mercator).
- * @param point - A Point3D with x as longitude and y as latitude.
- * @returns A Point3D with x and y in meters.
- */
-export function lngLatToMeters(point: Point3d): Point3d {
-    const [x, y] = PROJECTION.project([point[0], point[1]]);
-    return [x, y, point[2]];
-}
-
-/**
- * Converts meters (Web Mercator) back to geographic coordinates (longitude, latitude).
- * @param point - A Point3D with x and y in meters.
- * @returns A Point3D with x as longitude and y as latitude.
- */
-export function metersToLngLat(point: Point3dStructured): Point3dStructured {
-    const [x, y] = PROJECTION.unproject([point.x, point.y]);
-    return { x, y, z: point.z };
-}
-
-export function extrudePolylineProfile(
-    polyline: Point3d[],
-    pathWidth = 100,
-): { vertices: Point3d[]; indices: number[] } {
-    const keyedCoordinate = polyline.map(([x, y, z]) => ({
-        x,
-        y,
-        z,
-    }));
-    const { vertices, indices } = extrudePolylineToRoad(
-        keyedCoordinate,
-        pathWidth,
-    );
-    const unstructuredVertices: Point3d[] = vertices.map(({ x, y, z }) => [
-        x,
-        y,
-        z,
-    ]);
-    return { vertices: unstructuredVertices, indices };
-}
-
-/**
  * Extrudes a 3D polyline into a road geometry with constant width,
  * mitered corners, and vertical sides extending from sea level to the road level.
- * @param polyline - Array of 3D points representing the centerline of the road (in meters).
+ * Vertices are represented as flat arrays.
+ * @param polyline - Array of 3D points [[x0, y0, z0], [x1, y1, z1], ...] representing the centerline of the road (in meters).
  * @param roadWidth - The constant width of the road (in meters).
- * @returns An object containing vertices and indices representing the tessellated road geometry.
+ * @returns An object containing flat arrays for positions and indices representing the tessellated road geometry.
  */
-export function extrudePolylineToRoad(
-    polyline: Point3dStructured[],
+export function extrudeProfile(
+    polyline: Polyline,
     roadWidth: number,
-): Geometry {
-    const vertices: Point3dStructured[] = [];
+): { positions: number[]; indices: number[] } {
+    const positions: number[] = [];
     const indices: number[] = [];
 
     const n = polyline.length;
@@ -83,149 +35,124 @@ export function extrudePolylineToRoad(
         throw new Error("Polyline must have at least 2 points.");
     }
 
-    const leftOffsets: Point3dStructured[] = [];
-    const rightOffsets: Point3dStructured[] = [];
+    const halfWidth = roadWidth / 2;
 
-    // Precompute segment directions and normals
-    const segmentDirections: Point3dStructured[] = [];
+    // Compute normals and mitered offsets
+    const normals: number[][] = []; // Normals at each point
+    const miterLengths: number[] = []; // Miter lengths at each point
+
+    // Precompute segment directions
+    const segmentDirections: number[][] = [];
     for (let i = 0; i < n - 1; i++) {
         const p0 = polyline[i];
         const p1 = polyline[i + 1];
-        const dir = {
-            x: p1.x - p0.x,
-            y: p1.y - p0.y,
-            z: 0, // Ignore z for horizontal direction
-        };
-        const length = Math.hypot(dir.x, dir.y);
+        const dx = p1[0] - p0[0];
+        const dy = p1[1] - p0[1];
+        const length = Math.hypot(dx, dy);
         if (length === 0) {
             throw new Error(
                 `Zero-length segment between points ${i} and ${i + 1}.`,
             );
         }
-        // Normalize direction
-        segmentDirections.push({ x: dir.x / length, y: dir.y / length, z: 0 });
+        segmentDirections.push([dx / length, dy / length]);
     }
 
-    // Compute mitered offsets at each vertex
+    // Compute normals and mitered offsets at each point
     for (let i = 0; i < n; i++) {
-        let normal: Point3dStructured;
-        let miterLength = roadWidth / 2;
+        let normal: number[];
+        let miterLength = 1;
 
         if (i === 0) {
-            // Start point: use the normal of the first segment
+            // Start point
             const dir = segmentDirections[0];
-            normal = { x: -dir.y, y: dir.x, z: 0 };
+            normal = [-dir[1], dir[0]]; // Perpendicular to dir
         } else if (i === n - 1) {
-            // End point: use the normal of the last segment
+            // End point
             const dir = segmentDirections[n - 2];
-            normal = { x: -dir.y, y: dir.x, z: 0 };
+            normal = [-dir[1], dir[0]];
         } else {
-            // Middle points: compute mitered normal
+            // Middle points
             const dirPrev = segmentDirections[i - 1];
             const dirNext = segmentDirections[i];
 
-            // Compute angle between segments
-            const sinTheta = dirPrev.x * dirNext.y - dirPrev.y * dirNext.x;
+            // Compute miter vector
+            const normalPrev = [-dirPrev[1], dirPrev[0]];
+            const normalNext = [-dirNext[1], dirNext[0]];
 
-            // Miter vector is sum of normals of adjacent segments
-            const normalPrev = { x: -dirPrev.y, y: dirPrev.x, z: 0 };
-            const normalNext = { x: -dirNext.y, y: dirNext.x, z: 0 };
-            const miter = {
-                x: normalPrev.x + normalNext.x,
-                y: normalPrev.y + normalNext.y,
-                z: 0,
-            };
-            const miterLen = Math.hypot(miter.x, miter.y);
+            const miter = [
+                normalPrev[0] + normalNext[0],
+                normalPrev[1] + normalNext[1],
+            ];
+            const miterLen = Math.hypot(miter[0], miter[1]);
+
             if (miterLen === 0) {
-                normal = normalPrev; // Degenerate case
+                normal = normalPrev;
+                miterLength = 1;
             } else {
-                // Calculate the miter length
-                const sinHalfTheta = sinTheta / 2;
-                const miterLengthDenom = sinHalfTheta || 1e-6; // Avoid division by zero
-                miterLength = roadWidth / 2 / miterLengthDenom;
+                normal = [miter[0] / miterLen, miter[1] / miterLen];
 
-                // Cap the miter length to prevent excessive width
-                const maxMiterLength = roadWidth * 2; // Adjust as needed
-                miterLength = Math.min(miterLength, maxMiterLength);
+                // Compute miter length
+                const cosHalfAngle =
+                    normal[0] * normalNext[0] + normal[1] * normalNext[1];
+                miterLength = 1 / cosHalfAngle;
 
-                normal = {
-                    x:
-                        ((miter.x / miterLen) * (roadWidth / 2)) /
-                        miterLengthDenom,
-                    y:
-                        ((miter.y / miterLen) * (roadWidth / 2)) /
-                        miterLengthDenom,
-                    z: 0,
-                };
+                // Cap the miter length to prevent excessive extension
+                miterLength = Math.min(miterLength, 5); // Adjust the cap as needed
             }
         }
 
-        // Normalize the normal vector
-        const normalLen = Math.hypot(normal.x, normal.y);
-        if (normalLen === 0) {
-            throw new Error(`Zero-length normal at point ${i}.`);
-        }
-        normal = { x: normal.x / normalLen, y: normal.y / normalLen, z: 0 };
-
-        // Apply the offset
-        const offset = {
-            x: normal.x * (roadWidth / 2),
-            y: normal.y * (roadWidth / 2),
-            z: 0,
-        };
-
-        // Offset points at the road level (top surface)
-        leftOffsets.push({
-            x: polyline[i].x + offset.x,
-            y: polyline[i].y + offset.y,
-            z: polyline[i].z,
-        });
-        rightOffsets.push({
-            x: polyline[i].x - offset.x,
-            y: polyline[i].y - offset.y,
-            z: polyline[i].z,
-        });
+        normals.push(normal);
+        miterLengths.push(miterLength);
     }
 
-    // Build the vertices array (top and bottom vertices for each side)
+    // Build vertices
     for (let i = 0; i < n; i++) {
-        // Top left and right vertices (at road level)
-        const topLeft = leftOffsets[i];
-        const topRight = rightOffsets[i];
+        const p = polyline[i];
+        const normal = normals[i];
+        const miterLength = miterLengths[i];
 
-        // Bottom left and right vertices (at sea level, z = 0)
-        const bottomLeft = { x: leftOffsets[i].x, y: leftOffsets[i].y, z: 0 };
-        const bottomRight = {
-            x: rightOffsets[i].x,
-            y: rightOffsets[i].y,
-            z: 0,
-        };
+        const offsetX = normal[0] * halfWidth * miterLength;
+        const offsetY = normal[1] * halfWidth * miterLength;
 
-        // Add vertices in the order: topLeft, topRight, bottomRight, bottomLeft
-        vertices.push(topLeft, topRight, bottomRight, bottomLeft);
+        // Left side (offset negative normal)
+        const xLeft = p[0] - offsetX;
+        const yLeft = p[1] - offsetY;
+
+        // Right side (offset positive normal)
+        const xRight = p[0] + offsetX;
+        const yRight = p[1] + offsetY;
+
+        // Add vertices in the order: TL, BL, BR, TR
+        // Top Left (TL)
+        positions.push(xLeft, yLeft, p[2]);
+        // Bottom Left (BL)
+        positions.push(xLeft, yLeft, 0);
+        // Bottom Right (BR)
+        positions.push(xRight, yRight, 0);
+        // Top Right (TR)
+        positions.push(xRight, yRight, p[2]);
     }
 
-    // Build indices for triangles
+    // Build indices
     for (let i = 0; i < n - 1; i++) {
         const idx = i * 4;
 
-        // Top surface (road surface)
-        indices.push(idx, idx + 4, idx + 5);
-        indices.push(idx, idx + 5, idx + 1);
+        // Top surface
+        indices.push(idx, idx + 4, idx + 7);
+        indices.push(idx, idx + 7, idx + 3);
 
-        // Side surfaces
+        // Bottom surface (optional)
+        indices.push(idx + 1, idx + 2, idx + 6);
+        indices.push(idx + 1, idx + 6, idx + 5);
+
         // Left side
-        indices.push(idx, idx + 3, idx + 7);
-        indices.push(idx, idx + 7, idx + 4);
+        indices.push(idx, idx + 1, idx + 5);
+        indices.push(idx, idx + 5, idx + 4);
 
         // Right side
-        indices.push(idx + 1, idx + 5, idx + 6);
-        indices.push(idx + 1, idx + 6, idx + 2);
-
-        // Front face (connecting bottom vertices)
-        indices.push(idx + 2, idx + 6, idx + 7);
-        indices.push(idx + 2, idx + 7, idx + 3);
+        indices.push(idx + 3, idx + 7, idx + 6);
+        indices.push(idx + 3, idx + 6, idx + 2);
     }
 
-    return { vertices, indices };
+    return { positions, indices };
 }
