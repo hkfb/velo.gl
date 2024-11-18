@@ -1,18 +1,18 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { GpxMap, DEFAULT_GPX_FILE } from "./gpx-map";
+import { ActivityMap, DEFAULT_GPX_FILE } from "./activity-map";
 import { TripGpxLayer } from "../layers/trip-gpx-layer";
 import { Layer } from "@deck.gl/core";
 
-const meta: Meta<typeof GpxMap> = {
+const meta: Meta<typeof ActivityMap> = {
     title: "GPX Map",
     tags: ["autodocs"],
-    component: GpxMap,
+    component: ActivityMap,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof GpxMap>;
+type Story = StoryObj<typeof ActivityMap>;
 
 export const Default: Story = {};
 
@@ -28,11 +28,11 @@ export const ElTeide: Story = {
     },
 };
 
-export function GpxMapText() {
+export function ActivityMapText() {
     return (
-        <GpxMap>
+        <ActivityMap>
             <div>Text</div>
-        </GpxMap>
+        </ActivityMap>
     );
 }
 
@@ -44,6 +44,6 @@ export const AnnotationLayer: Story = {
                 data: DEFAULT_GPX_FILE,
             }) as unknown as Layer,
         ];
-        return <GpxMap annotationLayers={annotationLayers} />;
+        return <ActivityMap annotationLayers={annotationLayers} />;
     },
 };

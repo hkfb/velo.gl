@@ -16,7 +16,7 @@ export const INITIAL_VIEW_STATE = {
     zoom: 8,
 };
 
-export type GpxMapProps = {
+export type ActivityMapProps = {
     children?: React.ReactNode;
     gpx?: string;
     initialViewState?: typeof INITIAL_VIEW_STATE;
@@ -40,7 +40,7 @@ export type GpxMapProps = {
     baseLayers?: LayersList;
 };
 
-export function GpxMap({
+export function ActivityMap({
     children = [],
     gpx = DEFAULT_GPX_FILE,
     initialViewState = INITIAL_VIEW_STATE,
@@ -49,7 +49,7 @@ export function GpxMap({
     onGpxLoad,
     annotationLayers = [],
     baseLayers = [],
-}: GpxMapProps) {
+}: ActivityMapProps) {
     const gpxLayer = new GpxLayer({
         ...defaultLayerProps,
         data: gpx,
@@ -69,3 +69,13 @@ export function GpxMap({
         </DeckGL>
     );
 }
+
+/**
+ * @deprecated use ActivityMapProps instead.
+ */
+export type GpxMapProps = ActivityMapProps;
+
+/**
+ * @deprecated use ActivityMap instead.
+ */
+export const GpxMap = ActivityMap;
