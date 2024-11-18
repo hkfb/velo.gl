@@ -32,8 +32,10 @@ services:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
         volumes:
-            - ".:/app:ro"
+            - ".:/app:rw"
             - "./__snapshots__:/app/__snapshots__:rw"
+            - type: tmpfs
+              target: /app/.cache
         working_dir: /app
         user: ubuntu
         depends_on:

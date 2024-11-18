@@ -5,7 +5,7 @@ import { TripGpxLayer } from "../layers/trip-gpx-layer";
 import { Layer } from "@deck.gl/core";
 
 const meta: Meta<typeof ActivityMap> = {
-    title: "GPX Map",
+    title: "Activity Map",
     tags: ["autodocs"],
     component: ActivityMap,
 };

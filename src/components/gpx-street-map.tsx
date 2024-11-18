@@ -1,5 +1,5 @@
 import React from "react";
-import { GpxMap } from "./gpx-map";
+import { ActivityMap } from "./activity-map";
 import { StreetLayer } from "../layers/street-layer";
 import { MapViewState } from "@deck.gl/core";
 
@@ -15,12 +15,12 @@ export function GpxStreetMap({
     initialViewState,
 }: GpxStreetMapProps) {
     return (
-        <GpxMap
+        <ActivityMap
             gpx={gpx}
             initialViewState={initialViewState}
             auxLayers={[new StreetLayer()]}
         >
             {children}
-        </GpxMap>
+        </ActivityMap>
     );
 }
