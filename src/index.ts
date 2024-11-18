@@ -1,4 +1,8 @@
-export { GpxMap } from "./components/gpx-map";
+export {
+    GpxMap,
+    ActivityMap,
+    ActivityMapProps,
+} from "./components/activity-map";
 export { GpxLayer } from "./layers/gpx-layer";
 export { GpxStreetMap } from "./components/gpx-street-map";
 export { StreetLayer } from "./layers/street-layer";

@@ -1,5 +1,9 @@
 import * as React from "react";
-import { GpxMap, GpxMapProps, INITIAL_VIEW_STATE } from "./gpx-map";
+import {
+    ActivityMap,
+    ActivityMapProps,
+    INITIAL_VIEW_STATE,
+} from "./activity-map";
 import bbox from "@turf/bbox";
 import * as _ from "lodash";
 import {
@@ -10,7 +14,7 @@ import {
 } from "@deck.gl/core";
 import { FeatureCollection } from "geojson";
 
-export type FocusGpxMapProps = Omit<GpxMapProps, "initialViewState">;
+export type FocusGpxMapProps = Omit<ActivityMapProps, "initialViewState">;
 
 export function FocusGpxMap(args: FocusGpxMapProps) {
     const [viewState, setViewState] =
@@ -36,7 +40,7 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
         [setViewState],
     );
 
-    return GpxMap({
+    return ActivityMap({
         ...args,
         onGpxLoad: onLoad as (data: unknown, context: unknown) => void,
         initialViewState: viewState,

@@ -9,7 +9,7 @@ const screenshotTest = async (page, context) => {
 
     let stable = false;
 
-    const pollInterval = 20000;
+    const pollInterval = 16000;
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
