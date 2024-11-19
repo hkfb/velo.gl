@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DeckGL, DeckGLProps } from "@deck.gl/react";
 import { LayersList } from "@deck.gl/core";
-import { GpxLayer } from "../layers/gpx-layer";
+import { ActivityProfileLayer } from "../layers/activity-profile-layer/activity-profile-layer";
 
 export const DEFAULT_GPX_FILE = "Jotunheimen_rundt.gpx";
 
@@ -50,7 +50,7 @@ export function ActivityMap({
     annotationLayers = [],
     baseLayers = [],
 }: ActivityMapProps) {
-    const gpxLayer = new GpxLayer({
+    const gpxLayer = new ActivityProfileLayer({
         ...defaultLayerProps,
         data: gpx,
         onDataLoad: onGpxLoad,
