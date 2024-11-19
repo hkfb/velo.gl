@@ -12,7 +12,8 @@ import {
     FlyToInterpolator,
     MapViewState,
 } from "@deck.gl/core";
-import { FeatureCollection } from "geojson";
+import { Feature, MultiLineString } from "geojson";
+import { multiLineString } from "@turf/helpers";
 
 export type FocusGpxMapProps = Omit<ActivityMapProps, "initialViewState">;
 
@@ -21,12 +22,13 @@ export function FocusGpxMap(args: FocusGpxMapProps) {
         React.useState<MapViewState>(INITIAL_VIEW_STATE);
 
     const onLoad = React.useCallback(
-        (data: FeatureCollection, info: { propName: string; layer: Layer }) => {
+        (data: number[][][], info: { propName: string; layer: Layer }) => {
             const viewport = info.layer.context.viewport as WebMercatorViewport;
-            const bounds = _.chunk(bbox(data), 2) as [
-                [number, number],
-                [number, number],
-            ];
+            const polylines = multiLineString(data);
+            const bounds = _.chunk(
+                bbox(polylines as Feature<MultiLineString>),
+                2,
+            ) as [[number, number], [number, number]];
             const fit = viewport.fitBounds(bounds, { padding: 20 });
             const { longitude, latitude, zoom } = fit;
             setViewState({
