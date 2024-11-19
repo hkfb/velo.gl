@@ -6,11 +6,12 @@ Library for interactive 3D visualization of GPX activities.
 
 ## Features
 * [Deck.gl](https://deck.gl/) layers
+  * Activity Profile Layer - renders a GPX activity as a vertically extruded path
+  * Profile Layer - renders paths extruded vertically from sea level, from a set of 3D polylines
   * GPX Layer - renders the trace of a GPX file
   * Trip GPX Layer - renders the position along a GPX trace at a given time
-  * Profile Layer - renders paths extruded vertically from sea level, from a set of 3D polylines
 * Map components
-  * GPX Map - renders a GPX trace
+  * Activity Map - renders a GPX activity
   * GPX Maptiler - renders a GPX trace on a Maptiler base map
   * GPX Hill Map - renders a GPX trace on a Maptiler satellite terrain map
   * Focus GPX Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace
