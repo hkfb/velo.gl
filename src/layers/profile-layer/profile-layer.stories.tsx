@@ -70,3 +70,41 @@ export const ProfileLayerWithMap: StoryObj = {
         );
     },
 };
+
+export const ZeroLengthSegment: StoryObj = {
+    render: () => {
+        const path = [
+            [7.29, 61.45, 10000],
+            [8.3, 62.26, 0],
+            [8.3, 62.26, 0],
+            [8.51, 62.17, 7000],
+            [9.51, 61.1, 8000],
+        ];
+
+        const data = [path];
+
+        const props = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+        };
+
+        const layer = new ProfileLayer({ ...props });
+
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Handle zero length segments.",
+            },
+        },
+    },
+};

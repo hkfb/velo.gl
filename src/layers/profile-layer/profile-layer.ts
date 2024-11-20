@@ -3,6 +3,9 @@ import { type DefaultProps } from "@deck.gl/core";
 import { Polyline, getOffset, extrudeProfile } from "./extrudePolylineProfile";
 import { UpdateParameters } from "@deck.gl/core";
 import _ from "lodash";
+import { lineString } from "@turf/helpers";
+import { simplify } from "@turf/simplify";
+import { Feature, LineString } from "geojson";
 
 export type ProfileLayerData = Polyline[];
 
@@ -25,8 +28,14 @@ const getMesh = (activities: ProfileLayerData, width: number) => {
         getOffset(polyline, origin),
     );
 
-    const extrudedProfile = pathMeterOffset.map((polyline) =>
-        extrudeProfile(polyline, width),
+    const geojson = pathMeterOffset.map((polyline) => lineString(polyline));
+
+    const simplified = geojson.map((polyline) =>
+        simplify(polyline as Feature<LineString>),
+    );
+
+    const extrudedProfile = simplified.map((polyline) =>
+        extrudeProfile(polyline.geometry.coordinates as Polyline, width),
     );
 
     const verticesFlat = extrudedProfile[0].positions;
