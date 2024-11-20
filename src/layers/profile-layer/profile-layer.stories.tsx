@@ -8,6 +8,14 @@ import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
 
 export default {
     title: "Layers / Profile Layer",
+    tags: ["autodocs"],
+    parameters: {
+        docs: {
+            story: {
+                height: "500px",
+            },
+        },
+    },
 };
 
 const INITIAL_VIEW_STATE = {
