@@ -1,7 +1,7 @@
 import { SimpleMeshLayer, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
 import { type DefaultProps } from "@deck.gl/core";
 import { Polyline, getOffset, extrudeProfile } from "./extrudePolylineProfile";
-import { UpdateParameters } from "@deck.gl/core";
+import { UpdateParameters, type Position } from "@deck.gl/core";
 import _ from "lodash";
 import { lineString } from "@turf/helpers";
 import { simplify } from "@turf/simplify";
@@ -14,10 +14,15 @@ export interface ProfileLayerProps<DataT = unknown>
     width?: number;
 }
 
+const getPosition = (data: unknown) => {
+    const origin3d = (data as Polyline)[0];
+    return [origin3d[0], origin3d[1], 0] as Position;
+};
+
 const defaultProps: DefaultProps<ProfileLayerProps> = {
     ...SimpleMeshLayer.defaultProps,
     id: "road-layer",
-    getPosition: (data: unknown) => (data as unknown as Polyline)[0],
+    getPosition,
     getColor: [200, 100, 150, 255],
 };
 
