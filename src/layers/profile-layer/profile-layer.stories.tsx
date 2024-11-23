@@ -1,4 +1,8 @@
-import { ProfileLayer } from "./profile-layer";
+import {
+    ProfileLayer,
+    ProfileLayerData,
+    ProfileLayerProps,
+} from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
@@ -112,6 +116,51 @@ export const ZeroLengthSegment: StoryObj = {
         docs: {
             description: {
                 story: "Handle zero length segments.",
+            },
+        },
+    },
+};
+
+export const VerticalScale: StoryObj<{ verticalScale: number }> = {
+    args: {
+        verticalScale: 5,
+    },
+    argTypes: {
+        verticalScale: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 10,
+                step: 0.1,
+            },
+        },
+    },
+    render: ({ verticalScale }) => {
+        const data = [PATH_LAT_LONG];
+
+        const props: ProfileLayerProps<ProfileLayerData> = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+            getScale: [1, 1, verticalScale],
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Vertical scaling of profiles.",
             },
         },
     },
