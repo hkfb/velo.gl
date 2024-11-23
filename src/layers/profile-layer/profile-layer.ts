@@ -3,9 +3,10 @@ import { type DefaultProps } from "@deck.gl/core";
 import { Polyline, getOffset, extrudeProfile } from "./extrudePolylineProfile";
 import { UpdateParameters, type Position } from "@deck.gl/core";
 import _ from "lodash";
-import { lineString } from "@turf/helpers";
+import { lineString, multiLineString } from "@turf/helpers";
 import { simplify } from "@turf/simplify";
-import { Feature, LineString } from "geojson";
+import { Feature, LineString, MultiLineString } from "geojson";
+import { centroid } from "@turf/centroid";
 
 export type ProfileLayerData = Polyline[];
 
@@ -15,8 +16,9 @@ export interface ProfileLayerProps<DataT = unknown>
 }
 
 const getPosition = (data: unknown) => {
-    const origin3d = (data as Polyline)[0];
-    return [origin3d[0], origin3d[1], 0] as Position;
+    const path = lineString(data as Polyline);
+    const origin = centroid(path as Feature<LineString>).geometry.coordinates;
+    return [origin[0], origin[1], 0] as Position;
 };
 
 const defaultProps: DefaultProps<ProfileLayerProps> = {
@@ -27,10 +29,12 @@ const defaultProps: DefaultProps<ProfileLayerProps> = {
 };
 
 const getMesh = (activities: ProfileLayerData, width: number) => {
-    const origin = activities[0][0];
+    const paths = multiLineString(activities);
+
+    const origin = centroid(paths as Feature<MultiLineString>);
 
     const pathMeterOffset = activities.map((polyline: Polyline) =>
-        getOffset(polyline, origin),
+        getOffset(polyline, origin.geometry.coordinates),
     );
 
     const geojson = pathMeterOffset.map((polyline) => lineString(polyline));

@@ -25,6 +25,7 @@
         "@loaders.gl/kml": "^4.3.2",
         "@math.gl/proj4": "^4.1.0",
         "@turf/bbox": "^7.1.0",
+        "@turf/centroid": "^7.1.0",
         "@turf/distance": "^7.1.0",
         "@turf/simplify": "^7.1.0",
         "converter-locale-cartesian": "^1.1.0",
