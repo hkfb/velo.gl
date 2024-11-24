@@ -1,8 +1,4 @@
-import {
-    ProfileLayer,
-    ProfileLayerData,
-    ProfileLayerProps,
-} from "./profile-layer";
+import { ProfileLayer } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
@@ -138,12 +134,14 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
     render: ({ verticalScale }) => {
         const data = [PATH_LAT_LONG];
 
-        const props: ProfileLayerProps<ProfileLayerData> = {
+        const getScale: [number, number, number] = [1, 1, verticalScale];
+
+        const props = {
             data,
             id: "profile",
             pickable: true,
             width: 3000,
-            getScale: [1, 1, verticalScale],
+            getScale,
         };
 
         const profile = new ProfileLayer({ ...props });
