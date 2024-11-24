@@ -77,16 +77,27 @@ export class ProfileLayer<
 
     updateState(args: UpdateParameters<this>) {
         super.updateState(args);
+        if (!args.changeFlags.propsOrDataChanged) {
+            return;
+        }
 
         const data = args.props.data;
-        const width = this.props.width;
 
         if (!data || typeof data === "string" || _.isEmpty(data)) {
             return;
         }
 
-        const mesh = getMesh(data as ProfileLayerData, width ?? 100);
+        const newWidth = args.props.width;
+
+        const mesh = getMesh(data as ProfileLayerData, newWidth ?? 100);
         const model = this.getModel(mesh);
+
+        this.state.model?.destroy();
+        const attributeManager = this.getAttributeManager();
+        if (attributeManager) {
+            attributeManager.invalidateAll();
+        }
+
         this.setState({ model });
     }
 }

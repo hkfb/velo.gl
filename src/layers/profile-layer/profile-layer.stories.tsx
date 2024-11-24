@@ -36,7 +36,7 @@ const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
 
 export const ProfileLayerDefault: StoryObj = {
     render: () => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const props = {
             data,
@@ -59,7 +59,7 @@ export const ProfileLayerDefault: StoryObj = {
 
 export const ProfileLayerWithMap: StoryObj = {
     render: () => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const props = {
             data,
@@ -91,7 +91,7 @@ export const ZeroLengthSegment: StoryObj = {
             [9.51, 61.1, 8000],
         ];
 
-        const data = [path];
+        const data = React.useMemo(() => [path], []);
 
         const props = {
             data,
@@ -134,7 +134,7 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         },
     },
     render: ({ verticalScale }) => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const getScale: [number, number, number] = [1, 1, verticalScale];
 
@@ -178,7 +178,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     render: ({ color }) => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
             r: 0,
@@ -231,7 +231,7 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const props = {
             data,

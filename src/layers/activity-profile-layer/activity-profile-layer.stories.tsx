@@ -61,3 +61,49 @@ export const Empty: StoryObj = {
         );
     },
 };
+
+export const VerticalScale: StoryObj<{ verticalScale: number }> = {
+    args: {
+        verticalScale: 20,
+    },
+    argTypes: {
+        verticalScale: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 50,
+                step: 0.1,
+            },
+        },
+    },
+    render: ({ verticalScale }) => {
+        const data = JR_ACTIVITY_FILE;
+
+        const getScale: [number, number, number] = [1, 1, verticalScale];
+
+        const props = {
+            data,
+            id: "profile",
+            width: 100,
+            getScale,
+        };
+
+        const profile = new ActivityProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Vertical scaling of profiles.",
+            },
+        },
+    },
+};
