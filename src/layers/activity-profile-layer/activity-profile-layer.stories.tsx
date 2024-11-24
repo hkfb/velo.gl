@@ -64,14 +64,14 @@ export const Empty: StoryObj = {
 
 export const VerticalScale: StoryObj<{ verticalScale: number }> = {
     args: {
-        verticalScale: 5,
+        verticalScale: 20,
     },
     argTypes: {
         verticalScale: {
             control: {
                 type: "range",
                 min: -1,
-                max: 10,
+                max: 50,
                 step: 0.1,
             },
         },

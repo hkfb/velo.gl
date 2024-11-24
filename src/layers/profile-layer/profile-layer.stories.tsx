@@ -178,7 +178,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     render: ({ color }) => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
             r: 0,
@@ -231,7 +231,7 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
-        const data = [PATH_LAT_LONG];
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
         const props = {
             data,
