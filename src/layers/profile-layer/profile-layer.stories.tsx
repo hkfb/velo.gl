@@ -180,8 +180,12 @@ export const ProfileColor: StoryObj<{ color: string }> = {
     render: ({ color }) => {
         const data = [PATH_LAT_LONG];
 
-        const { r, g, b, opacity } =
-            d3.color(color).rgb() ?? d3.color("black").rgb();
+        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
+            r: 0,
+            g: 0,
+            b: 0,
+            opacity: 1,
+        };
 
         const getColor: Color = [r, g, b, opacity * 255];
 
