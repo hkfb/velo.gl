@@ -3,7 +3,7 @@ import {
     ActivityMap,
     ActivityMapProps,
     INITIAL_VIEW_STATE,
-} from "./activity-map";
+} from "../activity-map";
 import bbox from "@turf/bbox";
 import * as _ from "lodash";
 import {
@@ -15,9 +15,9 @@ import {
 import { Feature, MultiLineString } from "geojson";
 import { multiLineString } from "@turf/helpers";
 
-export type FocusGpxMapProps = Omit<ActivityMapProps, "initialViewState">;
+export type FocusActivityMapProps = Omit<ActivityMapProps, "initialViewState">;
 
-export function FocusGpxMap(args: FocusGpxMapProps) {
+export function FocusActivityMap(args: FocusActivityMapProps) {
     const [viewState, setViewState] =
         React.useState<MapViewState>(INITIAL_VIEW_STATE);
 

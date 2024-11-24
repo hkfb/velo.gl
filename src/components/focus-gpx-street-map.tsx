@@ -1,5 +1,5 @@
 import React from "react";
-import { FocusGpxMap } from "./focus-gpx-map";
+import { FocusActivityMap } from "./focus-activity-map/focus-activity-map";
 import { StreetLayer } from "../layers/street-layer";
 
 export type FocusGpxStreetMapProps = {
@@ -9,8 +9,8 @@ export type FocusGpxStreetMapProps = {
 
 export function FocusGpxStreetMap({ children, gpx }: FocusGpxStreetMapProps) {
     return (
-        <FocusGpxMap gpx={gpx} auxLayers={[new StreetLayer()]}>
+        <FocusActivityMap gpx={gpx} auxLayers={[new StreetLayer()]}>
             {children}
-        </FocusGpxMap>
+        </FocusActivityMap>
     );
 }
