@@ -215,3 +215,46 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
 };
+
+export const ProfileWidth: StoryObj<{ width: number }> = {
+    args: {
+        width: 1000,
+    },
+    argTypes: {
+        width: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 10000,
+                step: 1,
+            },
+        },
+    },
+    render: ({ width }) => {
+        const data = [PATH_LAT_LONG];
+
+        const props = {
+            data,
+            id: "profile",
+            width,
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Adjusting lateral width of profiles.",
+            },
+        },
+    },
+};
