@@ -1,11 +1,14 @@
 import * as React from "react";
-import { FocusGpxMap, FocusGpxMapProps } from "./focus-gpx-map";
+import {
+    FocusActivityMap,
+    FocusActivityMapProps,
+} from "./focus-activity-map/focus-activity-map";
 import { HillLayer } from "../layers/hill-layer";
 
 /**
  * Renders a GPX trace on top of a satellite terrain map.
  */
-export function GpxHillMap(args: FocusGpxMapProps) {
+export function GpxHillMap(args: FocusActivityMapProps) {
     const baseLayer = new HillLayer();
-    return <FocusGpxMap {...args} baseLayers={[baseLayer]} />;
+    return <FocusActivityMap {...args} baseLayers={[baseLayer]} />;
 }

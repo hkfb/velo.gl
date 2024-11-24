@@ -12,9 +12,9 @@ Library for interactive 3D visualization of GPX activities.
   * Trip GPX Layer - renders the position along a GPX trace at a given time
 * Map components
   * Activity Map - renders a GPX activity
+  * Focus Activity Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace
   * GPX Maptiler - renders a GPX trace on a Maptiler base map
   * GPX Hill Map - renders a GPX trace on a Maptiler satellite terrain map
-  * Focus GPX Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace
 
 ## Examples
 See [Storybook](https://hkfb.github.io/velo.gl/?path=/story/focus-gpx-street-map--focus-gpx-street-map-default)
