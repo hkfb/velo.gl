@@ -7,6 +7,8 @@ import {
     JR_PITCHED_VIEW_STATE,
 } from "../../constant.stories";
 import { StreetLayer } from "../street-layer";
+import * as d3 from "d3-color";
+import { Color } from "@deck.gl/core";
 
 export default {
     title: "Layers / Activity Profile Layer",
@@ -103,6 +105,99 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         docs: {
             description: {
                 story: "Vertical scaling of profiles.",
+            },
+        },
+    },
+};
+
+export const ActivityColor: StoryObj<{ color: string }> = {
+    args: {
+        color: "yellow",
+    },
+    argTypes: {
+        color: {
+            control: {
+                type: "color",
+            },
+        },
+    },
+    render: ({ color }) => {
+        const data = JR_ACTIVITY_FILE;
+
+        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
+            r: 0,
+            g: 0,
+            b: 0,
+            opacity: 1,
+        };
+
+        const getColor: Color = [r, g, b, opacity * 255];
+
+        const props = {
+            data,
+            id: "profile",
+            width: 100,
+            getColor,
+        };
+
+        const profile = new ActivityProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Profile coloring.",
+            },
+        },
+    },
+};
+
+export const ProfileWidth: StoryObj<{ width: number }> = {
+    args: {
+        width: 1000,
+    },
+    argTypes: {
+        width: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 5000,
+                step: 1,
+            },
+        },
+    },
+    render: ({ width }) => {
+        const data = JR_ACTIVITY_FILE;
+
+        const props = {
+            data,
+            id: "profile",
+            width,
+        };
+
+        const profile = new ActivityProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Adjusting lateral width of profiles.",
             },
         },
     },
