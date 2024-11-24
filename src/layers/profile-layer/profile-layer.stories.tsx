@@ -1,10 +1,12 @@
 import { ProfileLayer } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
+import { Color } from "@deck.gl/core";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
 import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
+import * as d3 from "d3-color";
 
 export default {
     title: "Layers / Profile Layer",
@@ -159,6 +161,52 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         docs: {
             description: {
                 story: "Vertical scaling of profiles.",
+            },
+        },
+    },
+};
+
+export const ProfileColor: StoryObj<{ color: string }> = {
+    args: {
+        color: "green",
+    },
+    argTypes: {
+        color: {
+            control: {
+                type: "color",
+            },
+        },
+    },
+    render: ({ color }) => {
+        const data = [PATH_LAT_LONG];
+
+        const { r, g, b, opacity } =
+            d3.color(color).rgb() ?? d3.color("black").rgb();
+
+        const getColor: Color = [r, g, b, opacity * 255];
+
+        const props = {
+            data,
+            id: "profile",
+            width: 3000,
+            getColor,
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Profile coloring.",
             },
         },
     },
