@@ -6,7 +6,8 @@ import {
 import { FeatureCollection, Feature, LineString } from "geojson";
 import { type DefaultProps } from "@deck.gl/core";
 
-export type ActivityProfileLayerProps = ProfileLayerProps;
+export type ActivityProfileLayerProps<DataT = unknown> =
+    ProfileLayerProps<DataT>;
 
 const defaultProps: DefaultProps<ActivityProfileLayerProps> = {
     ...ProfileLayer.defaultProps,
@@ -15,7 +16,10 @@ const defaultProps: DefaultProps<ActivityProfileLayerProps> = {
     dataTransform: dataTransform as unknown as undefined,
 };
 
-export class ActivityProfileLayer extends ProfileLayer {
+export class ActivityProfileLayer<
+    DataT = unknown,
+    PropsT = ActivityProfileLayerProps,
+> extends ProfileLayer<DataT, PropsT & ActivityProfileLayerProps> {
     static layerName = "ActivityProfileLayer";
     static defaultProps = defaultProps;
 }
