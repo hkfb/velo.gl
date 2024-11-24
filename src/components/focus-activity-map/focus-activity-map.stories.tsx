@@ -1,6 +1,10 @@
-import * as React from "react";
 import { FocusActivityMap } from "./focus-activity-map";
 import type { Meta, StoryObj } from "@storybook/react";
+import {
+    JR_ACTIVITY_FILE,
+    JR_PITCHED_VIEW_STATE,
+    TEIDE_ACTIVITY_FILE,
+} from "../../constant.stories";
 
 type Story = StoryObj<typeof FocusActivityMap>;
 
@@ -20,17 +24,41 @@ export default meta;
 
 export const Default: Story = {};
 
-export function FocusGpxMapSelect({ gpxUrl }: { gpxUrl: string }) {
-    return <FocusActivityMap gpx={gpxUrl}></FocusActivityMap>;
-}
-
-FocusGpxMapSelect.args = {
-    gpxUrl: "Jotunheimen_rundt.gpx",
+export const ActivitySelect: Story = {
+    args: {
+        gpx: JR_ACTIVITY_FILE,
+    },
+    argTypes: {
+        gpx: {
+            control: "select",
+            options: [JR_ACTIVITY_FILE, TEIDE_ACTIVITY_FILE],
+        },
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Focus on selected activity.",
+            },
+        },
+    },
 };
 
-FocusGpxMapSelect.argTypes = {
-    gpxUrl: {
-        control: "select",
-        options: ["Jotunheimen_rundt.gpx", "Teide.tcx"],
+export const PitchedCamera: Story = {
+    args: {
+        gpx: JR_ACTIVITY_FILE,
+        initialViewState: JR_PITCHED_VIEW_STATE,
+    },
+    argTypes: {
+        gpx: {
+            control: "select",
+            options: [JR_ACTIVITY_FILE, TEIDE_ACTIVITY_FILE],
+        },
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Focus with pitched camera.",
+            },
+        },
     },
 };

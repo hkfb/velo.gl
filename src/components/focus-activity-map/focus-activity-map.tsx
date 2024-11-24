@@ -15,11 +15,12 @@ import {
 import { Feature, MultiLineString } from "geojson";
 import { multiLineString } from "@turf/helpers";
 
-export type FocusActivityMapProps = Omit<ActivityMapProps, "initialViewState">;
+export type FocusActivityMapProps = ActivityMapProps;
 
 export function FocusActivityMap(args: FocusActivityMapProps) {
-    const [viewState, setViewState] =
-        React.useState<MapViewState>(INITIAL_VIEW_STATE);
+    const [viewState, setViewState] = React.useState<MapViewState>(
+        args.initialViewState ?? INITIAL_VIEW_STATE,
+    );
 
     const onLoad = React.useCallback(
         (data: number[][][], info: { propName: string; layer: Layer }) => {
@@ -32,6 +33,7 @@ export function FocusActivityMap(args: FocusActivityMapProps) {
             const fit = viewport.fitBounds(bounds, { padding: 20 });
             const { longitude, latitude, zoom } = fit;
             setViewState({
+                ...viewState,
                 longitude: longitude,
                 latitude: latitude,
                 zoom: zoom,
