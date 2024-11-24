@@ -116,3 +116,50 @@ export const ZeroLengthSegment: StoryObj = {
         },
     },
 };
+
+export const VerticalScale: StoryObj<{ verticalScale: number }> = {
+    args: {
+        verticalScale: 5,
+    },
+    argTypes: {
+        verticalScale: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 10,
+                step: 0.1,
+            },
+        },
+    },
+    render: ({ verticalScale }) => {
+        const data = [PATH_LAT_LONG];
+
+        const getScale: [number, number, number] = [1, 1, verticalScale];
+
+        const props = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+            getScale,
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Vertical scaling of profiles.",
+            },
+        },
+    },
+};
