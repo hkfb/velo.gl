@@ -56,3 +56,17 @@ services:
                 condition: service_healthy
         command: >
             sh -c "npm run test:storybook -- --ci --url http://storybook:6006/"
+
+    sandbox-read-only:
+        image: node:bookworm
+        user: node
+        volumes:
+            - ".:/home/node/velo.gl:ro"
+        working_dir: /home/node/velo.gl
+
+    sandbox:
+        image: node:bookworm
+        user: node
+        volumes:
+            - ".:/home/node/velo.gl:rw"
+        working_dir: /home/node/velo.gl
