@@ -5,6 +5,7 @@ services:
         build: .
         environment:
             - MAPTILER_API_KEY
+            - VITE_MAPTILER_API_KEY
         volumes:
             - ".:/app:rw"
         ports:
