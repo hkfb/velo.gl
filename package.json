@@ -76,7 +76,7 @@
         "build-storybook": "storybook build",
         "docker": "docker run --rm -it --user node --mount type=bind,source=\"$(pwd)\",target=/app $(docker build -q .)",
         "docker:storybook": "npm run docker -- npm run storybook -- --no-open",
-        "docker:compose:storybook": "docker-compose up --build storybook",
+        "docker:compose:storybook": "docker-compose up storybook",
         "docker:compose:test": "docker-compose run test-storybook",
         "docker:compose:test:github": "docker-compose run test-storybook-github",
         "docker:compose:test:update": "docker-compose run test-storybook-update",
