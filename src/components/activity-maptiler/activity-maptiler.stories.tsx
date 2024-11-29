@@ -1,19 +1,27 @@
 import * as React from "react";
 import { ActivityMaptiler } from "./activity-maptiler";
+import type { StoryObj } from "@storybook/react";
 
 export default {
-    title: "Activity Maptiler",
-    tags: ["no-visual-test"],
+    tags: ["no-visual-test", "autodocs"],
+    component: ActivityMaptiler,
+    parameters: {
+        docs: {
+            story: {
+                height: "400px",
+            },
+        },
+    },
 };
 
-export function ActivityMaptilerDefault() {
-    return <ActivityMaptiler></ActivityMaptiler>;
-}
+type Story = StoryObj<typeof ActivityMaptiler>;
 
-export function ActivityMaptilerText() {
-    return (
+export const Default: Story = {};
+
+export const TextAnnotation: Story = {
+    render: () => (
         <ActivityMaptiler>
             <div>Activity Map Tiler story</div>
         </ActivityMaptiler>
-    );
-}
+    ),
+};
