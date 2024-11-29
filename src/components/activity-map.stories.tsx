@@ -3,11 +3,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ActivityMap, DEFAULT_GPX_FILE } from "./activity-map";
 import { TripGpxLayer } from "../layers/trip-gpx-layer";
 import { Layer } from "@deck.gl/core";
+import { JR_PITCHED_VIEW_STATE } from "../constant.stories";
 
 const meta: Meta<typeof ActivityMap> = {
-    title: "Activity Map",
     tags: ["autodocs"],
     component: ActivityMap,
+    parameters: {
+        docs: {
+            story: {
+                height: "700px",
+            },
+        },
+    },
 };
 
 export default meta;
@@ -45,5 +52,16 @@ export const AnnotationLayer: Story = {
             }) as unknown as Layer,
         ];
         return <ActivityMap annotationLayers={annotationLayers} />;
+    },
+};
+
+export const ProfileConfig: Story = {
+    args: {
+        profileConfig: {
+            getScale: [1, 1, 20],
+            width: 1000,
+            getColor: [0, 100, 255, 200],
+        },
+        initialViewState: JR_PITCHED_VIEW_STATE,
     },
 };
