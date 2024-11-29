@@ -7,9 +7,8 @@ import {
     TEIDE_ACTIVITY_FILE,
 } from "../../constant.stories";
 
-
 export default {
-    tags: ["no-visual-test", "autodocs"],
+    tags: ["autodocs"],
     component: ActivityMaptiler,
     parameters: {
         docs: {

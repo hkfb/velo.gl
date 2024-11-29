@@ -6,7 +6,9 @@ import {
 } from "../focus-activity-map/focus-activity-map";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export function ActivityMaptiler(args: FocusActivityMapProps) {
+export type ActivityMaptilerProps = FocusActivityMapProps;
+
+export function ActivityMaptiler(args: ActivityMaptilerProps) {
     const apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const mapStyle = `https://api.maptiler.com/maps/streets-v2/style.json?key=${apiKey}`;
     return (
