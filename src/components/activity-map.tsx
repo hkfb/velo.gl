@@ -42,6 +42,9 @@ export type ActivityMapProps = {
      */
     baseLayers?: LayersList;
 
+    /**
+     * Properties that control the appearance of activity profiles.
+     */
     profileConfig?: Omit<ActivityProfileLayerProps, "data" | "id">;
 };
 
