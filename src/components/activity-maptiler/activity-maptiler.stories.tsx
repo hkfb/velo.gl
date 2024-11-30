@@ -50,3 +50,14 @@ export const PitchedCamera: Story = {
         },
     },
 };
+
+export const ProfileConfig: Story = {
+    args: {
+        profileConfig: {
+            getScale: [1, 1, 20],
+            width: 1000,
+            getColor: [0, 100, 255, 200],
+        },
+        initialViewState: JR_PITCHED_VIEW_STATE,
+    },
+};
