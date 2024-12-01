@@ -65,3 +65,37 @@ export const ProfileConfig: Story = {
         initialViewState: JR_PITCHED_VIEW_STATE,
     },
 };
+
+export const DisableController: Story = {
+    args: {
+        deckGlProps: {
+            controller: false,
+        },
+        initialViewState: JR_PITCHED_VIEW_STATE,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Disable camera interaction.",
+            },
+        },
+    },
+};
+
+export const OverrideController: Story = {
+    args: {
+        deckGlProps: {
+            controller: {
+                dragMode: "rotate",
+            },
+        },
+        initialViewState: JR_PITCHED_VIEW_STATE,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Override default camera interaction.",
+            },
+        },
+    },
+};
