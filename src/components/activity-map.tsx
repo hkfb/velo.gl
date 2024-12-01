@@ -19,6 +19,10 @@ export const INITIAL_VIEW_STATE = {
     zoom: 8,
 };
 
+const DEFAULT_CONTROLLER = {
+    touchRotate: true,
+};
+
 export type ActivityMapProps = {
     children?: React.ReactNode;
     gpx?: string;
@@ -68,12 +72,14 @@ export function ActivityMap({
 
     const layers = [...baseLayers, ...auxLayers, gpxLayer, ...annotationLayers];
 
+    const controller = deckGlProps.controller ?? DEFAULT_CONTROLLER;
+
     return (
         <DeckGL
             {...deckGlProps}
             layers={layers}
             initialViewState={initialViewState}
-            controller
+            controller={controller}
         >
             {children}
         </DeckGL>
