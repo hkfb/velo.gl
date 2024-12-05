@@ -8,6 +8,7 @@ services:
             - VITE_MAPTILER_API_KEY
         volumes:
             - ".:/home/node/velo.gl:rw"
+        working_dir: /home/node/velo.gl
         ports:
             - "6006:6006"
         healthcheck:
