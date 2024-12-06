@@ -47,12 +47,6 @@ npm ci
 npm run storybook
 ```
 
-### Using npm & docker:
-```sh
-npm ci
-npm run docker:storybook
-```
-
 ### Using npm & docker-compose:
 ```sh
 npm ci
