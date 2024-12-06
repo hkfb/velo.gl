@@ -47,13 +47,13 @@ services:
             sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
 
     storybook-github:
-        image: node:bookworm
+        image: velo.gl-storybook
+        build: .
         environment:
             - MAPTILER_API_KEY
             - VITE_MAPTILER_API_KEY
         volumes:
-            - ".:/home/node:rw"
-        working_dir: /home/node
+            - ".:/app:rw"
         ports:
             - "6006:6006"
         healthcheck:
