@@ -1,14 +1,13 @@
 version: "3"
 services:
     storybook:
-        image: node:bookworm
-        user: node
+        image: velo.gl-storybook
+        build: .
         environment:
             - MAPTILER_API_KEY
             - VITE_MAPTILER_API_KEY
         volumes:
-            - ".:/home/node/velo.gl:rw"
-        working_dir: /home/node/velo.gl
+            - ".:/app:rw"
         ports:
             - "6006:6006"
         healthcheck:
@@ -46,21 +45,6 @@ services:
         command: >
             sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
 
-    storybook-github:
-        image: velo.gl-storybook
-        build: .
-        environment:
-            - MAPTILER_API_KEY
-            - VITE_MAPTILER_API_KEY
-        volumes:
-            - ".:/app:rw"
-        ports:
-            - "6006:6006"
-        healthcheck:
-            test: curl --fail http://localhost:6006/
-        command: >
-            sh -c "npm run storybook -- --no-open"
-
     test-storybook-github:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
@@ -69,7 +53,7 @@ services:
         working_dir: /app
         user: root
         depends_on:
-            storybook-github:
+            storybook:
                 condition: service_healthy
         command: >
             sh -c "npm run test:storybook -- --ci --url http://storybook:6006/"
