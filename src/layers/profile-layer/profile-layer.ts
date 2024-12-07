@@ -13,6 +13,7 @@ export type ProfileLayerData = Polyline[];
 export interface ProfileLayerProps<DataT = unknown>
     extends Omit<SimpleMeshLayerProps<DataT>, "mesh"> {
     width?: number;
+    phongShading?: boolean;
 }
 
 const getPosition = (data: unknown) => {
@@ -26,58 +27,10 @@ const defaultProps: DefaultProps<ProfileLayerProps> = {
     id: "road-layer",
     getPosition,
     getColor: [200, 100, 150, 255],
-    material: {
-        ambient: 0.9,
-        diffuse: 0.1,
-    },
     parameters: {
         cullMode: "back",
     },
-};
-
-const getMesh = (activities: ProfileLayerData, width: number) => {
-    const paths = multiLineString(activities);
-
-    const origin = centroid(paths as Feature<MultiLineString>);
-
-    const pathMeterOffset = activities.map((polyline: Polyline) =>
-        getOffset(polyline, origin.geometry.coordinates),
-    );
-
-    const geojson = pathMeterOffset.map((polyline) => lineString(polyline));
-
-    const simplified = geojson.map((polyline) =>
-        simplify(polyline as Feature<LineString>),
-    );
-
-    const extrudedProfile = simplified.map((polyline) =>
-        extrudeProfile(polyline.geometry.coordinates as Polyline, width),
-    );
-
-    const verticesFlat = extrudedProfile[0].positions;
-    const normals = new Float32Array(extrudedProfile[0].normals.flat());
-
-    const positionsBuffer = new Float32Array(verticesFlat);
-    const indicesArray = new Uint32Array(extrudedProfile[0].indices);
-
-    const mesh: SimpleMeshLayerProps["mesh"] = {
-        attributes: {
-            positions: {
-                value: positionsBuffer,
-                size: 3,
-            },
-            normals: {
-                value: normals,
-                size: 3,
-            },
-        },
-        indices: {
-            value: indicesArray,
-            size: 1,
-        },
-    };
-
-    return mesh;
+    phongShading: false,
 };
 
 export class ProfileLayer<
@@ -86,6 +39,58 @@ export class ProfileLayer<
 > extends SimpleMeshLayer<DataT, PropsT & ProfileLayerProps> {
     static layerName = "ProfileLayer";
     static defaultProps = defaultProps;
+
+    _getMesh(activities: ProfileLayerData) {
+        const paths = multiLineString(activities);
+
+        const origin = centroid(paths as Feature<MultiLineString>);
+
+        const pathMeterOffset = activities.map((polyline: Polyline) =>
+            getOffset(polyline, origin.geometry.coordinates),
+        );
+
+        const geojson = pathMeterOffset.map((polyline) => lineString(polyline));
+
+        const simplified = geojson.map((polyline) =>
+            simplify(polyline as Feature<LineString>),
+        );
+
+        const extrudedProfile = simplified.map((polyline) =>
+            extrudeProfile(
+                polyline.geometry.coordinates as Polyline,
+                this.props.width ?? 100,
+            ),
+        );
+
+        const verticesFlat = extrudedProfile[0].positions;
+        const normals = new Float32Array(extrudedProfile[0].normals.flat());
+
+        const positionsBuffer = new Float32Array(verticesFlat);
+        const indicesArray = new Uint32Array(extrudedProfile[0].indices);
+
+        const normalsAttribute = {
+            normals: {
+                value: this.props.phongShading ? normals : new Float32Array(),
+                size: 3,
+            },
+        };
+
+        const mesh: SimpleMeshLayerProps["mesh"] = {
+            attributes: {
+                positions: {
+                    value: positionsBuffer,
+                    size: 3,
+                },
+                ...normalsAttribute,
+            },
+            indices: {
+                value: indicesArray,
+                size: 1,
+            },
+        };
+
+        return mesh;
+    }
 
     updateState(args: UpdateParameters<this>) {
         super.updateState(args);
@@ -99,9 +104,7 @@ export class ProfileLayer<
             return;
         }
 
-        const newWidth = args.props.width;
-
-        const mesh = getMesh(data as ProfileLayerData, newWidth ?? 100);
+        const mesh = this._getMesh(data as ProfileLayerData);
         const model = this.getModel(mesh);
 
         this.state.model?.destroy();
@@ -110,6 +113,6 @@ export class ProfileLayer<
             attributeManager.invalidateAll();
         }
 
-        this.setState({ model, hasNormals: true });
+        this.setState({ model, hasNormals: args.props.phongShading });
     }
 }
