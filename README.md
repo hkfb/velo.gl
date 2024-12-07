@@ -1,5 +1,7 @@
 # Velo.gl
 
+[![codecov](https://codecov.io/github/hkfb/velo.gl/graph/badge.svg?token=51M41YJFGO)](https://codecov.io/github/hkfb/velo.gl)
+
 Library for interactive 3D visualization of GPX activities.
 
 ![GpxLayer](https://github.com/hkfb/velo.gl/raw/main/sample/velo.gl.webp)
