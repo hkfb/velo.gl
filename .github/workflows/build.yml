@@ -57,3 +57,8 @@ jobs:
           MAPTILER_API_KEY: ${{ secrets.MAPTILER_API_KEY }}
         run: npm run docker:compose:test:github
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
