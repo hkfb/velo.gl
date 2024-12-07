@@ -3,6 +3,81 @@ import { LngLatToLocaleCartesian } from "converter-locale-cartesian";
 export type Point3d = [number, number, number];
 export type Polyline = Point3d[];
 
+/**
+ * Compute per-vertex normals by averaging the normals of all faces that share each vertex.
+ * @param positions - Flat array of vertex positions [x,y,z,...]
+ * @param indices - Array of triangle indices
+ */
+function computePerVertexNormals(
+    positions: number[],
+    indices: number[],
+): number[] {
+    const vertexCount = positions.length / 3;
+    const normals = new Float32Array(vertexCount * 3);
+
+    // Accumulate normals
+    for (let i = 0; i < indices.length; i += 3) {
+        const i0 = indices[i] * 3;
+        const i1 = indices[i + 1] * 3;
+        const i2 = indices[i + 2] * 3;
+
+        const x0 = positions[i0],
+            y0 = positions[i0 + 1],
+            z0 = positions[i0 + 2];
+        const x1 = positions[i1],
+            y1 = positions[i1 + 1],
+            z1 = positions[i1 + 2];
+        const x2 = positions[i2],
+            y2 = positions[i2 + 1],
+            z2 = positions[i2 + 2];
+
+        // Edges
+        const ex1 = x1 - x0,
+            ey1 = y1 - y0,
+            ez1 = z1 - z0;
+        const ex2 = x2 - x0,
+            ey2 = y2 - y0,
+            ez2 = z2 - z0;
+
+        // Face normal via cross product
+        const nx = ey1 * ez2 - ez1 * ey2;
+        const ny = ez1 * ex2 - ex1 * ez2;
+        const nz = ex1 * ey2 - ey1 * ex2;
+
+        // Add to each vertex normal
+        normals[i0] += nx;
+        normals[i0 + 1] += ny;
+        normals[i0 + 2] += nz;
+        normals[i1] += nx;
+        normals[i1 + 1] += ny;
+        normals[i1 + 2] += nz;
+        normals[i2] += nx;
+        normals[i2 + 1] += ny;
+        normals[i2 + 2] += nz;
+    }
+
+    // Normalize each vertex normal
+    for (let i = 0; i < vertexCount; i++) {
+        const ix = i * 3;
+        const nx = normals[ix],
+            ny = normals[ix + 1],
+            nz = normals[ix + 2];
+        const len = Math.hypot(nx, ny, nz);
+        if (len > 1e-6) {
+            normals[ix] /= len;
+            normals[ix + 1] /= len;
+            normals[ix + 2] /= len;
+        } else {
+            // In case of a degenerate normal, just set it to something consistent
+            normals[ix] = 0;
+            normals[ix + 1] = 0;
+            normals[ix + 2] = 1;
+        }
+    }
+
+    return Array.from(normals);
+}
+
 export function getOffset(geometry: Polyline, origin: number[]): Polyline {
     const lngLatToLocalCartesian = new LngLatToLocaleCartesian(
         origin[0],
@@ -26,7 +101,7 @@ export function getOffset(geometry: Polyline, origin: number[]): Polyline {
 export function extrudeProfile(
     polyline: Polyline,
     roadWidth: number,
-): { positions: number[]; indices: number[] } {
+): { positions: number[]; indices: number[]; normals: number[] } {
     const positions: number[] = [];
     const indices: number[] = [];
 
@@ -154,5 +229,7 @@ export function extrudeProfile(
         indices.push(idx + 3, idx + 6, idx + 2);
     }
 
-    return { positions, indices };
+    const vertexNormals = computePerVertexNormals(positions, indices);
+
+    return { positions, indices, normals: vertexNormals };
 }

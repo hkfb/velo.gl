@@ -26,6 +26,13 @@ const defaultProps: DefaultProps<ProfileLayerProps> = {
     id: "road-layer",
     getPosition,
     getColor: [200, 100, 150, 255],
+    material: {
+        ambient: 0.9,
+        diffuse: 0.1,
+    },
+    parameters: {
+        cullMode: "back",
+    },
 };
 
 const getMesh = (activities: ProfileLayerData, width: number) => {
@@ -48,6 +55,7 @@ const getMesh = (activities: ProfileLayerData, width: number) => {
     );
 
     const verticesFlat = extrudedProfile[0].positions;
+    const normals = new Float32Array(extrudedProfile[0].normals.flat());
 
     const positionsBuffer = new Float32Array(verticesFlat);
     const indicesArray = new Uint32Array(extrudedProfile[0].indices);
@@ -56,6 +64,10 @@ const getMesh = (activities: ProfileLayerData, width: number) => {
         attributes: {
             positions: {
                 value: positionsBuffer,
+                size: 3,
+            },
+            normals: {
+                value: normals,
                 size: 3,
             },
         },
@@ -98,6 +110,6 @@ export class ProfileLayer<
             attributeManager.invalidateAll();
         }
 
-        this.setState({ model });
+        this.setState({ model, hasNormals: true });
     }
 }
