@@ -231,5 +231,20 @@ export function extrudeProfile(
 
     const vertexNormals = computePerVertexNormals(positions, indices);
 
+    // --- Force top face normals to flat and horizontal ---
+    // Top vertices: For each cross-section, TL = i*4+0, TR = i*4+3 are top vertices.
+    // We'll set them to (0,0,1).
+    for (let i = 0; i < n; i++) {
+        const tlIndex = (i * 4 + 0) * 3; // top-left normal index
+        const trIndex = (i * 4 + 3) * 3; // top-right normal index
+
+        vertexNormals[tlIndex] = 0;
+        vertexNormals[tlIndex + 1] = 0;
+        vertexNormals[tlIndex + 2] = 1;
+        vertexNormals[trIndex] = 0;
+        vertexNormals[trIndex + 1] = 0;
+        vertexNormals[trIndex + 2] = 1;
+    }
+
     return { positions, indices, normals: vertexNormals };
 }
