@@ -1,5 +1,8 @@
 import type { StoryObj } from "@storybook/react";
-import { ActivityProfileLayer } from "./activity-profile-layer";
+import {
+    ActivityProfileLayer,
+    ActivityProfileLayerProps,
+} from "./activity-profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import {
@@ -198,6 +201,91 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         docs: {
             description: {
                 story: "Adjusting lateral width of profiles.",
+            },
+        },
+    },
+};
+
+export const PhongShading: StoryObj<
+    {
+        color: string;
+        verticalScale: number;
+        width: number;
+    } & ActivityProfileLayerProps
+> = {
+    args: {
+        color: "yellow",
+        phongShading: true,
+        material: {
+            ambient: 0.7,
+            diffuse: 0.4,
+            shininess: 10,
+        },
+        verticalScale: 2,
+        width: 500,
+    },
+    argTypes: {
+        color: {
+            control: {
+                type: "color",
+            },
+        },
+        verticalScale: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 10,
+                step: 0.1,
+            },
+        },
+        width: {
+            control: {
+                type: "range",
+                min: -1,
+                max: 10000,
+                step: 1,
+            },
+        },
+    },
+    render: ({ color, phongShading, material, verticalScale, width }) => {
+        const data = JR_ACTIVITY_FILE;
+
+        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
+            r: 0,
+            g: 0,
+            b: 0,
+            opacity: 1,
+        };
+
+        const getColor: Color = [r, g, b, opacity * 255];
+
+        const getScale: [number, number, number] = [1, 1, verticalScale];
+
+        const props = {
+            data,
+            id: "profile",
+            getColor,
+            phongShading,
+            material,
+            getScale,
+            width,
+        };
+
+        const profile = new ActivityProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Profile coloring.",
             },
         },
     },
