@@ -282,11 +282,4 @@ export const PhongShading: StoryObj<
             ></DeckGL>
         );
     },
-    parameters: {
-        docs: {
-            description: {
-                story: "Profile coloring.",
-            },
-        },
-    },
 };
