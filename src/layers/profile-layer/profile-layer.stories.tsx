@@ -1,4 +1,4 @@
-import { ProfileLayer } from "./profile-layer";
+import { ProfileLayer, type ProfileLayerProps } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import { Color } from "@deck.gl/core";
 import * as React from "react";
@@ -254,6 +254,66 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         docs: {
             description: {
                 story: "Adjusting lateral width of profiles.",
+            },
+        },
+    },
+};
+
+export const PhongShading: StoryObj<
+    { color: string } & Pick<ProfileLayerProps, "phongShading" | "material">
+> = {
+    args: {
+        color: "lightgreen",
+        phongShading: true,
+        material: {
+            ambient: 0.7,
+            diffuse: 0.4,
+            shininess: 10,
+        },
+    },
+    argTypes: {
+        color: {
+            control: {
+                type: "color",
+            },
+        },
+    },
+    render: ({ color, phongShading, material }) => {
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
+
+        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
+            r: 0,
+            g: 0,
+            b: 0,
+            opacity: 1,
+        };
+
+        const getColor: Color = [r, g, b, opacity * 255];
+
+        const props = {
+            data,
+            id: "profile",
+            width: 3000,
+            getColor,
+            phongShading,
+            material,
+        };
+
+        const profile = new ProfileLayer({ ...props });
+        const base = new StreetLayer();
+
+        return (
+            <DeckGL
+                layers={[base, profile]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Profile coloring.",
             },
         },
     },
