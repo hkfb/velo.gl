@@ -1,15 +1,22 @@
 import { toMatchImageSnapshot } from "jest-image-snapshot";
+import { type Page } from "playwright";
 
-import { getStoryContext, type TestRunnerConfig } from "@storybook/test-runner";
+import {
+    getStoryContext,
+    TestContext,
+    type TestRunnerConfig,
+} from "@storybook/test-runner";
 
 const customSnapshotsDir = `${process.cwd()}/__snapshots__`;
 
-const screenshotTest = async (page, context) => {
+const screenshotTest = async (page: Page, context: TestContext) => {
     let previousScreenshot: Buffer = Buffer.from("");
 
     let stable = false;
 
     const pollInterval = 16000;
+
+    const browserName: string = page.context().browser().browserType().name();
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
@@ -27,7 +34,7 @@ const screenshotTest = async (page, context) => {
     // @ts-expect-error TS2551
     expect(previousScreenshot).toMatchImageSnapshot({
         customSnapshotsDir,
-        customSnapshotIdentifier: context.id,
+        customSnapshotIdentifier: `${browserName}_${context.id}`,
     });
 };
 
@@ -36,6 +43,10 @@ const config: TestRunnerConfig = {
         jest.retryTimes(3);
 
         expect.extend({ toMatchImageSnapshot });
+    },
+
+    async preVisit(page, story) {
+        page.setViewportSize({width: 800, height: 600});
     },
 
     async postVisit(page, context) {
