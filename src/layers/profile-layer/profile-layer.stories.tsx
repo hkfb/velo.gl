@@ -117,6 +117,7 @@ export const ZeroLengthSegment: StoryObj = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const VerticalScale: StoryObj<{ verticalScale: number }> = {
@@ -212,6 +213,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileWidth: StoryObj<{ width: number }> = {

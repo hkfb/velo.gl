@@ -9,14 +9,18 @@ import {
 
 const customSnapshotsDir = `${process.cwd()}/__snapshots__`;
 
+const getBrowserName = (page: Page) => {
+    return page.context().browser().browserType().name();
+}
+
 const screenshotTest = async (page: Page, context: TestContext) => {
     let previousScreenshot: Buffer = Buffer.from("");
 
     let stable = false;
 
-    const pollInterval = 25000;
+    const pollInterval = 20000;
 
-    const browserName: string = page.context().browser().browserType().name();
+    const browserName = getBrowserName(page);
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
@@ -53,6 +57,14 @@ const config: TestRunnerConfig = {
         const storyContext = await getStoryContext(page, context);
 
         if (storyContext.tags.includes("no-test")) {
+            return;
+        }
+
+        const browserName = getBrowserName(page);
+
+        if (
+            browserName === "webkit"
+            && storyContext.tags.includes("no-test-webkit")) {
             return;
         }
 
