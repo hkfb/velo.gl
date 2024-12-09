@@ -9,5 +9,6 @@ const testRunnerConfig = getJestConfig();
 module.exports = {
     ...testRunnerConfig,
     testTimeout: 120000,
-    maxWorkers: process.env.CI ? 4 : 8,
+    maxWorkers: 4
+    //maxWorkers: process.env.CI ? 4 : 8,
 };

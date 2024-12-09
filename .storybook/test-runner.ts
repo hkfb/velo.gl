@@ -14,7 +14,7 @@ const screenshotTest = async (page: Page, context: TestContext) => {
 
     let stable = false;
 
-    const pollInterval = 20000;
+    const pollInterval = 25000;
 
     const browserName: string = page.context().browser().browserType().name();
 
