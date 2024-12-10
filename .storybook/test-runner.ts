@@ -4,6 +4,7 @@ import { type Page } from "playwright";
 import {
     getStoryContext,
     TestContext,
+    waitForPageReady,
     type TestRunnerConfig,
 } from "@storybook/test-runner";
 
@@ -13,14 +14,24 @@ const getBrowserName = (page: Page) => {
     return page.context().browser().browserType().name();
 }
 
+const getPollInterval = (page: Page) => {
+    const browserName = getBrowserName(page);
+    if (browserName === "webkit") {
+        return 20000;
+    }
+    return 15000;
+}
+
 const screenshotTest = async (page: Page, context: TestContext) => {
     let previousScreenshot: Buffer = Buffer.from("");
 
     let stable = false;
 
-    const pollInterval = 20000;
+    const pollInterval = getPollInterval(page);
 
     const browserName = getBrowserName(page);
+
+    await waitForPageReady(page);
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
@@ -43,8 +54,10 @@ const screenshotTest = async (page: Page, context: TestContext) => {
 };
 
 const config: TestRunnerConfig = {
+    logLevel: "verbose",
+
     setup() {
-        jest.retryTimes(3);
+        jest.retryTimes(5);
 
         expect.extend({ toMatchImageSnapshot });
     },

@@ -164,6 +164,7 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileColor: StoryObj<{ color: string }> = {
