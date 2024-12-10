@@ -27,7 +27,7 @@ services:
             storybook:
                 condition: service_healthy
         command: >
-            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/ --coverage"
+            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/ --coverage --browsers chromium,webkit --failOnConsole"
 
     test-storybook-update:
         image: velo.gl-test-storybook
@@ -43,7 +43,7 @@ services:
             storybook:
                 condition: service_healthy
         command: >
-            sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/"
+            sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/ --browsers chromium,webkit"
 
     test-storybook-github:
         image: velo.gl-test-storybook
@@ -56,7 +56,7 @@ services:
             storybook:
                 condition: service_healthy
         command: >
-            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/ --coverage"
+            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/ --coverage --browsers chromium,webkit --failOnConsole"
 
     sandbox-read-only:
         image: node:bookworm

@@ -70,7 +70,7 @@ export class ProfileLayer<
 
         const normalsAttribute = {
             normals: {
-                value: this.props.phongShading ? normals : new Float32Array(),
+                value: normals,
                 size: 3,
             },
         };

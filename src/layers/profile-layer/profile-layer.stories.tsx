@@ -117,6 +117,7 @@ export const ZeroLengthSegment: StoryObj = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const VerticalScale: StoryObj<{ verticalScale: number }> = {
@@ -147,11 +148,10 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         };
 
         const profile = new ProfileLayer({ ...props });
-        const base = new StreetLayer();
 
         return (
             <DeckGL
-                layers={[base, profile]}
+                layers={[profile]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
@@ -164,6 +164,7 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileColor: StoryObj<{ color: string }> = {
@@ -197,11 +198,10 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         };
 
         const profile = new ProfileLayer({ ...props });
-        const base = new StreetLayer();
 
         return (
             <DeckGL
-                layers={[base, profile]}
+                layers={[profile]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
@@ -214,6 +214,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileWidth: StoryObj<{ width: number }> = {
@@ -240,11 +241,10 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         };
 
         const profile = new ProfileLayer({ ...props });
-        const base = new StreetLayer();
 
         return (
             <DeckGL
-                layers={[base, profile]}
+                layers={[profile]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
@@ -300,11 +300,10 @@ export const PhongShading: StoryObj<
         };
 
         const profile = new ProfileLayer({ ...props });
-        const base = new StreetLayer();
 
         return (
             <DeckGL
-                layers={[base, profile]}
+                layers={[profile]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
