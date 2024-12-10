@@ -31,7 +31,9 @@ const screenshotTest = async (page: Page, context: TestContext) => {
 
     const browserName = getBrowserName(page);
 
-    await waitForPageReady(page);
+    if (browserName === "webkit") {
+        await waitForPageReady(page);
+    }
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
@@ -57,7 +59,7 @@ const config: TestRunnerConfig = {
     logLevel: "verbose",
 
     setup() {
-        jest.retryTimes(5);
+        jest.retryTimes(3);
 
         expect.extend({ toMatchImageSnapshot });
     },
