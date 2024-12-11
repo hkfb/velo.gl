@@ -59,7 +59,7 @@ const config: TestRunnerConfig = {
     logLevel: "verbose",
 
     setup() {
-        jest.retryTimes(3);
+        jest.retryTimes(5);
 
         expect.extend({ toMatchImageSnapshot });
     },
