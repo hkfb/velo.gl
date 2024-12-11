@@ -35,13 +35,16 @@ export const ElTeide: Story = {
     tags: ["no-test-webkit"],
 };
 
-export function ActivityMapText() {
-    return (
-        <ActivityMap>
-            <div>Text</div>
-        </ActivityMap>
-    );
-}
+export const ActivityMapText: Story = {
+    render: () => {
+        return (
+            <ActivityMap>
+                <div>Text</div>
+            </ActivityMap>
+        );
+    },
+    tags: ["no-test-webkit"],
+};
 
 export const AnnotationLayer: Story = {
     render: () => {
