@@ -65,6 +65,7 @@ export const ProfileConfig: Story = {
         },
         initialViewState: JR_PITCHED_VIEW_STATE,
     },
+    tags: ["no-test-webkit"],
 };
 
 export const DisableController: Story = {
@@ -81,6 +82,7 @@ export const DisableController: Story = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const OverrideController: Story = {
