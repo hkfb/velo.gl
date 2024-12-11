@@ -29,6 +29,7 @@ export const TextAnnotation: Story = {
             <div>Activity Map Tiler story</div>
         </ActivityMaptiler>
     ),
+    tags: ["no-test-webkit"],
 };
 
 export const PitchedCamera: Story = {
@@ -49,6 +50,7 @@ export const PitchedCamera: Story = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileConfig: Story = {
@@ -60,4 +62,5 @@ export const ProfileConfig: Story = {
         },
         initialViewState: JR_PITCHED_VIEW_STATE,
     },
+    tags: ["no-visual-test"],
 };

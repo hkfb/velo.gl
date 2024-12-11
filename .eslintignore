@@ -7,3 +7,5 @@ dist
 storybook-static
 package-lock.json
 __snapshots__
+core
+coverage

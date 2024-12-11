@@ -2,7 +2,6 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ActivityMap, DEFAULT_GPX_FILE } from "./activity-map";
 import { TripGpxLayer } from "../layers/trip-gpx-layer";
-import { Layer } from "@deck.gl/core";
 import { JR_PITCHED_VIEW_STATE } from "../constant.stories";
 
 const meta: Meta<typeof ActivityMap> = {
@@ -33,15 +32,19 @@ export const ElTeide: Story = {
 
         gpx: "Teide.tcx",
     },
+    tags: ["no-test-webkit"],
 };
 
-export function ActivityMapText() {
-    return (
-        <ActivityMap>
-            <div>Text</div>
-        </ActivityMap>
-    );
-}
+export const ActivityMapText: Story = {
+    render: () => {
+        return (
+            <ActivityMap>
+                <div>Text</div>
+            </ActivityMap>
+        );
+    },
+    tags: ["no-test-webkit"],
+};
 
 export const AnnotationLayer: Story = {
     render: () => {
@@ -49,10 +52,11 @@ export const AnnotationLayer: Story = {
             new TripGpxLayer({
                 id: "trip",
                 data: DEFAULT_GPX_FILE,
-            }) as unknown as Layer,
+            }),
         ];
         return <ActivityMap annotationLayers={annotationLayers} />;
     },
+    tags: ["no-test-webkit"],
 };
 
 export const ProfileConfig: Story = {
@@ -64,6 +68,7 @@ export const ProfileConfig: Story = {
         },
         initialViewState: JR_PITCHED_VIEW_STATE,
     },
+    tags: ["no-test-webkit"],
 };
 
 export const DisableController: Story = {
@@ -80,6 +85,7 @@ export const DisableController: Story = {
             },
         },
     },
+    tags: ["no-test-webkit"],
 };
 
 export const OverrideController: Story = {

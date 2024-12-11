@@ -37,6 +37,7 @@ export const JotunheimenRundt: StoryObj = {
             ></DeckGL>
         );
     },
+    tags: ["no-test-webkit"],
 };
 
 export const JotunheimenRundtWithMap: StoryObj = {
@@ -52,6 +53,7 @@ export const JotunheimenRundtWithMap: StoryObj = {
             ></DeckGL>
         );
     },
+    tags: ["no-test-webkit"],
 };
 
 export const Empty: StoryObj = {

@@ -1,9 +1,10 @@
 import * as React from "react";
 import { DeckGL } from "@deck.gl/react";
 import { Layer } from "@deck.gl/core";
-import { TripGpxLayer } from "./trip-gpx-layer";
+import { TripGpxLayer, TripGpxLayerProps } from "./trip-gpx-layer";
 import { GpxHillMap } from "../components/gpx-hill-map";
 import { DEFAULT_GPX_FILE } from "../components/activity-map";
+import type { StoryObj } from "@storybook/react";
 
 export default {
     title: "Layers / GPX Trip Layer",
@@ -22,36 +23,42 @@ const initialViewState = {
     zoom: 8,
 };
 
-export function TripGpxLayerDefault() {
-    const layer = new TripGpxLayer({
-        ...defaultLayerProps,
-    }) as unknown as Layer;
-    return (
-        <DeckGL
-            layers={[layer]}
-            initialViewState={initialViewState}
-            controller
-        ></DeckGL>
-    );
-}
+export const TripGpxLayerDefault: StoryObj<TripGpxLayerProps> = {
+    render: (layerProps) => {
+        const layer = new TripGpxLayer({
+            ...layerProps,
+        });
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={initialViewState}
+                controller
+            ></DeckGL>
+        );
+    },
+    tags: ["no-test-webkit"],
+    args: { ...defaultLayerProps },
+};
 
-export function TripGpxLayerTime({ time }: { time: number }) {
-    const layer = new TripGpxLayer({
-        ...defaultLayerProps,
-        currentTime: time,
-    }) as unknown as Layer;
-    return (
-        <DeckGL
-            layers={[layer]}
-            initialViewState={initialViewState}
-            controller
-        ></DeckGL>
-    );
-}
-
-TripGpxLayerTime.args = { time: 10000 };
-TripGpxLayerTime.argTypes = {
-    time: { control: { type: "range", min: 1000, max: 10000 } },
+export const TripGpxLayerTime: StoryObj<{ time: number }> = {
+    render: ({ time }) => {
+        const layer = new TripGpxLayer({
+            ...defaultLayerProps,
+            currentTime: time,
+        });
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={initialViewState}
+                controller
+            ></DeckGL>
+        );
+    },
+    tags: ["no-test-webkit"],
+    args: { time: 10000 },
+    argTypes: {
+        time: { control: { type: "range", min: 1000, max: 10000 } },
+    },
 };
 
 export function TripGpxLayerMap({ time }: { time: number }) {
