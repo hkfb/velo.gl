@@ -17,9 +17,9 @@ const getBrowserName = (page: Page) => {
 const getPollInterval = (page: Page) => {
     const browserName = getBrowserName(page);
     if (browserName === "webkit") {
-        return 20000;
+        return 30000;
     }
-    return 15000;
+    return 20000;
 }
 
 const screenshotTest = async (page: Page, context: TestContext) => {
