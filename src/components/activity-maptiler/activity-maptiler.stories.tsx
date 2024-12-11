@@ -62,5 +62,5 @@ export const ProfileConfig: Story = {
         },
         initialViewState: JR_PITCHED_VIEW_STATE,
     },
-    tags: ["no-test-webkit"],
+    tags: ["no-visual-test"],
 };
