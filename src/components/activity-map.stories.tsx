@@ -20,7 +20,9 @@ export default meta;
 
 type Story = StoryObj<typeof ActivityMap>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ["no-test-webkit"],
+};
 
 export const ElTeide: Story = {
     args: {

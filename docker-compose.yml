@@ -45,6 +45,21 @@ services:
         command: >
             sh -c "npm run test:storybook -- --updateSnapshot --url http://storybook:6006/ --browsers chromium,webkit"
 
+    storybook-github:
+        image: velo.gl-storybook
+        build: .
+        environment:
+            - MAPTILER_API_KEY
+            - VITE_MAPTILER_API_KEY
+        volumes:
+            - ".:/app:rw"
+        ports:
+            - "6006:6006"
+        healthcheck:
+            test: curl --fail http://localhost:6006/
+        command: >
+            sh -c "npm run storybook -- --no-open"
+
     test-storybook-github:
         image: velo.gl-test-storybook
         build: ./config/test-storybook
@@ -53,10 +68,10 @@ services:
         working_dir: /app
         user: root
         depends_on:
-            storybook:
+            storybook-github:
                 condition: service_healthy
         command: >
-            sh -c "npm run test:storybook -- --ci --url http://storybook:6006/ --coverage --browsers chromium,webkit --failOnConsole"
+            sh -c "npm run test:storybook -- --ci --url http://storybook-github:6006/ --coverage --browsers chromium,webkit --failOnConsole"
 
     sandbox-read-only:
         image: node:bookworm
