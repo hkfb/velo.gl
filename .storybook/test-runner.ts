@@ -31,9 +31,7 @@ const screenshotTest = async (page: Page, context: TestContext) => {
 
     const browserName = getBrowserName(page);
 
-    if (browserName === "webkit") {
-        await waitForPageReady(page);
-    }
+    await waitForPageReady(page);
 
     while (!stable) {
         const currentScreenshot = await page.screenshot();
