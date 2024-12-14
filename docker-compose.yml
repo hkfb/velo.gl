@@ -1,13 +1,15 @@
 version: "3"
+
 services:
     storybook:
-        image: velo.gl-storybook
-        build: .
+        image: node:bookworm
+        user: node
+        working_dir: /home/node/velo.gl
         environment:
             - MAPTILER_API_KEY
             - VITE_MAPTILER_API_KEY
         volumes:
-            - ".:/app:rw"
+            - ".:/home/node/velo.gl:rw"
         ports:
             - "6006:6006"
         healthcheck:
@@ -16,12 +18,10 @@ services:
             sh -c "npm run storybook -- --no-open"
 
     test-storybook:
-        image: velo.gl-test-storybook
-        build: ./config/test-storybook
+        image: mcr.microsoft.com/playwright:v1.49.1-noble
         volumes:
-            - ".:/app:rw"
-            - "./__snapshots__:/app/__snapshots__:rw"
-        working_dir: /app
+            - ".:/home/ubuntu/velo.gl:rw"
+        working_dir: /home/ubuntu/velo.gl
         user: ubuntu
         depends_on:
             storybook:
