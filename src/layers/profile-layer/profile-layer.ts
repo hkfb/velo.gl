@@ -64,6 +64,7 @@ export class ProfileLayer<
 
         const verticesFlat = extrudedProfile[0].positions;
         const normals = new Float32Array(extrudedProfile[0].normals.flat());
+        const texCoords = new Float32Array(extrudedProfile[0].texCoords.flat());
 
         const positionsBuffer = new Float32Array(verticesFlat);
         const indicesArray = new Uint32Array(extrudedProfile[0].indices);
@@ -75,6 +76,13 @@ export class ProfileLayer<
             },
         };
 
+        const texCoordsAttribute = {
+            texCoords: {
+                value: texCoords,
+                size: 2,
+            },
+        };
+
         const mesh: SimpleMeshLayerProps["mesh"] = {
             attributes: {
                 positions: {
@@ -82,6 +90,7 @@ export class ProfileLayer<
                     size: 3,
                 },
                 ...normalsAttribute,
+                ...texCoordsAttribute,
             },
             indices: {
                 value: indicesArray,

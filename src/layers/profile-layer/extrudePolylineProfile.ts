@@ -101,9 +101,15 @@ export function getOffset(geometry: Polyline, origin: number[]): Polyline {
 export function extrudeProfile(
     polyline: Polyline,
     roadWidth: number,
-): { positions: number[]; indices: number[]; normals: number[] } {
+): {
+    positions: number[];
+    indices: number[];
+    normals: number[];
+    texCoords: number[];
+} {
     const positions: number[] = [];
     const indices: number[] = [];
+    const texCoords: number[] = [];
 
     const n = polyline.length;
     if (n < 2) {
@@ -180,6 +186,18 @@ export function extrudeProfile(
         miterLengths.push(miterLength);
     }
 
+    let totalLength = 0;
+    const segmentLengths: number[] = [0];
+    for (let i = 1; i < polyline.length; i++) {
+        const p0 = polyline[i - 1];
+        const p1 = polyline[i];
+        const dx = p1[0] - p0[0];
+        const dy = p1[1] - p0[1];
+        const segmentLength = Math.hypot(dx, dy);
+        totalLength += segmentLength;
+        segmentLengths.push(totalLength);
+    }
+
     // Build vertices
     for (let i = 0; i < n; i++) {
         const p = polyline[i];
@@ -197,15 +215,25 @@ export function extrudeProfile(
         const xRight = p[0] + offsetX;
         const yRight = p[1] + offsetY;
 
+        // Compute the V coordinate based on the cumulative length
+        const v = segmentLengths[i] / totalLength;
+
         // Add vertices in the order: TL, BL, BR, TR
         // Top Left (TL)
         positions.push(xLeft, yLeft, p[2]);
+        texCoords.push(0, v); // U = 0 for left side
+
         // Bottom Left (BL)
         positions.push(xLeft, yLeft, 0);
+        texCoords.push(0, v);
+
         // Bottom Right (BR)
         positions.push(xRight, yRight, 0);
+        texCoords.push(1, v);
+
         // Top Right (TR)
         positions.push(xRight, yRight, p[2]);
+        texCoords.push(1, v);
     }
 
     // Build indices
@@ -246,5 +274,5 @@ export function extrudeProfile(
         vertexNormals[trIndex + 2] = 1;
     }
 
-    return { positions, indices, normals: vertexNormals };
+    return { positions, indices, normals: vertexNormals, texCoords };
 }
