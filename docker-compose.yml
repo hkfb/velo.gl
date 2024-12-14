@@ -1,13 +1,15 @@
 version: "3"
+
 services:
     storybook:
-        image: velo.gl-storybook
-        build: .
+        image: node:bookworm
+        user: node
+        working_dir: /home/node/velo.gl
         environment:
             - MAPTILER_API_KEY
             - VITE_MAPTILER_API_KEY
         volumes:
-            - ".:/app:rw"
+            - ".:/home/node/velo.gl:rw"
         ports:
             - "6006:6006"
         healthcheck:
