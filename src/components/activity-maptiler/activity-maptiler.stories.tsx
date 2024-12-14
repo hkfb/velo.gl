@@ -29,7 +29,7 @@ export const TextAnnotation: Story = {
             <div>Activity Map Tiler story</div>
         </ActivityMaptiler>
     ),
-    tags: ["no-test-webkit"],
+    tags: ["no-visual-test"],
 };
 
 export const PitchedCamera: Story = {
