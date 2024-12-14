@@ -15,3 +15,7 @@ export {
 export { GpxHillMap } from "./components/gpx-hill-map";
 export { HillLayer } from "./layers/hill-layer";
 export { useActivityView } from "./hooks/useActivityView";
+export {
+    ActivityProfileLayer,
+    ActivityProfileLayerProps,
+} from "./layers/activity-profile-layer/activity-profile-layer";
