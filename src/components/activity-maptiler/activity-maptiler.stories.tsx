@@ -50,7 +50,7 @@ export const PitchedCamera: Story = {
             },
         },
     },
-    tags: ["no-test-webkit"],
+    tags: ["no-visual-test"],
 };
 
 export const ProfileConfig: Story = {
