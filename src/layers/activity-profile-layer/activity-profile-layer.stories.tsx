@@ -25,7 +25,7 @@ export default {
     },
 };
 
-async function uriToBlob(uri) {
+async function uriToBlob(uri: string) {
     try {
         // Fetch the URI content
         const response = await fetch(uri);
