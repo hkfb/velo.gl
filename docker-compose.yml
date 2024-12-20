@@ -15,7 +15,7 @@ services:
         healthcheck:
             test: curl --fail http://localhost:6006/
         command: >
-            sh -c "npm run storybook -- --no-open"
+            sh -c "VITE_COVERAGE=false npm run storybook -- --no-open"
 
     test-storybook:
         image: mcr.microsoft.com/playwright:v1.49.1-noble
