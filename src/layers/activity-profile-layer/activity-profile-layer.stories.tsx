@@ -25,6 +25,25 @@ export default {
     },
 };
 
+async function uriToBlob(uri: string) {
+    try {
+        // Fetch the URI content
+        const response = await fetch(uri);
+
+        // Ensure the fetch was successful
+        if (!response.ok) {
+            throw new Error(`Failed to fetch URI: ${response.statusText}`);
+        }
+
+        // Convert the response into a Blob
+        const blob = await response.blob();
+        return blob;
+    } catch (error) {
+        console.error("Error converting URI to Blob:", error);
+        throw error;
+    }
+}
+
 export const JotunheimenRundt: StoryObj = {
     render: () => {
         const data = JR_ACTIVITY_FILE;
@@ -283,5 +302,43 @@ export const PhongShading: StoryObj<
                 controller
             ></DeckGL>
         );
+    },
+};
+
+export const DataUrl: StoryObj = {
+    render: () => {
+        const [dataUri, setDataUri] = React.useState<string>();
+        React.useEffect(() => {
+            const reader = new FileReader();
+            reader.addEventListener(
+                "load",
+                () => {
+                    setDataUri(reader.result as string);
+                },
+                false,
+            );
+            uriToBlob(JR_ACTIVITY_FILE).then((blob) => {
+                reader.readAsDataURL(blob);
+            });
+        }, []);
+
+        const layer = dataUri
+            ? new ActivityProfileLayer({ data: dataUri })
+            : null;
+
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Use a URL as profile data.",
+            },
+        },
     },
 };
