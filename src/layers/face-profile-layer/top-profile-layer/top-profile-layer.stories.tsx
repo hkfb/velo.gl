@@ -2,6 +2,9 @@ import {
     TopProfileLayer,
     type TopProfileLayerProps,
 } from "./top-profile-layer";
+import {
+    SideProfileLayer,
+} from "../side-profile-layer/side-profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import { Color } from "@deck.gl/core";
 import * as React from "react";
@@ -31,8 +34,10 @@ const INITIAL_VIEW_STATE = {
 
 const POLYLINE = [
     { y: 61.45, x: 7.29, z: 10000 },
+    { y: 61.76, x: 7.3, z: 7000 },
     { y: 62.26, x: 8.3, z: 0 },
     { y: 62.17, x: 8.51, z: 7000 },
+    { y: 62.07, x: 8.71, z: 6500 },
     { y: 61.1, x: 9.51, z: 8000 },
 ];
 
@@ -40,10 +45,9 @@ const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
 
 function defaultColorScale(t: number): [number, number, number, number] {
     // Map t in [0, 1] to a color
-    // For example, from blue to red
-    const r = t * 255;
-    const g = 0;
-    const b = (1 - t) * 255;
+    const r = (Math.trunc(t * 8) * 255) / 8;
+    const g = (r + 100) % 255;
+    const b = 255 - r;
     const a = 255;
     return [r, g, b, a];
 }
@@ -377,6 +381,37 @@ export const TopProfileTexture: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+};
+
+export const WithSideFaces: StoryObj<TopProfileLayerProps> = {
+    args: {
+        phongShading: true,
+    },
+    render: ({ phongShading }) => {
+        const data = React.useMemo(() => [PATH_LAT_LONG], []);
+
+        const texture = createGradientTexture();
+
+        const props = {
+            data,
+            id: "profile",
+            pickable: true,
+            width: 3000,
+            texture,
+            phongShading,
+        };
+
+        const topLayer = new TopProfileLayer({ ...props });
+        const sideLayer = new SideProfileLayer({ ...props });
+
+        return (
+            <DeckGL
+                layers={[topLayer, sideLayer]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
