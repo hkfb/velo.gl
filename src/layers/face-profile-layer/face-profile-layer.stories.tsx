@@ -1,20 +1,16 @@
-import {
-    TopProfileLayer,
-    type TopProfileLayerProps,
-} from "./top-profile-layer";
-import { SideProfileLayer } from "../side-profile-layer/side-profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import { Color } from "@deck.gl/core";
 import * as React from "react";
-import { Point3d } from "../../profile-layer/extrudePolylineProfile";
+import { Point3d } from "../profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
-import { StreetLayer } from "../../street-layer";
-import { JR_PITCHED_VIEW_STATE } from "../../../constant.stories";
+import { StreetLayer } from "../street-layer";
+import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
 import * as d3 from "d3-color";
 import { type TextureProps } from "@luma.gl/core";
+import { FaceProfileLayer, FaceProfileLayerProps } from "./face-profile-layer";
 
 export default {
-    title: "Layers / Top Profile Layer",
+    title: "Layers / Face Profile Layer",
     tags: ["autodocs"],
     parameters: {
         docs: {
@@ -76,7 +72,7 @@ function createGradientTexture(
     return textureParams;
 }
 
-export const TopProfileLayerDefault: StoryObj = {
+export const FaceProfileLayerDefault: StoryObj = {
     render: () => {
         const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
@@ -87,7 +83,7 @@ export const TopProfileLayerDefault: StoryObj = {
             width: 3000,
         };
 
-        const layer = new TopProfileLayer({ ...props });
+        const layer = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -99,7 +95,7 @@ export const TopProfileLayerDefault: StoryObj = {
     },
 };
 
-export const TopProfileLayerWithMap: StoryObj = {
+export const FaceProfileLayerWithMap: StoryObj = {
     render: () => {
         const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
@@ -110,7 +106,7 @@ export const TopProfileLayerWithMap: StoryObj = {
             width: 3000,
         };
 
-        const profile = new TopProfileLayer({ ...props });
+        const profile = new FaceProfileLayer({ ...props });
         const base = new StreetLayer();
 
         return (
@@ -123,7 +119,7 @@ export const TopProfileLayerWithMap: StoryObj = {
     },
 };
 
-export const TopProfileZeroLengthSegment: StoryObj = {
+export const FaceProfileZeroLengthSegment: StoryObj = {
     render: () => {
         const path = [
             [7.29, 61.45, 10000],
@@ -142,7 +138,7 @@ export const TopProfileZeroLengthSegment: StoryObj = {
             width: 3000,
         };
 
-        const layer = new TopProfileLayer({ ...props });
+        const layer = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -162,7 +158,7 @@ export const TopProfileZeroLengthSegment: StoryObj = {
     tags: ["no-test-webkit"],
 };
 
-export const TopProfileVerticalScale: StoryObj<{ verticalScale: number }> = {
+export const FaceProfileVerticalScale: StoryObj<{ verticalScale: number }> = {
     args: {
         verticalScale: 5,
     },
@@ -189,7 +185,7 @@ export const TopProfileVerticalScale: StoryObj<{ verticalScale: number }> = {
             getScale,
         };
 
-        const profile = new TopProfileLayer({ ...props });
+        const profile = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -209,7 +205,7 @@ export const TopProfileVerticalScale: StoryObj<{ verticalScale: number }> = {
     tags: ["no-test-webkit"],
 };
 
-export const TopProfileColor: StoryObj<{ color: string }> = {
+export const FaceProfileColor: StoryObj<{ color: string }> = {
     args: {
         color: "green",
     },
@@ -239,7 +235,7 @@ export const TopProfileColor: StoryObj<{ color: string }> = {
             getColor,
         };
 
-        const profile = new TopProfileLayer({ ...props });
+        const profile = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -259,7 +255,7 @@ export const TopProfileColor: StoryObj<{ color: string }> = {
     tags: ["no-test-webkit"],
 };
 
-export const TopProfileWidth: StoryObj<{ width: number }> = {
+export const FaceProfileWidth: StoryObj<{ width: number }> = {
     args: {
         width: 1000,
     },
@@ -282,7 +278,7 @@ export const TopProfileWidth: StoryObj<{ width: number }> = {
             width,
         };
 
-        const profile = new TopProfileLayer({ ...props });
+        const profile = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -301,8 +297,8 @@ export const TopProfileWidth: StoryObj<{ width: number }> = {
     },
 };
 
-export const TopProfilePhongShading: StoryObj<
-    { color: string } & Pick<TopProfileLayerProps, "phongShading" | "material">
+export const FaceProfilePhongShading: StoryObj<
+    { color: string } & Pick<FaceProfileLayerProps, "phongShading" | "material">
 > = {
     args: {
         color: "lightgreen",
@@ -341,7 +337,7 @@ export const TopProfilePhongShading: StoryObj<
             material,
         };
 
-        const profile = new TopProfileLayer({ ...props });
+        const profile = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
@@ -360,7 +356,7 @@ export const TopProfilePhongShading: StoryObj<
     },
 };
 
-export const TopProfileTexture: StoryObj = {
+export const FaceProfileTexture: StoryObj = {
     render: () => {
         const data = React.useMemo(() => [PATH_LAT_LONG], []);
 
@@ -374,42 +370,11 @@ export const TopProfileTexture: StoryObj = {
             texture,
         };
 
-        const layer = new TopProfileLayer({ ...props });
+        const layer = new FaceProfileLayer({ ...props });
 
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-};
-
-export const WithSideFaces: StoryObj<TopProfileLayerProps> = {
-    args: {
-        phongShading: true,
-    },
-    render: ({ phongShading }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
-        const texture = createGradientTexture();
-
-        const props = {
-            data,
-            id: "profile",
-            pickable: true,
-            width: 3000,
-            texture,
-            phongShading,
-        };
-
-        const topLayer = new TopProfileLayer({ ...props });
-        const sideLayer = new SideProfileLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[topLayer, sideLayer]}
                 initialViewState={INITIAL_VIEW_STATE}
                 controller
             ></DeckGL>
