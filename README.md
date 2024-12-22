@@ -69,3 +69,6 @@ npm ci
 npm run docker:compose:test:update
 ```
 
+## Demo
+Live demo: [VeloLens](https://velo-lens.com/)
+
