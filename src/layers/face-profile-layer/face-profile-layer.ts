@@ -2,12 +2,15 @@ import { CompositeLayer } from "@deck.gl/core";
 import {
     TopProfileLayer,
     TopProfileLayerProps,
+    TopProfileLayerData,
 } from "./top-profile-layer/top-profile-layer";
 import {
     SideProfileLayer,
     SideProfileLayerProps,
 } from "./side-profile-layer/side-profile-layer";
 import { type DefaultProps } from "@deck.gl/core";
+
+export type FaceProfileLayerData = TopProfileLayerData;
 
 export type FaceProfileLayerProps<DataT = unknown> =
     TopProfileLayerProps<DataT>;
@@ -27,7 +30,7 @@ export class FaceProfileLayer<
         const data = this.props.data;
         const texture = this.props.texture;
 
-        const topLayerProps: TopProfileLayerProps = {
+        const topLayerProps: TopProfileLayerProps<unknown> = {
             ...this.getSubLayerProps({
                 ...this.props,
                 id: "top",
@@ -37,7 +40,7 @@ export class FaceProfileLayer<
         };
         const topLayer = new TopProfileLayer<unknown>(topLayerProps);
 
-        const sideLayerProps: SideProfileLayerProps = {
+        const sideLayerProps: SideProfileLayerProps<unknown> = {
             ...this.getSubLayerProps({
                 ...this.props,
                 id: "side",
@@ -46,6 +49,7 @@ export class FaceProfileLayer<
             texture,
         };
         const sideLayer = new SideProfileLayer<unknown>(sideLayerProps);
+
         return [topLayer, sideLayer];
     }
 }
