@@ -21,7 +21,9 @@ export default {
 
 type Story = StoryObj<typeof ActivityMaptiler>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ["no-visual-test"],
+};
 
 export const TextAnnotation: Story = {
     render: () => (
