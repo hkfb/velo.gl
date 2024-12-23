@@ -19,3 +19,7 @@ export {
     ActivityProfileLayer,
     ActivityProfileLayerProps,
 } from "./layers/activity-profile-layer/activity-profile-layer";
+export {
+    ActivityLayer,
+    ActivityLayerProps,
+} from "./layers/activity-layer/activity-layer";

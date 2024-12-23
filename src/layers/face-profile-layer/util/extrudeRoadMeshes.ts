@@ -114,7 +114,7 @@ export function extrudeRoadMeshes(
                 segmentTangents[i - 1][1],
             ];
             const [dx2, dy2] = [segmentTangents[i][0], segmentTangents[i][1]];
-            const perp1 = [-dy1, dx1];
+            const perp1: [number, number] = [-dy1, dx1];
             const perp2 = [-dy2, dx2];
             const mx = perp1[0] + perp2[0];
             const my = perp1[1] + perp2[1];
