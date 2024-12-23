@@ -7,10 +7,10 @@ import {
 import { UpdateParameters, type Position } from "@deck.gl/core";
 import _ from "lodash";
 import { lineString, multiLineString } from "@turf/helpers";
-import { simplify } from "@turf/simplify";
 import { Feature, LineString, MultiLineString } from "geojson";
 import { centroid } from "@turf/centroid";
 import { extrudeRoadMeshes } from "../util/extrudeRoadMeshes";
+import { cleanCoords } from "@turf/clean-coords";
 
 export type SideProfileLayerData = Polyline[];
 
@@ -47,26 +47,18 @@ export class SideProfileLayer<
     _getMesh(activities: SideProfileLayerData) {
         const paths = multiLineString(activities);
 
-        const origin = centroid(paths as Feature<MultiLineString>);
+        const clean = cleanCoords(paths);
 
-        const pathMeterOffset = activities.map((polyline: Polyline) =>
-            getOffset(polyline, origin.geometry.coordinates),
+        const origin = centroid(clean as Feature<MultiLineString>);
+
+        const pathMeterOffset = clean.geometry.coordinates.map(
+            (polyline: Polyline) =>
+                getOffset(polyline, origin.geometry.coordinates),
         );
 
-        const geojson = pathMeterOffset.map((polyline) => lineString(polyline));
+        const profileWidth = this.props.width ?? 100;
 
-        const simplified = geojson.map((polyline) =>
-            simplify(polyline as Feature<LineString>),
-        );
-
-        const extrudedProfile = simplified.map((polyline) =>
-            extrudeRoadMeshes(
-                polyline.geometry.coordinates as Polyline,
-                this.props.width ?? 100,
-            ),
-        );
-
-        return extrudedProfile[0];
+        return extrudeRoadMeshes(pathMeterOffset[0] as Polyline, profileWidth);
     }
 
     updateState(args: UpdateParameters<this>) {
