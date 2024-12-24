@@ -366,7 +366,7 @@ export const Picking: StoryObj = {
         const layer = new ActivityLayer({ data: data, pickable: true });
 
         const getTooltip = React.useCallback(({ coordinate }: PickingInfo) => {
-            if (_.isEmpty(coordinate)) {
+            if (!coordinate || _.isEmpty(coordinate)) {
                 return null;
             }
             return {
@@ -383,16 +383,16 @@ export const Picking: StoryObj = {
             ></DeckGL>
         );
     },
-    play: async ({ canvasElement }) => {
+    play: async () => {
         const delay = 500;
         const canvas = document.querySelector("canvas");
 
-        if (canvas) {
-            await userEvent.click(canvas, { delay });
+        if (!canvas) {
+            return;
         }
 
+        await userEvent.click(canvas, { delay });
         await userEvent.hover(canvas, { delay });
-
         await fireEvent.mouseMove(canvas, { clientX: 50, clientY: 50, delay });
     },
 };
