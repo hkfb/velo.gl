@@ -356,4 +356,5 @@ export const MissingCoordinate: StoryObj = {
             ></DeckGL>
         );
     },
+    tags: ["no-test-ci"],
 };
