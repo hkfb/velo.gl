@@ -8,7 +8,7 @@ import {
 } from "../../constant.stories";
 import { StreetLayer } from "../street-layer";
 import * as d3 from "d3-color";
-import { Color } from "@deck.gl/core";
+import { Color, type MapViewState } from "@deck.gl/core";
 
 export default {
     title: "Layers / Activity Layer",
@@ -336,4 +336,25 @@ export const UseDataUrl: StoryObj = {
             },
         },
     },
+};
+
+export const MissingCoordinate: StoryObj = {
+    render: () => {
+        const data = "stage-7-parcours.gpx";
+        const layer = new ActivityLayer({ data });
+        const initialViewState: MapViewState = {
+            longitude: -0.3,
+            latitude: 44.2,
+            zoom: 10,
+            pitch: 60,
+        };
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={initialViewState}
+                controller
+            ></DeckGL>
+        );
+    },
+    tags: ["no-visual-test"],
 };
