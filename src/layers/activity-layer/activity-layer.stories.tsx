@@ -8,7 +8,9 @@ import {
 } from "../../constant.stories";
 import { StreetLayer } from "../street-layer";
 import * as d3 from "d3-color";
-import { Color, type MapViewState } from "@deck.gl/core";
+import { Color, type MapViewState, type PickingInfo } from "@deck.gl/core";
+import * as _ from "lodash";
+import { userEvent, fireEvent } from "@storybook/test";
 
 export default {
     title: "Layers / Activity Layer",
@@ -355,5 +357,42 @@ export const MissingCoordinate: StoryObj = {
                 controller
             ></DeckGL>
         );
+    },
+};
+
+export const Picking: StoryObj = {
+    render: () => {
+        const data = JR_ACTIVITY_FILE;
+        const layer = new ActivityLayer({ data: data, pickable: true });
+
+        const getTooltip = React.useCallback(({ coordinate }: PickingInfo) => {
+            if (_.isEmpty(coordinate)) {
+                return null;
+            }
+            return {
+                html: `<p>lat: ${coordinate[0]}, lon: ${coordinate[1]} </p>`,
+            };
+        }, []);
+
+        return (
+            <DeckGL
+                layers={[layer]}
+                initialViewState={JR_PITCHED_VIEW_STATE}
+                controller
+                getTooltip={getTooltip}
+            ></DeckGL>
+        );
+    },
+    play: async ({ canvasElement }) => {
+        const delay = 500;
+        const canvas = document.querySelector("canvas");
+
+        if (canvas) {
+            await userEvent.click(canvas, { delay });
+        }
+
+        await userEvent.hover(canvas, { delay });
+
+        await fireEvent.mouseMove(canvas, { clientX: 50, clientY: 50, delay });
     },
 };
