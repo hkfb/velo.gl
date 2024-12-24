@@ -84,12 +84,6 @@ const config: TestRunnerConfig = {
             return;
         }
 
-        if (
-            process.env.CI
-            && storyContext.tags.includes("no-test-ci")) {
-            return;
-        }
-
         if (!storyContext.tags.includes("no-visual-test")) {
             await screenshotTest(page, context);
         }
