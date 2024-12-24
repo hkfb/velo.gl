@@ -5,7 +5,6 @@ import {
     getOffset,
 } from "../../profile-layer/extrudePolylineProfile";
 import { UpdateParameters, type Position } from "@deck.gl/core";
-import _ from "lodash";
 import { lineString, multiLineString } from "@turf/helpers";
 import { Feature, LineString, MultiLineString } from "geojson";
 import { centroid } from "@turf/centroid";

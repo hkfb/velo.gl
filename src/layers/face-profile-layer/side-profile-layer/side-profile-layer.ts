@@ -9,7 +9,8 @@ import {
 
 export type SideProfileLayerData = AbstractProfileLayerData;
 
-type SideProfileLayerProps<DataT = unknown> = AbstractProfileLayerProps<DataT>;
+export type SideProfileLayerProps<DataT = unknown> =
+    AbstractProfileLayerProps<DataT>;
 
 const defaultProps: DefaultProps<SideProfileLayerProps> = {
     ...AbstractProfileLayer.defaultProps,

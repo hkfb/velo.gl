@@ -9,7 +9,8 @@ import {
 
 export type TopProfileLayerData = AbstractProfileLayerData;
 
-type TopProfileLayerProps<DataT = unknown> = AbstractProfileLayerProps<DataT>;
+export type TopProfileLayerProps<DataT = unknown> =
+    AbstractProfileLayerProps<DataT>;
 
 const defaultProps: DefaultProps<TopProfileLayerProps> = {
     ...AbstractProfileLayer.defaultProps,
