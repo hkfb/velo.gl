@@ -2,9 +2,9 @@ import * as React from "react";
 import { DeckGL, DeckGLProps } from "@deck.gl/react";
 import { LayersList } from "@deck.gl/core";
 import {
-    ActivityProfileLayer,
-    ActivityProfileLayerProps,
-} from "../layers/activity-profile-layer/activity-profile-layer";
+    ActivityLayer,
+    ActivityLayerProps,
+} from "../layers/activity-layer/activity-layer";
 
 export const DEFAULT_GPX_FILE = "Jotunheimen_rundt.gpx";
 
@@ -49,7 +49,7 @@ export type ActivityMapProps = {
     /**
      * Properties that control the appearance of activity profiles.
      */
-    profileConfig?: Omit<ActivityProfileLayerProps, "data" | "id">;
+    profileConfig?: Omit<ActivityLayerProps, "data" | "id">;
 };
 
 export function ActivityMap({
@@ -63,7 +63,7 @@ export function ActivityMap({
     baseLayers = [],
     profileConfig = {},
 }: ActivityMapProps) {
-    const gpxLayer = new ActivityProfileLayer({
+    const gpxLayer = new ActivityLayer({
         ...defaultLayerProps,
         ...profileConfig,
         data: gpx,

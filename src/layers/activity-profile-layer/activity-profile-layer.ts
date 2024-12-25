@@ -6,6 +6,9 @@ import {
 import { FeatureCollection, Feature, LineString } from "geojson";
 import { type DefaultProps } from "@deck.gl/core";
 
+/**
+ * @deprecated use ActivityLayer instead.
+ */
 export type ActivityProfileLayerProps<DataT = unknown> =
     ProfileLayerProps<DataT>;
 
@@ -16,6 +19,9 @@ const defaultProps: DefaultProps<ActivityProfileLayerProps> = {
     dataTransform: dataTransform as unknown as undefined,
 };
 
+/**
+ * @deprecated use ActivityLayer instead.
+ */
 export class ActivityProfileLayer<
     DataT = unknown,
     PropsT = ActivityProfileLayerProps,
