@@ -30,7 +30,7 @@ export class ActivityLayer<
 
 function dataTransform(collection: FeatureCollection) {
     const feature: Feature = collection.features[0];
-    const simplified = simplify(feature, { tolerance: 0.0003 });
+    const simplified = simplify(feature, { tolerance: 0.0002 });
     const geometry = simplified.geometry as LineString;
 
     // Sanitize coordinates.
