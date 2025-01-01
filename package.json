@@ -34,7 +34,7 @@
         "react-map-gl": "^7.1.8"
     },
     "devDependencies": {
-        "@storybook/addon-coverage": "^1.0.4",
+        "@storybook/addon-coverage": "^1.0.5",
         "@storybook/addon-essentials": "^8.4.7",
         "@storybook/addon-interactions": "^8.4.7",
         "@storybook/addon-links": "^8.4.7",
