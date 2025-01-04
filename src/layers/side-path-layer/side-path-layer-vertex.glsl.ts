@@ -195,12 +195,12 @@ void main() {
   vec3 nextPosition = mix(instanceEndPositions, instanceRightPositions, isEnd);
   vec3 nextPosition64Low = mix(instanceEndPositions64Low, instanceRightPositions64Low, isEnd);
 
-  float currZ = mix(sea_level, top_level, isTop);
-  //float currZ = mix(instanceStartPositions.z, sea_level, isTop);
+  float currZ = mix(sea_level, currPosition.z, isTop);
+  //float currZ = mix(sea_level, top_level, isTop);
   //
   currPosition.z = currZ;
-  //prevPosition.z = currZ;
-  //nextPosition.z = currZ;
+  //prevPosition.z = 0.0;
+  //nextPosition.z = 0.0;
 
   geometry.worldPosition = currPosition;
   vec2 widthPixels = vec2(clamp(
@@ -217,6 +217,11 @@ void main() {
   DECKGL_FILTER_SIZE(width, geometry);
 
   vec3 offset = getLineJoinOffset(prevPosition, currPosition, nextPosition, width.xy);
+
+  if (offset.x == 0. && offset.y == 0.) {
+    currPosition.z = 0.;
+  }
+
   geometry.position = vec4(currPosition + offset, 1.0);
   gl_Position = project_common_position_to_clipspace(geometry.position);
   DECKGL_FILTER_GL_POSITION(gl_Position, geometry);

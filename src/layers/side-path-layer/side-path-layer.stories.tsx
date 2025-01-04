@@ -32,6 +32,8 @@ const POLYLINE = [
     { y: 62.26, x: 8.3, z: 0 },
     { y: 62.17, x: 8.51, z: 7000 },
     { y: 61.1, x: 9.51, z: 8000 },
+    { y: 61.0, x: 8.51, z: 8000 },
+    { y: 61.1, x: 8.71, z: 1000 },
 ];
 
 const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);

@@ -153,7 +153,7 @@ export class SidePathLayer extends PathLayer {
           // end corner
           3, 5, 4,
           // Right side
-          2, 6, 4,
+          2, 4, 6,
           6, 7, 4,
           0, 6, 2,
           0, 8, 6,
@@ -170,13 +170,13 @@ export class SidePathLayer extends PathLayer {
           0, 0, 1,
           // start inner corner
           0, -1, 1,
-          // start outer corner
+          // start outer corner (2)
           0, 1, 1,
           // end inner corner
           1, -1, 1,
-          // end outer corner
+          // end outer corner (4)
           1, 1, 1,
-          // bevel end corner
+          // bevel end corner (5)
           1, 0, 1,
           // bottom start outer corner (6)
           0, 1, 0,
