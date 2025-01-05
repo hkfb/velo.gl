@@ -7,11 +7,7 @@ Library for interactive 3D visualization of GPX activities.
 ![GpxLayer](https://github.com/hkfb/velo.gl/raw/main/sample/velo.gl.webp)
 
 ## Features
-* [Deck.gl](https://deck.gl/) layers
-  * Activity Profile Layer - renders a GPX activity as a vertically extruded path
-  * Profile Layer - renders paths extruded vertically from sea level, from a set of 3D polylines
-  * GPX Layer - renders the trace of a GPX file
-  * Trip GPX Layer - renders the position along a GPX trace at a given time
+* [Deck.gl](https://deck.gl/) [layers](./src/layers/README.md) for visualization of GPX and TCX activities.
 * Map components
   * Activity Map - renders a GPX activity
   * Focus Activity Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace

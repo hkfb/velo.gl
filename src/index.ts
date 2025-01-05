@@ -23,3 +23,7 @@ export {
     ActivityLayer,
     ActivityLayerProps,
 } from "./layers/activity-layer/activity-layer";
+export {
+    ExtrudedPathLayer,
+    ExtrudedPathLayerProps,
+} from "./layers/extruded-path-layer/extruded-path-layer";

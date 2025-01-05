@@ -14,3 +14,8 @@ export const JR_PITCHED_VIEW_STATE: MapViewState = {
     ...JR_INITIAL_VIEW_STATE,
     pitch: 45,
 };
+
+export const SYNTHETIC_VIEW_STATE: MapViewState = {
+    ...JR_PITCHED_VIEW_STATE,
+    zoom: 7,
+};
