@@ -1,13 +1,7 @@
 import * as React from "react";
 import { DeckGL } from "@deck.gl/react";
 import { HillLayer } from "./hill-layer";
-
-const INITIAL_VIEW_STATE = {
-    longitude: 8.3,
-    latitude: 61.4,
-    zoom: 8,
-    pitch: 45,
-};
+import { JR_PITCHED_VIEW_STATE } from "../constant.stories";
 
 export default {
     title: "Hill Layer",
@@ -24,7 +18,7 @@ export function HillLayerCamera() {
     return (
         <DeckGL
             layers={[layer]}
-            initialViewState={INITIAL_VIEW_STATE}
+            initialViewState={JR_PITCHED_VIEW_STATE}
             controller
         />
     );

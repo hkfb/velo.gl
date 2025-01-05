@@ -181,10 +181,9 @@ void main() {
   float isEnd = positions.x;
   float isTop = positions.z;
 
-  vColor = mix(sideColor, vColor, isTop);
+  //vColor = mix(sideColor, vColor, isTop);
 
-  float sea_level = 0.0;
-  float top_level = 3000.0;
+  float seaLevel = 0.0;
 
   vec3 prevPosition = mix(instanceLeftPositions, instanceStartPositions, isEnd);
   vec3 prevPosition64Low = mix(instanceLeftPositions64Low, instanceStartPositions64Low, isEnd);
@@ -195,12 +194,8 @@ void main() {
   vec3 nextPosition = mix(instanceEndPositions, instanceRightPositions, isEnd);
   vec3 nextPosition64Low = mix(instanceEndPositions64Low, instanceRightPositions64Low, isEnd);
 
-  float currZ = mix(sea_level, currPosition.z, isTop);
-  //float currZ = mix(sea_level, top_level, isTop);
-  //
+  float currZ = mix(seaLevel, currPosition.z, isTop);
   currPosition.z = currZ;
-  //prevPosition.z = 0.0;
-  //nextPosition.z = 0.0;
 
   geometry.worldPosition = currPosition;
   vec2 widthPixels = vec2(clamp(

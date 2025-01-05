@@ -5,7 +5,7 @@ import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
+import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import * as d3 from "d3-color";
 import { type TextureProps } from "@luma.gl/core";
 
@@ -19,11 +19,6 @@ export default {
             },
         },
     },
-};
-
-const INITIAL_VIEW_STATE = {
-    ...JR_PITCHED_VIEW_STATE,
-    zoom: 7,
 };
 
 const POLYLINE = [
@@ -87,7 +82,7 @@ export const ProfileLayerDefault: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -111,7 +106,7 @@ export const ProfileLayerWithMap: StoryObj = {
         return (
             <DeckGL
                 layers={[base, profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -142,7 +137,7 @@ export const ZeroLengthSegment: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -189,7 +184,7 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -239,7 +234,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -282,7 +277,7 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -341,7 +336,7 @@ export const PhongShading: StoryObj<
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -374,7 +369,7 @@ export const ProfileTexture: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );

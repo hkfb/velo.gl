@@ -1,14 +1,14 @@
 import { SidePathLayer, type SidePathLayerProps } from "./side-path-layer";
 import { DeckGL } from "@deck.gl/react";
-import { Color, LayerDataSource } from "@deck.gl/core";
+import { Color } from "@deck.gl/core";
 import * as React from "react";
 import { Point3d } from "../profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { JR_PITCHED_VIEW_STATE } from "../../constant.stories";
+import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import * as d3 from "d3-color";
-import { type TextureProps } from "@luma.gl/core";
 import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
+import { Matrix4 } from "@math.gl/core";
 
 export default {
     title: "Layers / Side Path Layer",
@@ -22,11 +22,6 @@ export default {
     },
 };
 
-const INITIAL_VIEW_STATE = {
-    ...JR_PITCHED_VIEW_STATE,
-    zoom: 7,
-};
-
 const POLYLINE = [
     { y: 61.45, x: 7.29, z: 10000 },
     { y: 62.26, x: 8.3, z: 0 },
@@ -38,63 +33,26 @@ const POLYLINE = [
 
 const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
 
-function defaultColorScale(t: number): [number, number, number, number] {
-    // Map t in [0, 1] to a color
-    // For example, from blue to red
-    const r = t * 255;
-    const g = 0;
-    const b = (1 - t) * 255;
-    const a = 255;
-    return [r, g, b, a];
-}
+const DATA = [
+    {
+        path: PATH_LAT_LONG as PathGeometry,
+    },
+];
 
-function createGradientTexture(
-    colorScale: (
-        t: number,
-    ) => [number, number, number, number] = defaultColorScale,
-    size = 256,
-): TextureProps {
-    const data = new Uint8Array(size * 4); // RGBA for each pixel
-
-    for (let i = 0; i < size; i++) {
-        const t = i / (size - 1);
-        const [r, g, b, a] = colorScale(t);
-        data[i * 4 + 0] = r;
-        data[i * 4 + 1] = g;
-        data[i * 4 + 2] = b;
-        data[i * 4 + 3] = a;
-    }
-
-    const textureParams: TextureProps = {
-        width: 1,
-        height: size,
-        data,
-    };
-
-    return textureParams;
-}
+const DEFAULT_PROPS = {
+    data: DATA,
+    id: "side-path-layer",
+    getWidth: 3000,
+};
 
 export const SidePathLayerDefault: StoryObj = {
     render: () => {
-        const data = [
-            {
-                path: PATH_LAT_LONG as PathGeometry,
-            },
-        ];
-
-        const props: SidePathLayerProps<unknown> = {
-            data,
-            id: "side-path-layer",
-            pickable: true,
-            getWidth: 3000,
-        };
-
-        const layer = new SidePathLayer({ ...props });
+        const layer = new SidePathLayer({ ...DEFAULT_PROPS });
 
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -103,33 +61,19 @@ export const SidePathLayerDefault: StoryObj = {
 
 export const SidePathLayerWithMap: StoryObj = {
     render: () => {
-        const data = [
-            {
-                path: PATH_LAT_LONG as PathGeometry,
-            },
-        ];
-
-        const props = {
-            data,
-            id: "profile",
-            pickable: true,
-            getWidth: 3000,
-        };
-
-        const profile = new SidePathLayer({ ...props });
+        const profile = new SidePathLayer({ ...DEFAULT_PROPS });
         const base = new StreetLayer();
 
         return (
             <DeckGL
                 layers={[base, profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
     },
 };
 
-/*
 export const ZeroLengthSegment: StoryObj = {
     render: () => {
         const path = [
@@ -140,13 +84,11 @@ export const ZeroLengthSegment: StoryObj = {
             [9.51, 61.1, 8000],
         ];
 
-        const data = React.useMemo(() => [path], []);
+        const data = [{ path }];
 
         const props = {
+            ...DEFAULT_PROPS,
             data,
-            id: "profile",
-            pickable: true,
-            width: 3000,
         };
 
         const layer = new SidePathLayer({ ...props });
@@ -154,7 +96,7 @@ export const ZeroLengthSegment: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -169,7 +111,9 @@ export const ZeroLengthSegment: StoryObj = {
     tags: ["no-test-webkit"],
 };
 
-export const VerticalScale: StoryObj<{ verticalScale: number }> = {
+export const SidePathLayerVerticalScale: StoryObj<
+    SidePathLayerProps<unknown> & { verticalScale: number }
+> = {
     args: {
         verticalScale: 5,
     },
@@ -184,16 +128,12 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         },
     },
     render: ({ verticalScale }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
+        const modelMatrix = new Matrix4();
+        modelMatrix.scale([1, 1, verticalScale]);
 
-        const getScale: [number, number, number] = [1, 1, verticalScale];
-
-        const props = {
-            data,
-            id: "profile",
-            pickable: true,
-            width: 3000,
-            getScale,
+        const props: SidePathLayerProps<unknown> = {
+            ...DEFAULT_PROPS,
+            modelMatrix,
         };
 
         const profile = new SidePathLayer({ ...props });
@@ -201,7 +141,7 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -228,8 +168,6 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     render: ({ color }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
             r: 0,
             g: 0,
@@ -240,9 +178,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         const getColor: Color = [r, g, b, opacity * 255];
 
         const props = {
-            data,
-            id: "profile",
-            width: 3000,
+            ...DEFAULT_PROPS,
             getColor,
         };
 
@@ -251,7 +187,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -281,12 +217,9 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const props = {
-            data,
-            id: "profile",
-            width,
+            ...DEFAULT_PROPS,
+            getWidth: width,
         };
 
         const profile = new SidePathLayer({ ...props });
@@ -294,7 +227,7 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -307,89 +240,3 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
 };
-
-export const PhongShading: StoryObj<
-    { color: string } & Pick<SidePathLayerProps, "phongShading" | "material">
-> = {
-    args: {
-        color: "lightgreen",
-        phongShading: true,
-        material: {
-            ambient: 0.7,
-            diffuse: 0.4,
-            shininess: 10,
-        },
-    },
-    argTypes: {
-        color: {
-            control: {
-                type: "color",
-            },
-        },
-    },
-    render: ({ color, phongShading, material }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
-        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
-            r: 0,
-            g: 0,
-            b: 0,
-            opacity: 1,
-        };
-
-        const getColor: Color = [r, g, b, opacity * 255];
-
-        const props = {
-            data,
-            id: "profile",
-            width: 3000,
-            getColor,
-            phongShading,
-            material,
-        };
-
-        const profile = new SidePathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: "Profile coloring.",
-            },
-        },
-    },
-};
-
-export const ProfileTexture: StoryObj = {
-    render: () => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
-        const texture = createGradientTexture();
-
-        const props = {
-            data,
-            id: "profile",
-            pickable: true,
-            width: 3000,
-            texture,
-        };
-
-        const layer = new SidePathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-};
-*/

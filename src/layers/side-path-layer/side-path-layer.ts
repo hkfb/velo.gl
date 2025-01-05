@@ -1,5 +1,5 @@
 import { PathLayer, type PathLayerProps } from "@deck.gl/layers";
-import { project32, picking, UNIT } from "@deck.gl/core";
+import { project32, picking } from "@deck.gl/core";
 import { fs } from "./side-path-layer-fragment.glsl";
 import { vs } from "./side-path-layer-vertex.glsl";
 import { Geometry, Model } from "@luma.gl/engine";
@@ -20,45 +20,6 @@ export class SidePathLayer extends PathLayer {
         ...PathLayer.defaultProps,
     };
 
-    /*
-    initializeState() {
-        super.initializeState();
-        this.setState({
-            sideModel: this._getSideModel(),
-        });
-    }
-    */
-
-    /*
-    draw({ uniforms }) {
-        super.draw({ uniforms });
-        const {
-            jointRounded,
-            capRounded,
-            billboard,
-            miterLimit,
-            widthUnits,
-            widthScale,
-            widthMinPixels,
-            widthMaxPixels,
-        } = this.props;
-
-        const model = this.state.sideModel!;
-        model.setUniforms(uniforms);
-        model.setUniforms({
-            jointType: Number(jointRounded),
-            capType: Number(capRounded),
-            billboard,
-            widthUnits: UNIT[widthUnits],
-            widthScale,
-            miterLimit,
-            widthMinPixels,
-            widthMaxPixels,
-        });
-        model.draw(this.context.renderPass);
-    }
-    */
-
     getShaders() {
         return {
             vs,
@@ -68,64 +29,6 @@ export class SidePathLayer extends PathLayer {
             shaderCache: this.context.shaderCache, // optional optimization
         };
     }
-
-    /*
-    _getSideModel() {
-        // 1. Create luma.gl Geometry with side-wall vertices + indices
-        //    For demonstration, let's define a simple rectangle in "template space".
-        //    The vertex shader will interpret instance attributes to extrude them
-        //    around each path segment from bottom (z=0) to the path’s z.
-        //
-        //    Example: a single quad with corners: (-1, 0), (-1, 1), (1, 1), (1, 0).
-        //    We’ll rely on the vertex shader to shape it (width, height, offset, etc.)
-        //
-        //    If you want each segment's left/right walls, you might replicate or expand
-        //    to 8 corners. Keep it minimal for demonstration.
-
-        // prettier-ignore
-        const VERTICES = new Float32Array([
-            // x,   y
-            -1.0, 0.0, // bottom-left corner
-            -1.0, 1.0, // top-left corner
-            1.0, 1.0, // top-right corner
-            1.0, 0.0, // bottom-right corner
-        ]);
-
-        // Triangulate (2 triangles): [0,1,2], [0,2,3]
-        const INDICES = new Uint16Array([0, 1, 2, 0, 2, 3]);
-
-        const geometry = new Geometry({
-            id: `${this.props.id}-side-geometry`,
-            topology: "triangle-list",
-
-            attributes: {
-                // "positions" is the non-instanced, "template" geometry
-                // that the vertex shader will reshape for each instance
-                side_positions: {
-                    size: 2, // (x, y)
-                    value: VERTICES,
-                },
-            },
-            indices: INDICES,
-        });
-
-        // 2. Create a luma.gl Model using your custom side-face vertex/fragment shaders
-        //    Typically you'd do getShaders() or specify {vs, fs} inline.
-        //    For demonstration, let's say we have them in `this.getShaders()`.
-        const { vs, fs, modules } = this.getShaders();
-
-        return new Model(this.context.device, {
-            id: `${this.props.id}-side-model`,
-            vs,
-            fs,
-            modules,
-            //shaderCache,
-            geometry,
-            isInstanced: true, // so we can draw multiple path segments in one pass
-            // The instanceCount is set later in draw/updateState, based on how many segments
-        });
-    }
-    */
 
     protected _getModel(): Model {
         /*
@@ -152,13 +55,21 @@ export class SidePathLayer extends PathLayer {
           1, 3, 4,
           // end corner
           3, 5, 4,
+
           // Right side
           2, 4, 6,
           6, 7, 4,
           0, 6, 2,
           0, 8, 6,
-          6, 4, 9,
           9, 4, 5,
+          7, 4, 9,
+
+          // Left side
+          10, 3, 1,
+          10, 11, 3,
+          10, 1, 0,
+          11, 3, 5,
+
         ];
 
         // [0] position on segment - 0: start, 1: end
@@ -166,13 +77,13 @@ export class SidePathLayer extends PathLayer {
         // [2] elevation of path - 0: bottom, 1: top
         // prettier-ignore
         const SEGMENT_POSITIONS = [
-          // bevel start corner
+          // bevel start corner (0)
           0, 0, 1,
-          // start inner corner
+          // start inner corner (1)
           0, -1, 1,
           // start outer corner (2)
           0, 1, 1,
-          // end inner corner
+          // end inner corner (3)
           1, -1, 1,
           // end outer corner (4)
           1, 1, 1,
@@ -186,6 +97,10 @@ export class SidePathLayer extends PathLayer {
           0, 0, 0,
           // bottom bevel end corner (9)
           1, 0, 0,
+          // bottom start inner corner (10)
+          0, -1, 0,
+          // bottom end inner corner (11)
+          1, -1, 0,
         ];
 
         return new Model(this.context.device, {
