@@ -1,4 +1,7 @@
-import { SidePathLayer, type SidePathLayerProps } from "./side-path-layer";
+import {
+    ExtrudedPathLayer,
+    type ExtrudedPathLayerProps,
+} from "./extruded-path-layer";
 import { DeckGL } from "@deck.gl/react";
 import { Color } from "@deck.gl/core";
 import * as React from "react";
@@ -11,7 +14,7 @@ import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
 import { Matrix4 } from "@math.gl/core";
 
 export default {
-    title: "Layers / Side Path Layer",
+    title: "Layers / Extruded Path Layer",
     tags: ["autodocs"],
     parameters: {
         docs: {
@@ -45,9 +48,9 @@ const DEFAULT_PROPS = {
     getWidth: 3000,
 };
 
-export const SidePathLayerDefault: StoryObj = {
+export const ExtrudedPathLayerDefault: StoryObj = {
     render: () => {
-        const layer = new SidePathLayer({ ...DEFAULT_PROPS });
+        const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
 
         return (
             <DeckGL
@@ -59,9 +62,9 @@ export const SidePathLayerDefault: StoryObj = {
     },
 };
 
-export const SidePathLayerWithMap: StoryObj = {
+export const ExtrudedPathLayerWithMap: StoryObj = {
     render: () => {
-        const profile = new SidePathLayer({ ...DEFAULT_PROPS });
+        const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
         const base = new StreetLayer();
 
         return (
@@ -91,7 +94,7 @@ export const ZeroLengthSegment: StoryObj = {
             data,
         };
 
-        const layer = new SidePathLayer({ ...props });
+        const layer = new ExtrudedPathLayer({ ...props });
 
         return (
             <DeckGL
@@ -111,8 +114,8 @@ export const ZeroLengthSegment: StoryObj = {
     tags: ["no-test-webkit"],
 };
 
-export const SidePathLayerVerticalScale: StoryObj<
-    SidePathLayerProps<unknown> & { verticalScale: number }
+export const ExtrudedPathLayerVerticalScale: StoryObj<
+    ExtrudedPathLayerProps<unknown> & { verticalScale: number }
 > = {
     args: {
         verticalScale: 5,
@@ -131,12 +134,12 @@ export const SidePathLayerVerticalScale: StoryObj<
         const modelMatrix = new Matrix4();
         modelMatrix.scale([1, 1, verticalScale]);
 
-        const props: SidePathLayerProps<unknown> = {
+        const props: ExtrudedPathLayerProps<unknown> = {
             ...DEFAULT_PROPS,
             modelMatrix,
         };
 
-        const profile = new SidePathLayer({ ...props });
+        const profile = new ExtrudedPathLayer({ ...props });
 
         return (
             <DeckGL
@@ -182,7 +185,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
             getColor,
         };
 
-        const profile = new SidePathLayer({ ...props });
+        const profile = new ExtrudedPathLayer({ ...props });
 
         return (
             <DeckGL
@@ -222,7 +225,7 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
             getWidth: width,
         };
 
-        const profile = new SidePathLayer({ ...props });
+        const profile = new ExtrudedPathLayer({ ...props });
 
         return (
             <DeckGL

@@ -1,51 +1,35 @@
 import { PathLayer, type PathLayerProps } from "@deck.gl/layers";
-import { project32, picking } from "@deck.gl/core";
-import { fs } from "./side-path-layer-fragment.glsl";
-import { vs } from "./side-path-layer-vertex.glsl";
+import { fs } from "./extruded-path-layer-fragment.glsl";
+import { vs } from "./extruded-path-layer-vertex.glsl";
 import { Geometry, Model } from "@luma.gl/engine";
 
-export type SidePathLayerProps<DataT> = PathLayerProps<DataT>;
+export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT>;
 
 /**
- * SidePathLayer:
- * --------------
- * - Extends PathLayer so we can use its multi-segment logic from getPath()
- * - Inherits width props (getWidth, widthScale, etc.)
- * - No "initializeState" override needed; parent's attributes suffice
- * - Imports "project32" and "picking" as modules, without string references
- * - Uses "project_position_to_clipspace" directly, no #include needed
+ * Deck.gl layer that extrudes a path vertically from sea level.
  */
-export class SidePathLayer extends PathLayer {
+export class ExtrudedPathLayer extends PathLayer {
     static defaultProps = {
         ...PathLayer.defaultProps,
     };
+    static layerName = "ExtrudedPathLayer";
 
+    /**
+     * Override PathLayer shaders with ones that draw path side walls.
+     */
     getShaders() {
         return {
+            ...super.getShaders(),
             vs,
             fs,
-            // Provide the modules as objects instead of strings:
-            modules: [project32, picking],
-            shaderCache: this.context.shaderCache, // optional optimization
         };
     }
 
+    /**
+     * Override the PathLayer path segment model with a model that defines
+     * side walls.
+     */
     protected _getModel(): Model {
-        /*
-         *       _
-         *        "-_ 1                   3                       5
-         *     _     "o---------------------o-------------------_-o
-         *       -   / ""--..__              '.             _.-' /
-         *   _     "@- - - - - ""--..__- - - - x - - - -_.@'    /
-         *    "-_  /                   ""--..__ '.  _,-` :     /
-         *       "o----------------------------""-o'    :     /
-         *      0,2                            4 / '.  :     /
-         *                                      /   '.:     /
-         *                                     /     :'.   /
-         *                                    /     :  ', /
-         *                                   /     :     o
-         */
-
         // prettier-ignore
         const SEGMENT_INDICES = [
           // start corner
@@ -118,7 +102,6 @@ export class SidePathLayer extends PathLayer {
                 },
             }),
             isInstanced: true,
-            //debugShaders: "always",
         });
     }
 }
