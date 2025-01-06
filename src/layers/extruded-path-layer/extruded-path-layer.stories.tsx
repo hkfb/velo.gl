@@ -3,15 +3,14 @@ import {
     type ExtrudedPathLayerProps,
 } from "./extruded-path-layer";
 import { DeckGL } from "@deck.gl/react";
-import { Color } from "@deck.gl/core";
 import * as React from "react";
 import { Point3d } from "../profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
 import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
-import * as d3 from "d3-color";
 import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
 import { Matrix4 } from "@math.gl/core";
+import { getRgba } from "../util.stories";
 
 export default {
     title: "Layers / Extruded Path Layer",
@@ -171,14 +170,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     render: ({ color }) => {
-        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
-            r: 0,
-            g: 0,
-            b: 0,
-            opacity: 1,
-        };
-
-        const getColor: Color = [r, g, b, opacity * 255];
+        const getColor = getRgba(color);
 
         const props = {
             ...DEFAULT_PROPS,
@@ -203,6 +195,41 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     tags: ["no-test-webkit"],
+};
+
+export const SideColor: StoryObj<{ mainColor: string; sideColor: string }> = {
+    args: {
+        mainColor: "yellow",
+        sideColor: "gray",
+    },
+
+    render: ({ mainColor, sideColor }) => {
+        const getColor = getRgba(mainColor);
+        const getSideColor = getRgba(sideColor);
+
+        const props: ExtrudedPathLayerProps<unknown> = {
+            ...DEFAULT_PROPS,
+            getColor,
+            getSideColor,
+        };
+
+        const profile = new ExtrudedPathLayer({ ...props });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Control top and side color.",
+            },
+        },
+    },
 };
 
 export const ProfileWidth: StoryObj<{ width: number }> = {

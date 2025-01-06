@@ -2,15 +2,37 @@ import { PathLayer, type PathLayerProps } from "@deck.gl/layers";
 import { fs } from "./extruded-path-layer-fragment.glsl";
 import { vs } from "./extruded-path-layer-vertex.glsl";
 import { Geometry, Model } from "@luma.gl/engine";
+import type { Accessor, Color } from "@deck.gl/core";
+import { TransitionSettings } from "@deck.gl/core/dist/lib/attribute/transition-settings";
 
-export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT>;
+export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT> & {
+    /**
+     * Path side wall color accessor.
+     * @default [20, 20, 20, 255]
+     */
+    getSideColor?: Accessor<DataT, Color | Color[]>;
+};
+
+const ATTRIBUTE_TRANSITION: Partial<TransitionSettings> = {
+    enter: (value: number[], chunk?: number[]) => {
+        return chunk?.length
+            ? chunk.subarray(chunk.length - value.length)
+            : value;
+    },
+};
+
+const DEFAULT_SIDE_COLOR = [20, 20, 20, 255];
 
 /**
  * Deck.gl layer that extrudes a path vertically from sea level.
  */
-export class ExtrudedPathLayer extends PathLayer {
+export class ExtrudedPathLayer<
+    DataT = unknown,
+    PropsT = ExtrudedPathLayerProps<DataT>,
+> extends PathLayer<DataT, PropsT & PathLayerProps> {
     static defaultProps = {
         ...PathLayer.defaultProps,
+        getSideColor: { type: "accessor", value: DEFAULT_SIDE_COLOR },
     };
     static layerName = "ExtrudedPathLayer";
 
@@ -102,6 +124,28 @@ export class ExtrudedPathLayer extends PathLayer {
                 },
             }),
             isInstanced: true,
+        });
+    }
+
+    initializeState() {
+        super.initializeState();
+        const attributeManager = this.getAttributeManager();
+
+        const layerProps: ExtrudedPathLayerProps<unknown> = this.props;
+
+        // Fall back to main color if side color is not specified.
+        const sideColorAccessorName = layerProps.getSideColor
+            ? "getSideColor"
+            : "getColor";
+
+        attributeManager!.addInstanced({
+            instanceSideColors: {
+                size: this.props.colorFormat.length,
+                type: "unorm8",
+                accessor: sideColorAccessorName,
+                transition: ATTRIBUTE_TRANSITION,
+                defaultValue: DEFAULT_SIDE_COLOR,
+            },
         });
     }
 }
