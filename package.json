@@ -30,7 +30,7 @@
         "@turf/simplify": "^7.2.0",
         "converter-locale-cartesian": "^1.1.0",
         "lodash": "^4.17.21",
-        "maplibre-gl": "^4.7.1",
+        "maplibre-gl": "^5.0.0",
         "react-map-gl": "^7.1.8"
     },
     "devDependencies": {
