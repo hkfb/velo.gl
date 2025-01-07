@@ -35,6 +35,7 @@ in vec3 instanceEndPositions64Low;
 in vec3 instanceRightPositions64Low;
 in float instanceStrokeWidths;
 in vec4 instanceColors;
+in vec4 instanceSideColors;
 in vec3 instancePickingColors;
 
 uniform float widthScale;
@@ -176,12 +177,12 @@ void main() {
   geometry.pickingColor = instancePickingColors;
 
   vColor = vec4(instanceColors.rgb, instanceColors.a * opacity);
-  vec4 sideColor = vec4(255, 0, 0, 1);
+  vec4 sideColor = vec4(instanceSideColors.rgb, instanceSideColors.a * opacity);
 
   float isEnd = positions.x;
   float isTop = positions.z;
 
-  //vColor = mix(sideColor, vColor, isTop);
+  vColor = mix(sideColor, vColor, isTop);
 
   float seaLevel = 0.0;
 

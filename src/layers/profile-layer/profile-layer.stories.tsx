@@ -1,13 +1,12 @@
 import { ProfileLayer, type ProfileLayerProps } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
-import { Color } from "@deck.gl/core";
 import * as React from "react";
 import { Point3d } from "./extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
 import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
-import * as d3 from "d3-color";
 import { type TextureProps } from "@luma.gl/core";
+import { getRgba } from "../util.stories";
 
 export default {
     title: "Layers / Profile Layer",
@@ -212,15 +211,7 @@ export const ProfileColor: StoryObj<{ color: string }> = {
     },
     render: ({ color }) => {
         const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
-        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
-            r: 0,
-            g: 0,
-            b: 0,
-            opacity: 1,
-        };
-
-        const getColor: Color = [r, g, b, opacity * 255];
+        const getColor = getRgba(color);
 
         const props = {
             data,
@@ -312,15 +303,7 @@ export const PhongShading: StoryObj<
     },
     render: ({ color, phongShading, material }) => {
         const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
-        const { r, g, b, opacity } = d3.color(color)?.rgb() ?? {
-            r: 0,
-            g: 0,
-            b: 0,
-            opacity: 1,
-        };
-
-        const getColor: Color = [r, g, b, opacity * 255];
+        const getColor = getRgba(color);
 
         const props = {
             data,
