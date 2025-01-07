@@ -4,6 +4,8 @@ import { vs } from "./extruded-path-layer-vertex.glsl";
 import { Geometry, Model } from "@luma.gl/engine";
 import type { Accessor, Color } from "@deck.gl/core";
 import { TransitionSettings } from "@deck.gl/core/dist/lib/attribute/transition-settings";
+import { NumberArray, TypedArray } from "@math.gl/types";
+import * as _ from "lodash";
 
 export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT> & {
     /**
@@ -14,9 +16,15 @@ export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT> & {
 };
 
 const ATTRIBUTE_TRANSITION: Partial<TransitionSettings> = {
-    enter: (value: number[], chunk?: number[]) => {
+    enter: (value: NumberArray, chunk?: NumberArray) => {
+        if (!_.isTypedArray(chunk)) {
+            return value;
+        }
+
         return chunk?.length
-            ? chunk.subarray(chunk.length - value.length)
+            ? ((chunk as unknown as TypedArray).subarray(
+                  chunk.length - value.length,
+              ) as unknown as NumberArray)
             : value;
     },
 };
