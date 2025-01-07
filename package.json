@@ -1,9 +1,12 @@
 {
     "name": "velo.gl",
+    "description": "React/Typescript library for interactive 3D visualization of GPX and TCX activities.",
+    "repository": "github:hkfb/velo.gl",
     "author": "Håvard Bjerke",
     "license": "MIT",
     "keywords": [
         "gpx",
+        "tcx",
         "webgl",
         "visualization",
         "react",

@@ -28,7 +28,7 @@ const MyActivityMap = () => {
 };
 ```
 
-See also [Story](https://hkfb.github.io/velo.gl/?path=/docs/layers-activity-layer--docs)
+See also [Activity Layer Story](https://hkfb.github.io/velo.gl/?path=/docs/layers-activity-layer--docs)
 
 ## Profile Layer
 Renders paths extruded vertically from sea level, from a set of 3D polylines.
@@ -38,3 +38,5 @@ Renders the position along a GPX trace at a given time.
 
 ## Extruded Path Layer
 Extends the [Deck.gl Path Layer](https://deck.gl/docs/api-reference/layers/path-layer) with vertical extrusion of paths.
+
+See also [Extruded Path Layer Story](https://hkfb.github.io/velo.gl/?path=/docs/layers-extruded-path-layer--docs)
