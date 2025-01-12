@@ -12,6 +12,7 @@ import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
 import { Matrix4 } from "@math.gl/core";
 import { getRgba } from "../../layers/util.stories";
 import { PathTextureExtension } from "./texture-extension";
+import { type TextureProps } from "@luma.gl/core";
 
 export default {
     title: "Extensions / Texture Extension",
@@ -49,6 +50,42 @@ const DEFAULT_PROPS = {
     extensions: [new PathTextureExtension()],
 };
 
+function defaultColorScale(t: number): [number, number, number, number] {
+    // Map t in [0, 1] to a color
+    // For example, from blue to red
+    const r = t * 255;
+    const g = 0;
+    const b = (1 - t) * 255;
+    const a = 255;
+    return [r, g, b, a];
+}
+
+function createGradientTexture(
+    colorScale: (
+        t: number,
+    ) => [number, number, number, number] = defaultColorScale,
+    size = 256,
+): TextureProps {
+    const data = new Uint8Array(size * 4); // RGBA for each pixel
+
+    for (let i = 0; i < size; i++) {
+        const t = i / (size - 1);
+        const [r, g, b, a] = colorScale(t);
+        data[i * 4 + 0] = r;
+        data[i * 4 + 1] = g;
+        data[i * 4 + 2] = b;
+        data[i * 4 + 3] = a;
+    }
+
+    const textureParams: TextureProps = {
+        width: 1,
+        height: size,
+        data,
+    };
+
+    return textureParams;
+}
+
 export const Default: StoryObj = {
     render: () => {
         const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
@@ -65,7 +102,14 @@ export const Default: StoryObj = {
 
 export const TextureExtensionWithMap: StoryObj = {
     render: () => {
-        const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+        const texture = createGradientTexture();
+
+        const profileProps = {
+            ...DEFAULT_PROPS,
+            texture,
+        };
+
+        const profile = new ExtrudedPathLayer({ ...profileProps });
         const base = new StreetLayer();
 
         return (
@@ -88,11 +132,14 @@ export const TextureExtensionZeroLengthSegment: StoryObj = {
             [9.51, 61.1, 8000],
         ];
 
+        const texture = createGradientTexture();
+
         const data = [{ path }];
 
         const props = {
             ...DEFAULT_PROPS,
             data,
+            texture,
         };
 
         const layer = new ExtrudedPathLayer({ ...props });
@@ -115,7 +162,7 @@ export const TextureExtensionZeroLengthSegment: StoryObj = {
     tags: ["no-test-webkit"],
 };
 
-export const TextureExtensionVerticalScale: StoryObj<
+export const VerticalScale: StoryObj<
     ExtrudedPathLayerProps<unknown> & { verticalScale: number }
 > = {
     args: {
@@ -135,9 +182,12 @@ export const TextureExtensionVerticalScale: StoryObj<
         const modelMatrix = new Matrix4();
         modelMatrix.scale([1, 1, verticalScale]);
 
-        const props: ExtrudedPathLayerProps<unknown> = {
+        const texture = createGradientTexture();
+
+        const props = {
             ...DEFAULT_PROPS,
             modelMatrix,
+            texture,
         };
 
         const profile = new ExtrudedPathLayer({ ...props });
@@ -160,84 +210,7 @@ export const TextureExtensionVerticalScale: StoryObj<
     tags: ["no-test-webkit"],
 };
 
-export const TextureExtensionProfileColor: StoryObj<{ color: string }> = {
-    args: {
-        color: "green",
-    },
-    argTypes: {
-        color: {
-            control: {
-                type: "color",
-            },
-        },
-    },
-    render: ({ color }) => {
-        const getColor = getRgba(color);
-
-        const props = {
-            ...DEFAULT_PROPS,
-            getColor,
-        };
-
-        const profile = new ExtrudedPathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[profile]}
-                initialViewState={SYNTHETIC_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: "Profile coloring.",
-            },
-        },
-    },
-    tags: ["no-test-webkit"],
-};
-
-export const TextureExtensionSideColor: StoryObj<{
-    mainColor: string;
-    sideColor: string;
-}> = {
-    args: {
-        mainColor: "yellow",
-        sideColor: "gray",
-    },
-
-    render: ({ mainColor, sideColor }) => {
-        const getColor = getRgba(mainColor);
-        const getSideColor = getRgba(sideColor);
-
-        const props: ExtrudedPathLayerProps<unknown> = {
-            ...DEFAULT_PROPS,
-            getColor,
-            getSideColor,
-        };
-
-        const profile = new ExtrudedPathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[profile]}
-                initialViewState={SYNTHETIC_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: "Control top and side color.",
-            },
-        },
-    },
-};
-
-export const TextureExtensionProfileWidth: StoryObj<{ width: number }> = {
+export const ProfileWidth: StoryObj<{ width: number }> = {
     args: {
         width: 1000,
     },
@@ -252,9 +225,12 @@ export const TextureExtensionProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
+        const texture = createGradientTexture();
+
         const props = {
             ...DEFAULT_PROPS,
             getWidth: width,
+            texture,
         };
 
         const profile = new ExtrudedPathLayer({ ...props });

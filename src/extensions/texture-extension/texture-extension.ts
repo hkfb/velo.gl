@@ -3,9 +3,11 @@ import {
     Layer,
     LayerContext,
     UpdateParameters,
+    DefaultProps,
+    TextureSource,
 } from "@deck.gl/core";
 import { vec3 } from "@math.gl/core";
-import type { Texture } from "@luma.gl/core";
+import type { Texture, Binding } from "@luma.gl/core";
 import type { Model } from "@luma.gl/engine";
 
 /**
@@ -19,18 +21,17 @@ export interface PathTextureExtensionProps {
     /**
      * A 2D texture to be sampled as a 1D strip (in its u-direction).
      */
-    texture?: Texture;
+    texture?: TextureSource;
 }
 
-/**
- * PathTextureExtension
- *
- * A LayerExtension that:
- * - Computes per-vertex distances along a path in the layer's projected space
- * - Normalizes distances to [0..1]
- * - Injects shaders that sample a 2D texture using the distance as the u-coordinate
- */
+const defaultProps: DefaultProps<PathTextureExtensionProps> = {
+    texture: { type: "image", value: null, async: true },
+};
+
 export class PathTextureExtension extends LayerExtension<PathTextureExtensionProps> {
+    static defaultProps = defaultProps;
+    static extensionName = "PathTextureExtension";
+
     /**
      * Return GLSL shader injection code.
      * We add a vertex attribute for distance and sample a texture in the fragment shader.
@@ -55,11 +56,10 @@ export class PathTextureExtension extends LayerExtension<PathTextureExtensionPro
         uniform sampler2D pathTexture;
         //out vec4 fragColor;
       `,
-                "fs:#main-start": `
-        // Sample the texture at (vTexCoord, 0.5)
-        vec4 texColor = texture(pathTexture, vec2(vTexCoord, 0.5));
-        //fragColor = texColor * color;
-        fragColor = texColor;
+                //"fs:#main-start": `
+                "fs:DECKGL_FILTER_COLOR": `
+        vec4 texColor = texture(pathTexture, vec2(0.5, vTexCoord));
+        color = texColor;
       `,
             },
         };
@@ -107,18 +107,6 @@ export class PathTextureExtension extends LayerExtension<PathTextureExtensionPro
         return "pathTesselator" in layer.state;
     }
 
-    /**
-     * Called each render cycle; sets our sampler uniform to the user-provided texture (if any).
-     */
-    /*
-    public draw({ uniforms }: { uniforms: Record<string, any> }): void {
-        const { texture } = this.getCurrentLayer()
-            .props as PathTextureExtensionProps;
-        if (texture) {
-            uniforms.pathTexture = texture;
-        }
-    }
-   */
     updateState(
         this: Layer<PathTextureExtensionProps>,
         params: UpdateParameters<Layer<PathTextureExtensionProps>>,
@@ -130,14 +118,12 @@ export class PathTextureExtension extends LayerExtension<PathTextureExtensionPro
 
         const { emptyTexture, model } = this.state;
 
-        //const uniforms = { pathTexture: this.props.texture };
-        //con
-        const bindings = {
-            pathTexture: this.props.texture || (emptyTexture as Texture),
+        const bindings: Record<string, Binding> = {
+            pathTexture:
+                (this.props.texture as Binding) || (emptyTexture as Texture),
         };
 
         (model as Model)?.setBindings(bindings);
-        //(this.state.model as Model)?.setUniforms(uniforms);
     }
 
     /**
@@ -182,19 +168,5 @@ export class PathTextureExtension extends LayerExtension<PathTextureExtensionPro
         }
 
         return distances;
-    }
-
-    /**
-     * Create a 1×1 fully opaque black texture as a fallback.
-     */
-    private _createFallbackTexture(
-        gl: WebGLRenderingContext | WebGL2RenderingContext,
-    ): Texture {
-        return new Texture(gl, {
-            // A single RGBA pixel of [0, 0, 0, 255]
-            data: new Uint8Array([0, 0, 0, 255]),
-            width: 1,
-            height: 1,
-        });
     }
 }
