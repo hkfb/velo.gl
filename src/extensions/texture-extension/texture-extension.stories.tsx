@@ -10,6 +10,7 @@ import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
 import { PathTextureExtension } from "./texture-extension";
 import { createGradientTexture } from "../../util.stories";
+import { PathLayer } from "@deck.gl/layers";
 
 export default {
     title: "Extensions / Texture Extension",
@@ -21,11 +22,16 @@ const DEFAULT_PROPS = {
     id: "extruded-path-layer",
     getWidth: 3000,
     extensions: [new PathTextureExtension()],
+    texture: createGradientTexture(),
 };
 
-export const Default: StoryObj = {
+export const UndefinedTexture: StoryObj = {
     render: () => {
-        const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+        const layerProps = {
+            ...DEFAULT_PROPS,
+            texture: undefined,
+        };
+        const layer = new ExtrudedPathLayer({ ...layerProps });
 
         return (
             <DeckGL
@@ -35,18 +41,60 @@ export const Default: StoryObj = {
             ></DeckGL>
         );
     },
+    parameters: {
+        docs: {
+            description: {
+                story: "Show the effect of an undefined texture (default).",
+            },
+        },
+    },
+};
+
+export const PathLayerTexture: StoryObj = {
+    render: () => {
+        const profile = new PathLayer({ ...DEFAULT_PROPS });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Apply the Texture Extension to PathLayer.",
+            },
+        },
+    },
+};
+
+export const ExtrudedPath: StoryObj = {
+    render: () => {
+        const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Apply the Texture Extension to ExtrudedPathLayer.",
+            },
+        },
+    },
 };
 
 export const WithMap: StoryObj = {
     render: () => {
-        const texture = createGradientTexture();
-
-        const profileProps = {
-            ...DEFAULT_PROPS,
-            texture,
-        };
-
-        const profile = new ExtrudedPathLayer({ ...profileProps });
+        const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
         const base = new StreetLayer();
 
         return (
@@ -69,14 +117,11 @@ export const ZeroLengthSegment: StoryObj = {
             [9.51, 61.1, 8000],
         ];
 
-        const texture = createGradientTexture();
-
         const data = [{ path }];
 
         const props = {
             ...DEFAULT_PROPS,
             data,
-            texture,
         };
 
         const layer = new ExtrudedPathLayer({ ...props });
@@ -118,12 +163,9 @@ export const VerticalScale: StoryObj<
         const modelMatrix = new Matrix4();
         modelMatrix.scale([1, 1, verticalScale]);
 
-        const texture = createGradientTexture();
-
         const props = {
             ...DEFAULT_PROPS,
             modelMatrix,
-            texture,
         };
 
         const profile = new ExtrudedPathLayer({ ...props });
@@ -160,12 +202,9 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
-        const texture = createGradientTexture();
-
         const props = {
             ...DEFAULT_PROPS,
             getWidth: width,
-            texture,
         };
 
         const profile = new ExtrudedPathLayer({ ...props });
