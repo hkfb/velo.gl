@@ -8,12 +8,12 @@ import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../../layers/street-layer";
 import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
-import { PathTextureExtension } from "./texture-extension";
+import { PathTextureExtension } from "./path-texture-extension";
 import { createGradientTexture } from "../../util.stories";
 import { PathLayer } from "@deck.gl/layers";
 
 export default {
-    title: "Extensions / Texture Extension",
+    title: "Extensions / Path Texture Extension",
     tags: ["autodocs"],
 };
 
