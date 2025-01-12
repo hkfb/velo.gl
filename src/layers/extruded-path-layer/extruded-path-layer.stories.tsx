@@ -4,46 +4,20 @@ import {
 } from "./extruded-path-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
-import { Point3d } from "../profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
-import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
+import { SYNTHETIC_VIEW_STATE, SYNTHETIC_DATA } from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
-import { getRgba } from "../util.stories";
+import { getRgba } from "../../util.stories";
 
 export default {
     title: "Layers / Extruded Path Layer",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "500px",
-            },
-        },
-    },
 };
 
-const POLYLINE = [
-    { y: 61.45, x: 7.29, z: 10000 },
-    { y: 62.26, x: 8.3, z: 0 },
-    { y: 62.17, x: 8.51, z: 7000 },
-    { y: 61.1, x: 9.51, z: 8000 },
-    { y: 61.0, x: 8.51, z: 8000 },
-    { y: 61.1, x: 8.71, z: 1000 },
-];
-
-const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
-
-const DATA = [
-    {
-        path: PATH_LAT_LONG as PathGeometry,
-    },
-];
-
 const DEFAULT_PROPS = {
-    data: DATA,
-    id: "side-path-layer",
+    data: SYNTHETIC_DATA,
+    id: "extruded-path-layer",
     getWidth: 3000,
 };
 

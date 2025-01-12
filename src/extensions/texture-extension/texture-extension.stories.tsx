@@ -4,87 +4,24 @@ import {
 } from "../../layers/extruded-path-layer/extruded-path-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
-import { Point3d } from "../../layers/profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../../layers/street-layer";
-import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
-import { PathGeometry } from "@deck.gl/layers/dist/path-layer/path";
+import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
-import { getRgba } from "../../layers/util.stories";
 import { PathTextureExtension } from "./texture-extension";
-import { type TextureProps } from "@luma.gl/core";
+import { createGradientTexture } from "../../util.stories";
 
 export default {
     title: "Extensions / Texture Extension",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "500px",
-            },
-        },
-    },
 };
 
-const POLYLINE = [
-    { y: 61.45, x: 7.29, z: 10000 },
-    { y: 62.26, x: 8.3, z: 0 },
-    { y: 62.17, x: 8.51, z: 7000 },
-    { y: 61.1, x: 9.51, z: 8000 },
-    { y: 61.0, x: 8.51, z: 8000 },
-    { y: 61.1, x: 8.71, z: 1000 },
-];
-
-const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
-
-const DATA = [
-    {
-        path: PATH_LAT_LONG as PathGeometry,
-    },
-];
-
 const DEFAULT_PROPS = {
-    data: DATA,
+    data: SYNTHETIC_DATA,
     id: "extruded-path-layer",
     getWidth: 3000,
     extensions: [new PathTextureExtension()],
 };
-
-function defaultColorScale(t: number): [number, number, number, number] {
-    // Map t in [0, 1] to a color
-    // For example, from blue to red
-    const r = t * 255;
-    const g = 0;
-    const b = (1 - t) * 255;
-    const a = 255;
-    return [r, g, b, a];
-}
-
-function createGradientTexture(
-    colorScale: (
-        t: number,
-    ) => [number, number, number, number] = defaultColorScale,
-    size = 256,
-): TextureProps {
-    const data = new Uint8Array(size * 4); // RGBA for each pixel
-
-    for (let i = 0; i < size; i++) {
-        const t = i / (size - 1);
-        const [r, g, b, a] = colorScale(t);
-        data[i * 4 + 0] = r;
-        data[i * 4 + 1] = g;
-        data[i * 4 + 2] = b;
-        data[i * 4 + 3] = a;
-    }
-
-    const textureParams: TextureProps = {
-        width: 1,
-        height: size,
-        data,
-    };
-
-    return textureParams;
-}
 
 export const Default: StoryObj = {
     render: () => {
@@ -100,7 +37,7 @@ export const Default: StoryObj = {
     },
 };
 
-export const TextureExtensionWithMap: StoryObj = {
+export const WithMap: StoryObj = {
     render: () => {
         const texture = createGradientTexture();
 
@@ -122,7 +59,7 @@ export const TextureExtensionWithMap: StoryObj = {
     },
 };
 
-export const TextureExtensionZeroLengthSegment: StoryObj = {
+export const ZeroLengthSegment: StoryObj = {
     render: () => {
         const path = [
             [7.29, 61.45, 10000],
@@ -159,7 +96,6 @@ export const TextureExtensionZeroLengthSegment: StoryObj = {
             },
         },
     },
-    tags: ["no-test-webkit"],
 };
 
 export const VerticalScale: StoryObj<
@@ -207,7 +143,6 @@ export const VerticalScale: StoryObj<
             },
         },
     },
-    tags: ["no-test-webkit"],
 };
 
 export const ProfileWidth: StoryObj<{ width: number }> = {

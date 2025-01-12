@@ -15,13 +15,6 @@ import { type TextureProps } from "@luma.gl/core";
 export default {
     title: "Layers / Side Profile Layer",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "500px",
-            },
-        },
-    },
 };
 
 const INITIAL_VIEW_STATE = {
