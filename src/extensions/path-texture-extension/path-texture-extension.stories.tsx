@@ -1,17 +1,19 @@
 import {
     ExtrudedPathLayer,
     type ExtrudedPathLayerProps,
-} from "./extruded-path-layer";
+} from "../../layers/extruded-path-layer/extruded-path-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import type { StoryObj } from "@storybook/react";
-import { StreetLayer } from "../street-layer";
-import { SYNTHETIC_VIEW_STATE, SYNTHETIC_DATA } from "../../constant.stories";
+import { StreetLayer } from "../../layers/street-layer";
+import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
-import { getRgba } from "../../util.stories";
+import { PathTextureExtension } from "./path-texture-extension";
+import { createGradientTexture } from "../../util.stories";
+import { PathLayer } from "@deck.gl/layers";
 
 export default {
-    title: "Layers / Extruded Path Layer",
+    title: "Extensions / Path Texture Extension",
     tags: ["autodocs"],
 };
 
@@ -19,11 +21,17 @@ const DEFAULT_PROPS = {
     data: SYNTHETIC_DATA,
     id: "extruded-path-layer",
     getWidth: 3000,
+    extensions: [new PathTextureExtension()],
+    texture: createGradientTexture(),
 };
 
-export const ExtrudedPathLayerDefault: StoryObj = {
+export const UndefinedTexture: StoryObj = {
     render: () => {
-        const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+        const layerProps = {
+            ...DEFAULT_PROPS,
+            texture: undefined,
+        };
+        const layer = new ExtrudedPathLayer({ ...layerProps });
 
         return (
             <DeckGL
@@ -33,9 +41,58 @@ export const ExtrudedPathLayerDefault: StoryObj = {
             ></DeckGL>
         );
     },
+    parameters: {
+        docs: {
+            description: {
+                story: "Show the effect of an undefined texture (default).",
+            },
+        },
+    },
 };
 
-export const ExtrudedPathLayerWithMap: StoryObj = {
+export const PathLayerTexture: StoryObj = {
+    render: () => {
+        const profile = new PathLayer({ ...DEFAULT_PROPS });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Apply the Texture Extension to PathLayer.",
+            },
+        },
+    },
+};
+
+export const ExtrudedPath: StoryObj = {
+    render: () => {
+        const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Apply the Texture Extension to ExtrudedPathLayer.",
+            },
+        },
+    },
+};
+
+export const WithMap: StoryObj = {
     render: () => {
         const profile = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
         const base = new StreetLayer();
@@ -84,10 +141,9 @@ export const ZeroLengthSegment: StoryObj = {
             },
         },
     },
-    tags: ["no-test-webkit"],
 };
 
-export const ExtrudedPathLayerVerticalScale: StoryObj<
+export const VerticalScale: StoryObj<
     ExtrudedPathLayerProps<unknown> & { verticalScale: number }
 > = {
     args: {
@@ -107,7 +163,7 @@ export const ExtrudedPathLayerVerticalScale: StoryObj<
         const modelMatrix = new Matrix4();
         modelMatrix.scale([1, 1, verticalScale]);
 
-        const props: ExtrudedPathLayerProps<unknown> = {
+        const props = {
             ...DEFAULT_PROPS,
             modelMatrix,
         };
@@ -126,81 +182,6 @@ export const ExtrudedPathLayerVerticalScale: StoryObj<
         docs: {
             description: {
                 story: "Vertical scaling of profiles.",
-            },
-        },
-    },
-    tags: ["no-test-webkit"],
-};
-
-export const ProfileColor: StoryObj<{ color: string }> = {
-    args: {
-        color: "green",
-    },
-    argTypes: {
-        color: {
-            control: {
-                type: "color",
-            },
-        },
-    },
-    render: ({ color }) => {
-        const getColor = getRgba(color);
-
-        const props = {
-            ...DEFAULT_PROPS,
-            getColor,
-        };
-
-        const profile = new ExtrudedPathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[profile]}
-                initialViewState={SYNTHETIC_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: "Profile coloring.",
-            },
-        },
-    },
-    tags: ["no-test-webkit"],
-};
-
-export const SideColor: StoryObj<{ mainColor: string; sideColor: string }> = {
-    args: {
-        mainColor: "yellow",
-        sideColor: "gray",
-    },
-
-    render: ({ mainColor, sideColor }) => {
-        const getColor = getRgba(mainColor);
-        const getSideColor = getRgba(sideColor);
-
-        const props: ExtrudedPathLayerProps<unknown> = {
-            ...DEFAULT_PROPS,
-            getColor,
-            getSideColor,
-        };
-
-        const profile = new ExtrudedPathLayer({ ...props });
-
-        return (
-            <DeckGL
-                layers={[profile]}
-                initialViewState={SYNTHETIC_VIEW_STATE}
-                controller
-            ></DeckGL>
-        );
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: "Control top and side color.",
             },
         },
     },
