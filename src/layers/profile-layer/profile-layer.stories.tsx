@@ -1,76 +1,21 @@
 import { ProfileLayer, type ProfileLayerProps } from "./profile-layer";
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
-import { Point3d } from "./extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { SYNTHETIC_VIEW_STATE } from "../../constant.stories";
-import { type TextureProps } from "@luma.gl/core";
-import { getRgba } from "../util.stories";
+import { SYNTHETIC_PATH, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
+import { getRgba } from "../../util.stories";
+import { createGradientTexture } from "../../util.stories";
 
 export default {
     title: "Layers / Profile Layer",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "500px",
-            },
-        },
-    },
 };
-
-const POLYLINE = [
-    { y: 61.45, x: 7.29, z: 10000 },
-    { y: 62.26, x: 8.3, z: 0 },
-    { y: 62.17, x: 8.51, z: 7000 },
-    { y: 61.1, x: 9.51, z: 8000 },
-];
-
-const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
-
-function defaultColorScale(t: number): [number, number, number, number] {
-    // Map t in [0, 1] to a color
-    // For example, from blue to red
-    const r = t * 255;
-    const g = 0;
-    const b = (1 - t) * 255;
-    const a = 255;
-    return [r, g, b, a];
-}
-
-function createGradientTexture(
-    colorScale: (
-        t: number,
-    ) => [number, number, number, number] = defaultColorScale,
-    size = 256,
-): TextureProps {
-    const data = new Uint8Array(size * 4); // RGBA for each pixel
-
-    for (let i = 0; i < size; i++) {
-        const t = i / (size - 1);
-        const [r, g, b, a] = colorScale(t);
-        data[i * 4 + 0] = r;
-        data[i * 4 + 1] = g;
-        data[i * 4 + 2] = b;
-        data[i * 4 + 3] = a;
-    }
-
-    const textureParams: TextureProps = {
-        width: 1,
-        height: size,
-        data,
-    };
-
-    return textureParams;
-}
 
 export const ProfileLayerDefault: StoryObj = {
     render: () => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             pickable: true,
             width: 3000,
@@ -90,10 +35,8 @@ export const ProfileLayerDefault: StoryObj = {
 
 export const ProfileLayerWithMap: StoryObj = {
     render: () => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             pickable: true,
             width: 3000,
@@ -166,12 +109,10 @@ export const VerticalScale: StoryObj<{ verticalScale: number }> = {
         },
     },
     render: ({ verticalScale }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const getScale: [number, number, number] = [1, 1, verticalScale];
 
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             pickable: true,
             width: 3000,
@@ -210,11 +151,10 @@ export const ProfileColor: StoryObj<{ color: string }> = {
         },
     },
     render: ({ color }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
         const getColor = getRgba(color);
 
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             width: 3000,
             getColor,
@@ -255,10 +195,8 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         },
     },
     render: ({ width }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             width,
         };
@@ -302,11 +240,10 @@ export const PhongShading: StoryObj<
         },
     },
     render: ({ color, phongShading, material }) => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
         const getColor = getRgba(color);
 
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             width: 3000,
             getColor,
@@ -335,12 +272,10 @@ export const PhongShading: StoryObj<
 
 export const ProfileTexture: StoryObj = {
     render: () => {
-        const data = React.useMemo(() => [PATH_LAT_LONG], []);
-
         const texture = createGradientTexture();
 
         const props = {
-            data,
+            data: [SYNTHETIC_PATH],
             id: "profile",
             pickable: true,
             width: 3000,

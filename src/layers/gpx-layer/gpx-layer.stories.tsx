@@ -12,18 +12,11 @@ import {
     JR_PITCHED_VIEW_STATE,
 } from "../../constant.stories";
 import { HillLayer } from "../hill-layer";
-import { getRgba } from "../util.stories";
+import { getRgba } from "../../util.stories";
 
 export default {
     title: "Layers / GPX Layer",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "600px",
-            },
-        },
-    },
 };
 
 const defaultLayerProps = {

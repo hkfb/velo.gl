@@ -8,25 +8,13 @@ import * as React from "react";
 import { Point3d } from "../../profile-layer/extrudePolylineProfile";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../../street-layer";
-import { JR_PITCHED_VIEW_STATE } from "../../../constant.stories";
+import { SYNTHETIC_VIEW_STATE } from "../../../constant.stories";
 import * as d3 from "d3-color";
-import { type TextureProps } from "@luma.gl/core";
+import { createGradientTexture } from "../../../util.stories";
 
 export default {
     title: "Layers / Side Profile Layer",
     tags: ["autodocs"],
-    parameters: {
-        docs: {
-            story: {
-                height: "500px",
-            },
-        },
-    },
-};
-
-const INITIAL_VIEW_STATE = {
-    ...JR_PITCHED_VIEW_STATE,
-    zoom: 7,
 };
 
 const POLYLINE = [
@@ -37,42 +25,6 @@ const POLYLINE = [
 ];
 
 const PATH_LAT_LONG: Point3d[] = POLYLINE.map(({ x, y, z }) => [x, y, z]);
-
-function defaultColorScale(t: number): [number, number, number, number] {
-    // Map t in [0, 1] to a color
-    // For example, from blue to red
-    const r = t * 255;
-    const g = 0;
-    const b = (1 - t) * 255;
-    const a = 255;
-    return [r, g, b, a];
-}
-
-function createGradientTexture(
-    colorScale: (
-        t: number,
-    ) => [number, number, number, number] = defaultColorScale,
-    size = 256,
-): TextureProps {
-    const data = new Uint8Array(size * 4); // RGBA for each pixel
-
-    for (let i = 0; i < size; i++) {
-        const t = i / (size - 1);
-        const [r, g, b, a] = colorScale(t);
-        data[i * 4 + 0] = r;
-        data[i * 4 + 1] = g;
-        data[i * 4 + 2] = b;
-        data[i * 4 + 3] = a;
-    }
-
-    const textureParams: TextureProps = {
-        width: 1,
-        height: size,
-        data,
-    };
-
-    return textureParams;
-}
 
 export const SideProfileLayerDefault: StoryObj = {
     render: () => {
@@ -90,7 +42,7 @@ export const SideProfileLayerDefault: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -114,7 +66,7 @@ export const SideProfileLayerWithMap: StoryObj = {
         return (
             <DeckGL
                 layers={[base, profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -145,7 +97,7 @@ export const SideProfileZeroLengthSegment: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -192,7 +144,7 @@ export const SideProfileVerticalScale: StoryObj<{ verticalScale: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -242,7 +194,7 @@ export const SideProfileColor: StoryObj<{ color: string }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -285,7 +237,7 @@ export const SideProfileWidth: StoryObj<{ width: number }> = {
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -344,7 +296,7 @@ export const SideProfilePhongShading: StoryObj<
         return (
             <DeckGL
                 layers={[profile]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
@@ -377,7 +329,7 @@ export const SideProfileTexture: StoryObj = {
         return (
             <DeckGL
                 layers={[layer]}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
             ></DeckGL>
         );
