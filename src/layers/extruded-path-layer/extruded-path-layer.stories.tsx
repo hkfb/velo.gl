@@ -6,7 +6,11 @@ import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { SYNTHETIC_VIEW_STATE, SYNTHETIC_DATA } from "../../constant.stories";
+import {
+    SYNTHETIC_VIEW_STATE,
+    SYNTHETIC_DATA,
+    SYNTHETIC_PATH,
+} from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
 import { getRgba } from "../../util.stories";
 
@@ -240,6 +244,54 @@ export const ProfileWidth: StoryObj<{ width: number }> = {
         docs: {
             description: {
                 story: "Adjusting lateral width of profiles.",
+            },
+        },
+    },
+};
+
+export const SegmentColor: StoryObj = {
+    render: () => {
+        const path = new Float32Array(SYNTHETIC_PATH.flat());
+
+        const colors = [
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [255, 255, 0],
+            [0, 255, 255],
+            [255, 0, 255],
+        ];
+
+        const colorValues = new Uint8Array(colors.flat());
+
+        const data = {
+            length: 1,
+            startIndices: new Uint16Array([0]),
+            attributes: {
+                getPath: { value: path, size: 3 },
+                getColor: { value: colorValues, size: 3 },
+            },
+        };
+
+        const props = {
+            ...DEFAULT_PROPS,
+            data,
+        };
+
+        const profile = new ExtrudedPathLayer({ ...props });
+
+        return (
+            <DeckGL
+                layers={[profile]}
+                initialViewState={SYNTHETIC_VIEW_STATE}
+                controller
+            ></DeckGL>
+        );
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: "Profile segment coloring.",
             },
         },
     },
