@@ -1,6 +1,6 @@
 "use strict";
 
-import { Layer, LayerExtension, LayerContext } from "@deck.gl/core";
+import { Layer, LayerExtension, LayerContext, picking } from "@deck.gl/core";
 import { vec3 } from "@math.gl/core";
 
 /**
@@ -28,13 +28,11 @@ export class PathDistancePickingExtension extends LayerExtension {
 
         //attributeManager.add({
         attributeManager.addInstanced({
-            customPickingColors: {
-                size: 3, // R, G, B
+            instanceDistAlongPath: {
+                size: 1,
                 accessor: "getPath",
-                // transform is invoked once for each data object (each path).
-                // Must return an array of length 3 * numVertices in that path.
                 transform: (path) =>
-                    extension._createPickingColorsForPath(path, this),
+                    extension._getPerVertexDistances(path, this),
             },
         });
     }
@@ -46,6 +44,7 @@ export class PathDistancePickingExtension extends LayerExtension {
      *
      * Here we decode the 24-bit distance from the picking color, storing it in `info.distance`.
      */
+    /*
     public getPickingInfo({
         info,
         mode,
@@ -60,6 +59,35 @@ export class PathDistancePickingExtension extends LayerExtension {
             info.distance = distance;
         }
         return info;
+    }
+   */
+
+    private _getPerVertexDistances(path: number[][], layer: Layer): number[] {
+        if (!Array.isArray(path) || path.length < 2) {
+            // Degenerate path -> single vertex, distance = 0
+            return [0, 0, 0];
+        }
+
+        // 1) Project each [longitude, latitude] or [x, y] via layer.project
+        const projectedPositions: [number, number, number][] = [];
+        for (const pt of path) {
+            const [x, y] = layer.project(pt);
+            projectedPositions.push([x, y, 0]);
+        }
+
+        // 2) Compute cumulative distances in projected space
+        const distances = [0];
+        let totalDist = 0;
+        for (let i = 1; i < projectedPositions.length; i++) {
+            totalDist += vec3.dist(
+                projectedPositions[i],
+                projectedPositions[i - 1],
+            );
+            distances.push(totalDist);
+        }
+        console.log(distances);
+
+        return distances;
     }
 
     /**
@@ -111,24 +139,141 @@ export class PathDistancePickingExtension extends LayerExtension {
         return colors;
     }
 
-    getShaders() {
+    override getShaders() {
         return {
             name: "path-distance-picking-extension",
+            modules: [picking],
             inject: {
                 // Vertex shader: declare and set the picking color
                 "vs:#decl": `
-        in vec3 customPickingColors;
+        in float instanceDistAlongPath;
+        //in vec3 customPickingColors;
+        out float vDistAlongPath;        // pass to fragment
+
+        // Encode a float distance (0..16777215) into an RGB color [0..1].
+        vec3 encodeDistanceToRGB(float distance) {
+          float distClamped = clamp(distance, 0.0, 16777215.0);
+          int distInt = int(floor(distClamped + 0.5));
+
+          int r = distInt & 255;          // low byte
+          int g = (distInt >> 8) & 255;   // mid byte
+          int b = (distInt >> 16) & 255;  // high byte
+
+          // Convert [0..255] -> [0..1]
+          //return vec3(float(r), float(g), float(b)) / 255.0;
+          return vec3(float(r), float(g), float(b));
+        }
       `,
                 "vs:#main-end": `
         // Use the custom per-vertex picking color
-        picking_setPickingColor(customPickingColors);
+        //picking_setPickingColor(customPickingColors);
+        //picking_setPickingAttribute(instanceDistAlongPath);
+        //vec3 pickingColor = encodeDistanceToRGB(instanceDistAlongPath);
+        //picking_setPickingColor(pickingColor);
+        vDistAlongPath = instanceDistAlongPath;
       `,
 
                 // Fragment shader: finalize picking color
+                "fs:#decl": `
+        precision highp float;
+
+        in float vDistAlongPath;
+        vec4 fPickingColor;
+
+        // Normalize unsigned byte color to 0-1 range
+        vec3 picking_normalizeColor(vec3 color) {
+          return picking.useFloatColors > 0.5 ? color : color / 255.0;
+        }
+
+        // Normalize unsigned byte color to 0-1 range
+        vec4 picking_normalizeColor(vec4 color) {
+          return picking.useFloatColors > 0.5 ? color : color / 255.0;
+        }
+
+        bool picking_isColorZero(vec3 color) {
+          return dot(color, vec3(1.0)) < 0.00001;
+        }
+
+        bool picking_isColorValid(vec3 color) {
+          return dot(color, vec3(1.0)) > 0.00001;
+        }
+
+        // Check if this vertex is highlighted 
+        bool isVertexHighlighted(vec3 vertexColor) {
+          vec3 highlightedObjectColor = picking_normalizeColor(picking.highlightedObjectColor);
+          return
+            bool(picking.isHighlightActive) && picking_isColorZero(abs(vertexColor - highlightedObjectColor));
+        }
+
+        // Set the current picking color
+        void picking_setPickingColor(vec3 pickingColor) {
+          pickingColor = picking_normalizeColor(pickingColor);
+
+          if (bool(picking.isActive)) {
+            // Use alpha as the validity flag. If pickingColor is [0, 0, 0] fragment is non-pickable
+            fPickingColor.a = float(picking_isColorValid(pickingColor));
+            //picking_vRGBcolor_Avalid.a = float(picking_isColorValid(pickingColor));
+
+            if (!bool(picking.isAttribute)) {
+              // Stores the picking color so that the fragment shader can render it during picking
+              fPickingColor.rgb = pickingColor;
+              //picking_vRGBcolor_Avalid.rgb = pickingColor;
+            }
+          } else {
+            // Do the comparison with selected item color in vertex shader as it should mean fewer compares
+            fPickingColor.a = float(isVertexHighlighted(pickingColor));
+            //picking_vRGBcolor_Avalid.a = float(isVertexHighlighted(pickingColor));
+          }
+        }
+
+        // Encode a float distance (0..16777215) into an RGB color [0..1].
+        vec3 encodeDistanceToRGB(float distance) {
+          float distClamped = clamp(distance, 0.0, 16777215.0);
+          int distInt = int(floor(distClamped + 0.5));
+
+          int r = distInt & 255;          // low byte
+          int g = (distInt >> 8) & 255;   // mid byte
+          int b = (distInt >> 16) & 255;  // high byte
+
+          // Convert [0..255] -> [0..1]
+          return vec3(float(r), float(g), float(b));
+          //return vec3(float(r), float(g), float(b)) / 255.0;
+        }
+      `,
+
+                "fs:#main-start": `
+        vec3 pickingColor = encodeDistanceToRGB(vDistAlongPath);
+        picking_setPickingColor(pickingColor);
+      `,
                 "fs:#main-end": `
-        fragColor = picking_filterPickingColor(fragColor);
+        //vec3 pickingColor = encodeDistanceToRGB(vDistAlongPath);
+        /*
+        if (bool(picking.isActive)) {
+            fragColor = vec4(pickingColor, 1.);
+        }
+        */
+        //fragColor = picking_filterPickingColor(fragColor);
+        if (bool(picking.isActive)) {
+            fragColor = fPickingColor;
+        }
+
       `,
             },
         };
     }
+
+    /*
+    override draw(this: Layer, { moduleParameters, ...args }: any) {
+        //args.moduleParameters.picking.isAttribute = true;
+        this.setShaderModuleProps({
+            ...moduleParameters,
+            picking: {
+                ...moduleParameters.picking,
+                isAttribute: true,
+                //useFloatColors: true,
+            },
+        });
+        //console.log(args);
+    }
+    */
 }

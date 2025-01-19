@@ -5,7 +5,7 @@ import type { StoryObj } from "@storybook/react";
 import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { PathDistancePickingExtension } from "./path-distance-picking-extension";
 //import { PathTextureExtension } from "./path-texture-extension";
-import { createGradientTexture } from "../../util.stories";
+//import { createGradientTexture } from "../../util.stories";
 import * as _ from "lodash";
 import { type PickingInfo } from "@deck.gl/core";
 
@@ -33,7 +33,7 @@ export const PathDistancePicking: StoryObj = {
                 }
                 //console.log(args.index, color);
                 const distance = color[0] + (color[1] << 8) + (color[2] << 16);
-                console.log(distance, args.index);
+                console.log(distance, args.index, color);
                 return {
                     html: `lat: ${coordinate[1]}, lon: ${coordinate[0]}`,
                 };
