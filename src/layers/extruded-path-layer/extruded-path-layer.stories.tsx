@@ -6,7 +6,11 @@ import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import type { StoryObj } from "@storybook/react";
 import { StreetLayer } from "../street-layer";
-import { SYNTHETIC_VIEW_STATE, SYNTHETIC_DATA, SYNTHETIC_PATH } from "../../constant.stories";
+import {
+    SYNTHETIC_VIEW_STATE,
+    SYNTHETIC_DATA,
+    SYNTHETIC_PATH,
+} from "../../constant.stories";
 import { Matrix4 } from "@math.gl/core";
 import { getRgba } from "../../util.stories";
 
