@@ -8,6 +8,7 @@ import { PathDistancePickingExtension } from "./path-distance-picking-extension"
 //import { createGradientTexture } from "../../util.stories";
 import * as _ from "lodash";
 import { type PickingInfo } from "@deck.gl/core";
+import { StreetLayer } from "../../layers/street-layer";
 
 export default {
     title: "Extensions / Path Distance Picking Extension",
@@ -33,17 +34,23 @@ export const PathDistancePicking: StoryObj = {
                 }
                 //console.log(args.index, color);
                 const distance = color[0] + (color[1] << 8) + (color[2] << 16);
+
+                const latTrunc = Math.floor(coordinate[1]);
+                const lonTrunc = Math.floor(coordinate[0]);
                 console.log(distance, args.index, color);
                 return {
-                    html: `lat: ${coordinate[1]}, lon: ${coordinate[0]}`,
+                    //html: `lat: ${latTrunc} lon: ${lonTrunc} distance: ${args.index}`,
+                    html: `distance: ${args.index} rgb: ${color} d: ${distance}`,
                 };
             },
             [],
         );
 
+        const base = new StreetLayer();
+
         return (
             <DeckGL
-                layers={[layer]}
+                layers={[base, layer]}
                 initialViewState={SYNTHETIC_VIEW_STATE}
                 controller
                 getTooltip={getTooltip}

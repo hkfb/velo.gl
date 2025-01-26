@@ -71,7 +71,7 @@ export class PathDistancePickingExtension extends LayerExtension {
         // 1) Project each [longitude, latitude] or [x, y] via layer.project
         const projectedPositions: [number, number, number][] = [];
         for (const pt of path) {
-            const [x, y] = layer.project(pt);
+            const [x, y] = layer.projectPosition(pt);
             projectedPositions.push([x, y, 0]);
         }
 
@@ -86,6 +86,7 @@ export class PathDistancePickingExtension extends LayerExtension {
             distances.push(totalDist);
         }
         console.log(distances);
+        console.log("projectedPositions: ", projectedPositions);
 
         return distances;
     }
@@ -142,7 +143,6 @@ export class PathDistancePickingExtension extends LayerExtension {
     override getShaders() {
         return {
             name: "path-distance-picking-extension",
-            modules: [picking],
             inject: {
                 // Vertex shader: declare and set the picking color
                 "vs:#decl": `
@@ -155,125 +155,95 @@ export class PathDistancePickingExtension extends LayerExtension {
           float distClamped = clamp(distance, 0.0, 16777215.0);
           int distInt = int(floor(distClamped + 0.5));
 
-          int r = distInt & 255;          // low byte
-          int g = (distInt >> 8) & 255;   // mid byte
-          int b = (distInt >> 16) & 255;  // high byte
+          int r = distInt & 0xFF;          // low byte
+          int g = (distInt >> 8) & 0xFF;   // mid byte
+          int b = (distInt >> 16) & 0xFF;  // high byte
 
           // Convert [0..255] -> [0..1]
           //return vec3(float(r), float(g), float(b)) / 255.0;
-          return vec3(float(r), float(g), float(b));
+          //return vec3(float(r), float(g), float(b));
+          return vec3(float(r + 1), float(g), float(b));
+        }
+
+        // calculate line join positions
+        float getSegmentLength(
+          vec3 prevPoint, vec3 currPoint, vec3 nextPoint,
+          vec2 width, bool billboard, vec3 positions
+        ) {
+          bool isEnd = positions.x > 0.0;
+
+          vec3 deltaA3 = (currPoint - prevPoint);
+          vec3 deltaB3 = (nextPoint - currPoint);
+
+          mat3 rotationMatrix;
+          bool needsRotation = !billboard && project_needs_rotation(currPoint, rotationMatrix);
+          if (needsRotation) {
+            deltaA3 = deltaA3 * rotationMatrix;
+            deltaB3 = deltaB3 * rotationMatrix;
+          }
+          vec2 deltaA = deltaA3.xy / width;
+          vec2 deltaB = deltaB3.xy / width;
+
+          deltaA = deltaA / project_uCommonUnitsPerMeter.xy;
+          deltaB = deltaB / project_uCommonUnitsPerMeter.xy;
+
+          float lenA = length(deltaA);
+          float lenB = length(deltaB);
+
+          // length of the segment
+          float L = isEnd ? lenA : lenB;
+          return L;
         }
       `,
                 "vs:#main-end": `
         // Use the custom per-vertex picking color
-        //picking_setPickingColor(customPickingColors);
-        //picking_setPickingAttribute(instanceDistAlongPath);
-        //vec3 pickingColor = encodeDistanceToRGB(instanceDistAlongPath);
-        //picking_setPickingColor(pickingColor);
-        vDistAlongPath = instanceDistAlongPath;
+        vec3 segmentStart = project_position(instanceStartPositions, instanceStartPositions64Low);
+        vec3 segmentEnd = project_position(instanceEndPositions, instanceEndPositions64Low);
+
+        vec3 deltaCommon = segmentEnd - segmentStart;
+        float deltaMeters = length(deltaCommon.xy / project_uCommonUnitsPerMeter.xy);
+        deltaMeters /= project_size();
+        float segmentUnits = length(deltaCommon.xy);
+
+        //float segmentLength = getSegmentLength(prevPosition, currPosition, nextPosition, width.xy, billboard, positions);
+
+        //float deltaACommon = distance(currPosition, prevPosition);
+        //float deltaBCommon = distance(nextPosition, currPosition);
+        //float segmentLengthCommon = mix(deltaBCommon, deltaACommon, isEnd);
+
+        //float distUnits = mix(instanceDistAlongPath, instanceDistAlongPath + segmentLengthCommon, isEnd);
+        float distUnits = mix(instanceDistAlongPath, instanceDistAlongPath + segmentUnits, isEnd);
+
+        float distMeters = distUnits / project_uCommonUnitsPerMeter.z / project_size();
+
+        vec3 pickingColor = encodeDistanceToRGB(distMeters);
+        
+        //vec3 pickingColor = encodeDistanceToRGB(instanceDistAlongPath / project_uCommonUnitsPerMeter.z);
+        //vec3 pickingColor = encodeDistanceToRGB(d / project_uCommonUnitsPerMeter.z);
+
+        picking_setPickingColor(pickingColor);
+        //vColor = vec4(pickingColor, 1.);
       `,
 
                 // Fragment shader: finalize picking color
                 "fs:#decl": `
-        precision highp float;
-
-        in float vDistAlongPath;
-        vec4 fPickingColor;
-
-        // Normalize unsigned byte color to 0-1 range
-        vec3 picking_normalizeColor(vec3 color) {
-          return picking.useFloatColors > 0.5 ? color : color / 255.0;
-        }
-
-        // Normalize unsigned byte color to 0-1 range
-        vec4 picking_normalizeColor(vec4 color) {
-          return picking.useFloatColors > 0.5 ? color : color / 255.0;
-        }
-
-        bool picking_isColorZero(vec3 color) {
-          return dot(color, vec3(1.0)) < 0.00001;
-        }
-
-        bool picking_isColorValid(vec3 color) {
-          return dot(color, vec3(1.0)) > 0.00001;
-        }
-
-        // Check if this vertex is highlighted 
-        bool isVertexHighlighted(vec3 vertexColor) {
-          vec3 highlightedObjectColor = picking_normalizeColor(picking.highlightedObjectColor);
-          return
-            bool(picking.isHighlightActive) && picking_isColorZero(abs(vertexColor - highlightedObjectColor));
-        }
-
-        // Set the current picking color
-        void picking_setPickingColor(vec3 pickingColor) {
-          pickingColor = picking_normalizeColor(pickingColor);
-
-          if (bool(picking.isActive)) {
-            // Use alpha as the validity flag. If pickingColor is [0, 0, 0] fragment is non-pickable
-            fPickingColor.a = float(picking_isColorValid(pickingColor));
-            //picking_vRGBcolor_Avalid.a = float(picking_isColorValid(pickingColor));
-
-            if (!bool(picking.isAttribute)) {
-              // Stores the picking color so that the fragment shader can render it during picking
-              fPickingColor.rgb = pickingColor;
-              //picking_vRGBcolor_Avalid.rgb = pickingColor;
-            }
-          } else {
-            // Do the comparison with selected item color in vertex shader as it should mean fewer compares
-            fPickingColor.a = float(isVertexHighlighted(pickingColor));
-            //picking_vRGBcolor_Avalid.a = float(isVertexHighlighted(pickingColor));
-          }
-        }
-
-        // Encode a float distance (0..16777215) into an RGB color [0..1].
-        vec3 encodeDistanceToRGB(float distance) {
-          float distClamped = clamp(distance, 0.0, 16777215.0);
-          int distInt = int(floor(distClamped + 0.5));
-
-          int r = distInt & 255;          // low byte
-          int g = (distInt >> 8) & 255;   // mid byte
-          int b = (distInt >> 16) & 255;  // high byte
-
-          // Convert [0..255] -> [0..1]
-          return vec3(float(r), float(g), float(b));
-          //return vec3(float(r), float(g), float(b)) / 255.0;
-        }
-      `,
-
-                "fs:#main-start": `
-        vec3 pickingColor = encodeDistanceToRGB(vDistAlongPath);
-        picking_setPickingColor(pickingColor);
+        //precision highp float;
       `,
                 "fs:#main-end": `
-        //vec3 pickingColor = encodeDistanceToRGB(vDistAlongPath);
-        /*
-        if (bool(picking.isActive)) {
-            fragColor = vec4(pickingColor, 1.);
-        }
-        */
-        //fragColor = picking_filterPickingColor(fragColor);
-        if (bool(picking.isActive)) {
-            fragColor = fPickingColor;
-        }
-
+        fragColor = picking_filterPickingColor(fragColor);
       `,
             },
         };
     }
 
     /*
-    override draw(this: Layer, { moduleParameters, ...args }: any) {
-        //args.moduleParameters.picking.isAttribute = true;
+    override draw(this: Layer, params: any, extension: this) {
         this.setShaderModuleProps({
-            ...moduleParameters,
             picking: {
-                ...moduleParameters.picking,
                 isAttribute: true,
-                //useFloatColors: true,
+                useFloatValues: true,
             },
         });
-        //console.log(args);
     }
     */
 }
