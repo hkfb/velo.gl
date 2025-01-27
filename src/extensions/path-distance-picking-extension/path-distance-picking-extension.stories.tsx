@@ -68,7 +68,7 @@ export const PathDistancePicking: StoryObj = {
         },
     },
     play: async () => {
-        const delay = 500;
+        const delay = 300;
         const canvas = document.querySelector("canvas");
 
         if (!canvas) {
