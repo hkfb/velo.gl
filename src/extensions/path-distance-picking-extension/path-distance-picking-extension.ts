@@ -69,6 +69,7 @@ export class PathDistancePickingExtension extends LayerExtension {
                 // Vertex shader: declare and set the picking color
                 "vs:#decl": `
         in float instanceDistAlongPath;
+        out float pathDistance;
 
         // Encode a float distance (0..16777215) into an RGB color.
         vec3 encodeDistanceToRGB(float distance) {
@@ -97,10 +98,33 @@ export class PathDistancePickingExtension extends LayerExtension {
 
         vec3 pickingColor = encodeDistanceToRGB(distMeters);
 
-        picking_setPickingColor(pickingColor);
+        //picking_setPickingColor(pickingColor);
+        picking_vRGBcolor_Avalid.r = distMeters;
+
+        pathDistance = distMeters;
+      `,
+                "fs:#decl": `
+        in float pathDistance;
+
+        // Encode a float distance (0..16777215) into an RGB color.
+        vec3 encodeDistanceToRGB(float distance) {
+          float distClamped = clamp(distance, 0.0, 16777215.0);
+          int distInt = int(floor(distClamped + 0.5));
+
+          int r = distInt & 0xFF;          // low byte
+          int g = (distInt >> 8) & 0xFF;   // mid byte
+          int b = (distInt >> 16) & 0xFF;  // high byte
+
+          return vec3(float(r + 1), float(g), float(b)) / 255.;
+        }
       `,
                 "fs:#main-end": `
-        fragColor = picking_filterPickingColor(fragColor);
+        //fragColor = picking_filterPickingColor(fragColor);
+                //
+        if (bool(picking.isActive)) {
+            fragColor.rgb = encodeDistanceToRGB(picking_vRGBcolor_Avalid.r);
+            //fragColor.rgb = encodeDistanceToRGB(pathDistance);
+        }
       `,
             },
         };
