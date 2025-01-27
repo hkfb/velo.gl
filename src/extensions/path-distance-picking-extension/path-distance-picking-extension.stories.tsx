@@ -2,12 +2,9 @@ import { ExtrudedPathLayer } from "../../layers/extruded-path-layer/extruded-pat
 import { DeckGL } from "@deck.gl/react";
 import * as React from "react";
 import type { StoryObj } from "@storybook/react";
-import { SYNTHETIC_DATA, SYNTHETIC_VIEW_STATE } from "../../constant.stories";
 import { PathDistancePickingExtension } from "./path-distance-picking-extension";
-//import { PathTextureExtension } from "./path-texture-extension";
-//import { createGradientTexture } from "../../util.stories";
 import * as _ from "lodash";
-import { type PickingInfo } from "@deck.gl/core";
+import { MapViewState, type PickingInfo } from "@deck.gl/core";
 import { StreetLayer } from "../../layers/street-layer";
 
 export default {
@@ -16,31 +13,53 @@ export default {
 };
 
 const DEFAULT_PROPS = {
-    data: SYNTHETIC_DATA,
     id: "extruded-path-layer",
-    getWidth: 3000,
+    getWidth: 10,
     extensions: [new PathDistancePickingExtension()],
     pickable: true,
 };
 
 export const PathDistancePicking: StoryObj = {
     render: () => {
-        const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
+        const path = [
+            [7.291, 61.411, 50],
+            [7.29, 61.411, 50],
+            [7.288, 61.411, 110],
+            [7.287, 61.412, 250],
+            [7.285, 61.413, 200],
+            [7.284, 61.413, 200],
+            [7.283, 61.413, 100],
+        ];
+
+        const layerProps = {
+            ...DEFAULT_PROPS,
+            data: [
+                {
+                    path,
+                },
+            ],
+        };
+
+        const initialViewState: MapViewState = {
+            longitude: 7.287,
+            latitude: 61.412,
+            zoom: 15,
+            pitch: 45,
+        };
+
+        const layer = new ExtrudedPathLayer({ ...layerProps });
 
         const getTooltip = React.useCallback(
-            ({ coordinate, picked, color, ...args }: PickingInfo) => {
+            ({ coordinate, picked, index }: PickingInfo) => {
                 if (!coordinate || _.isEmpty(coordinate) || !picked) {
                     return null;
                 }
-                //console.log(args.index, color);
-                const distance = color[0] + (color[1] << 8) + (color[2] << 16);
 
                 const latTrunc = Math.floor(coordinate[1]);
                 const lonTrunc = Math.floor(coordinate[0]);
-                console.log(distance, args.index, color);
+
                 return {
-                    //html: `lat: ${latTrunc} lon: ${lonTrunc} distance: ${args.index}`,
-                    html: `distance: ${args.index} rgb: ${color} d: ${distance}`,
+                    html: `lat: ${latTrunc} lon: ${lonTrunc} distance: ${index}`,
                 };
             },
             [],
@@ -51,7 +70,7 @@ export const PathDistancePicking: StoryObj = {
         return (
             <DeckGL
                 layers={[base, layer]}
-                initialViewState={SYNTHETIC_VIEW_STATE}
+                initialViewState={initialViewState}
                 controller
                 getTooltip={getTooltip}
             ></DeckGL>
@@ -60,7 +79,7 @@ export const PathDistancePicking: StoryObj = {
     parameters: {
         docs: {
             description: {
-                story: "Show the effect of an undefined texture (default).",
+                story: "Pick the distance along the path. Does not work for segments longer than 255 meters.",
             },
         },
     },
