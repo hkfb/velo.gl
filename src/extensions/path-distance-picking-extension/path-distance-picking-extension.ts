@@ -5,8 +5,6 @@ import { vec3 } from "@math.gl/core";
 
 /**
  * A deck.gl layer extension for picking the distance along a path.
- *
- * Does not work for segments longer than 255 meters.
  */
 export class PathDistancePickingExtension extends LayerExtension {
     static extensionName = "PathDistancePickingExtension";
@@ -14,8 +12,6 @@ export class PathDistancePickingExtension extends LayerExtension {
 
     /**
      * Called once when the layer is initialized. We add the `customPickingColors`
-     * attribute with a `transform` callback that returns an array of RGB
-     * values (3 per vertex) encoding the distance along the path.
      */
     override initializeState(
         this: Layer,
@@ -65,26 +61,13 @@ export class PathDistancePickingExtension extends LayerExtension {
     override getShaders() {
         return {
             name: "path-distance-picking-extension",
+            dependencies: [picking],
             inject: {
                 // Vertex shader: declare and set the picking color
                 "vs:#decl": `
         in float instanceDistAlongPath;
-        out float pathDistance;
-
-        // Encode a float distance (0..16777215) into an RGB color.
-        vec3 encodeDistanceToRGB(float distance) {
-          float distClamped = clamp(distance, 0.0, 16777215.0);
-          int distInt = int(floor(distClamped + 0.5));
-
-          int r = distInt & 0xFF;          // low byte
-          int g = (distInt >> 8) & 0xFF;   // mid byte
-          int b = (distInt >> 16) & 0xFF;  // high byte
-
-          return vec3(float(r + 1), float(g), float(b));
-        }
       `,
                 "vs:#main-end": `
-        // Use the custom per-vertex picking color
         vec3 segmentStart = project_position(instanceStartPositions, instanceStartPositions64Low);
         vec3 segmentEnd = project_position(instanceEndPositions, instanceEndPositions64Low);
 
@@ -96,16 +79,9 @@ export class PathDistancePickingExtension extends LayerExtension {
 
         float distMeters = distUnits / project_uCommonUnitsPerMeter.z / project_size();
 
-        vec3 pickingColor = encodeDistanceToRGB(distMeters);
-
-        //picking_setPickingColor(pickingColor);
         picking_vRGBcolor_Avalid.r = distMeters;
-
-        pathDistance = distMeters;
       `,
                 "fs:#decl": `
-        in float pathDistance;
-
         // Encode a float distance (0..16777215) into an RGB color.
         vec3 encodeDistanceToRGB(float distance) {
           float distClamped = clamp(distance, 0.0, 16777215.0);
@@ -119,11 +95,8 @@ export class PathDistancePickingExtension extends LayerExtension {
         }
       `,
                 "fs:#main-end": `
-        //fragColor = picking_filterPickingColor(fragColor);
-                //
         if (bool(picking.isActive)) {
             fragColor.rgb = encodeDistanceToRGB(picking_vRGBcolor_Avalid.r);
-            //fragColor.rgb = encodeDistanceToRGB(pathDistance);
         }
       `,
             },

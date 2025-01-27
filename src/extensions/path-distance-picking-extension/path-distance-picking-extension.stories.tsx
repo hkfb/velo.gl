@@ -6,6 +6,8 @@ import { PathDistancePickingExtension } from "./path-distance-picking-extension"
 import * as _ from "lodash";
 import { MapViewState, type PickingInfo } from "@deck.gl/core";
 import { StreetLayer } from "../../layers/street-layer";
+import { SYNTHETIC_DATA } from "../../constant.stories";
+import { userEvent, fireEvent } from "@storybook/test";
 
 export default {
     title: "Extensions / Path Distance Picking Extension",
@@ -14,40 +16,22 @@ export default {
 
 const DEFAULT_PROPS = {
     id: "extruded-path-layer",
-    getWidth: 10,
+    getWidth: 3000,
     extensions: [new PathDistancePickingExtension()],
     pickable: true,
+    data: SYNTHETIC_DATA,
 };
 
 export const PathDistancePicking: StoryObj = {
     render: () => {
-        const path = [
-            [7.291, 61.411, 50],
-            [7.29, 61.411, 50],
-            [7.288, 61.411, 110],
-            [7.287, 61.412, 250],
-            [7.285, 61.413, 200],
-            [7.284, 61.413, 200],
-            [7.283, 61.413, 100],
-        ];
-
-        const layerProps = {
-            ...DEFAULT_PROPS,
-            data: [
-                {
-                    path,
-                },
-            ],
-        };
+        const layer = new ExtrudedPathLayer({ ...DEFAULT_PROPS });
 
         const initialViewState: MapViewState = {
-            longitude: 7.287,
-            latitude: 61.412,
-            zoom: 15,
-            pitch: 45,
+            zoom: 8,
+            latitude: 62.1,
+            longitude: 8.7,
+            pitch: 60,
         };
-
-        const layer = new ExtrudedPathLayer({ ...layerProps });
 
         const getTooltip = React.useCallback(
             ({ coordinate, picked, index }: PickingInfo) => {
@@ -79,8 +63,24 @@ export const PathDistancePicking: StoryObj = {
     parameters: {
         docs: {
             description: {
-                story: "Pick the distance along the path. Does not work for segments longer than 255 meters.",
+                story: "Pick the distance along the path.",
             },
         },
+    },
+    play: async () => {
+        const delay = 500;
+        const canvas = document.querySelector("canvas");
+
+        if (!canvas) {
+            return;
+        }
+
+        await userEvent.click(canvas, { delay });
+        await userEvent.hover(canvas, { delay });
+        await fireEvent.mouseMove(canvas, {
+            clientX: canvas.width / 2,
+            clientY: canvas.height / 2,
+            delay,
+        });
     },
 };
