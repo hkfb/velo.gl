@@ -370,7 +370,7 @@ export const Picking: StoryObj = {
                 return null;
             }
             return {
-                html: `<p>lat: ${coordinate[1]}, lon: ${coordinate[0]} </p>`,
+                html: `lat: ${coordinate[1]}, lon: ${coordinate[0]}`,
             };
         }, []);
 
