@@ -230,7 +230,7 @@ void main() {
   DECKGL_FILTER_COLOR(vColor, geometry);
 
   // Compute normals
-  vec3 segment = instanceEndPositions - instanceStartPositions;
+  vec3 segment = nextPosition - currPosition;
   float lenXY = length(segment.xy);
   if (lenXY < 1e-6) {
     lenXY = 1.0;
