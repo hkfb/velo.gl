@@ -29,6 +29,9 @@ uniform float miterLimit;
 in vec4 vColor;
 in vec2 vCornerOffset;
 in float vMiterLength;
+in vec3 vNormal;
+in vec3 cameraPosition;
+
 /*
  * vPathPosition represents the relative coordinates of the current fragment on the path segment.
  * vPathPosition.x - position along the width of the path, between [-1, 1]. 0 is the center line.
@@ -37,6 +40,7 @@ in float vMiterLength;
 in vec2 vPathPosition;
 in float vPathLength;
 in float vJointType;
+in vec3 vCommonPosition;
 
 out vec4 fragColor;
 
@@ -53,7 +57,12 @@ void main(void) {
       discard;
     }
   }
-  fragColor = vColor;
+
+  vec3 N = normalize(vNormal);
+
+  vec3 lightColor = lighting_getLightColor(vColor.rgb, cameraPosition, vCommonPosition, N);
+
+  fragColor = vec4(lightColor, vColor.a);
 
   DECKGL_FILTER_COLOR(fragColor, geometry);
 }
