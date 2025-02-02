@@ -55,6 +55,9 @@ out float vMiterLength;
 out vec2 vPathPosition;
 out float vPathLength;
 out float vJointType;
+out vec3 vNormal;
+out vec3 vCommonPosition;
+out vec3 cameraPosition;
 
 const float EPSILON = 0.001;
 const vec3 ZERO_OFFSET = vec3(0.0);
@@ -209,6 +212,8 @@ void main() {
   currPosition = project_position(currPosition, currPosition64Low);
   nextPosition = project_position(nextPosition, nextPosition64Low);
 
+  vCommonPosition = currPosition;
+
   width = vec3(project_pixel_size(widthPixels), 0.0);
   DECKGL_FILTER_SIZE(width, geometry);
 
@@ -223,5 +228,25 @@ void main() {
   DECKGL_FILTER_GL_POSITION(gl_Position, geometry);
 
   DECKGL_FILTER_COLOR(vColor, geometry);
+
+  // Compute normals
+  vec3 segment = nextPosition - currPosition;
+  float lenXY = length(segment.xy);
+  if (lenXY < 1e-6) {
+    lenXY = 1.0;
+  }
+  vec2 dir = segment.xy / lenXY;
+
+  // 2) Compute outward normal in XY plane (walls are vertical => no tilt in Z)
+  //    This normal points "out" horizontally. If you want inside vs. outside, flip sign.
+  vec2 normalXY = vec2(-dir.y, dir.x);
+  normalXY = normalize(normalXY);
+
+  // 3) Approximate the normal
+  //    For purely vertical walls, normal in world space is (nx, ny, 0).
+  //    We'll store it as vNormal for the fragment shader.
+  vNormal = vec3(normalXY, 0.);
+
+  cameraPosition = project_uCameraPosition;
 }
 `;

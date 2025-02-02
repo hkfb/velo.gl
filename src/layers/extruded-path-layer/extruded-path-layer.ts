@@ -3,6 +3,7 @@ import { fs } from "./extruded-path-layer-fragment.glsl";
 import { vs } from "./extruded-path-layer-vertex.glsl";
 import { Geometry, Model } from "@luma.gl/engine";
 import type { Accessor, Color } from "@deck.gl/core";
+import { phongLighting, Material } from "@deck.gl/core";
 import { TransitionSettings } from "@deck.gl/core/dist/lib/attribute/transition-settings";
 import { NumberArray, TypedArray } from "@math.gl/types";
 import * as _ from "lodash";
@@ -13,6 +14,14 @@ export type ExtrudedPathLayerProps<DataT> = PathLayerProps<DataT> & {
      * @default [20, 20, 20, 255]
      */
     getSideColor?: Accessor<DataT, Color | Color[]>;
+
+    /**
+     * Material props for lighting effect.
+     *
+     * @default true
+     * @see https://deck.gl/docs/developer-guide/using-lighting#constructing-a-material-instance
+     */
+    material?: Material;
 };
 
 const ATTRIBUTE_TRANSITION: Partial<TransitionSettings> = {
@@ -41,6 +50,9 @@ export class ExtrudedPathLayer<
     static defaultProps = {
         ...PathLayer.defaultProps,
         getSideColor: { type: "accessor", value: DEFAULT_SIDE_COLOR },
+
+        // Optional material for 'lighting' shader module
+        material: true,
     };
     static layerName = "ExtrudedPathLayer";
 
@@ -48,10 +60,12 @@ export class ExtrudedPathLayer<
      * Override PathLayer shaders with ones that draw path side walls.
      */
     getShaders() {
+        const parentShaders = super.getShaders();
         return {
             ...super.getShaders(),
             vs,
             fs,
+            modules: [...parentShaders.modules, phongLighting],
         };
     }
 
