@@ -8,6 +8,7 @@ React/Typescript library for interactive 3D visualization of GPX and TCX activit
 
 ## Features
 * [Deck.gl](https://deck.gl/) [layers](./src/layers/README.md) for visualization of GPX and TCX activities.
+* [Deck.gl](https://deck.gl/) [layer extensions](./src/extensions/README.md) for path type layers
 * Map components
   * Activity Map - renders a GPX activity
   * Focus Activity Map - renders a GPX trace and automatically centers the camera around the bounds of the displayed trace
